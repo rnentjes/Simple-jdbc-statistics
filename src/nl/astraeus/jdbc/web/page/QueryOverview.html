@@ -1,0 +1,30 @@
+<div class="page-header">
+    <h3>Queries ({count})</h3>
+</div>
+
+<ul class="nav nav-pills">
+    <li {if(sortTotalTime)}class="active"{endif}><a onclick="submit('sortTotalTime')">Total time</a></li>
+    <li {if(sortAvgTime)}class="active"{endif}><a onclick="submit('sortAvgTime')">Avg. time</a></li>
+    <li {if(sortTotalCalls)}class="active"{endif}><a onclick="submit('sortTotalCalls')"># Calls</a></li>
+</ul>
+
+<table class="table table-condensed table-striped " id="overview">
+    <thead>
+    <tr>
+        <th>Total time</th>
+        <th>Avg. time</th>
+        <th># Calls</th>
+        <th>Sql</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach(queries as q)}
+    <tr>
+        <td>{q.total}</td>
+        <td>{q.nano}</td>
+        <td>{q.count}</td>
+        <td>{q.sql}</td>
+    </tr>
+    {eachend}
+    </tbody>
+</table>

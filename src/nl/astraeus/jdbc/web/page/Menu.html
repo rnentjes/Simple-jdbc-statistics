@@ -1,0 +1,42 @@
+<div id="topmenu" class="navbar navbar-fixed-top" >
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">Simple JDBC Statistics</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class=""><a onclick="submit('menumain');">Overview</a></li>
+                </ul>
+
+                {if(user.superuser)}
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#"
+                           class="dropdown-toggle"
+                           data-toggle="dropdown">
+                            Info
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a onclick="submit('diagnostics');">Diagnostics</a></li>
+                            <li class=""><a onclick="submit('showmembers');">Show members</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {endif}
+
+                <ul class="nav pull-right">
+                    {if(user.nickName)}
+                    <li class=""><a onclick="submit('menulogout');">Logout {user.nickName}</a></li>
+                    {else}
+                    <li class=""><a onclick="submit('menulogin');">Login</a></li>
+                    {endif}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>

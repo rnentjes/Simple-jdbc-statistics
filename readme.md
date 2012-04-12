@@ -1,0 +1,1 @@
+A simple wrapper around jdbc drivers what will show current jdbc stats of the running queries on a simple web page on port 18080.
