@@ -33,6 +33,8 @@ public class QueryOverview extends TemplatePage {
             sortTotalCalls = false;
             sortAvgTime = false;
             sortTotalTime = true;
+        } else if ("clear".equals(request.getParameter("action"))) {
+            JdbcLogger.get().clear();
         }
 
         return this;

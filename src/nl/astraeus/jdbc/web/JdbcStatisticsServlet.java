@@ -5,6 +5,8 @@ import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.page.Menu;
 import nl.astraeus.jdbc.web.page.Page;
 import nl.astraeus.jdbc.web.page.QueryOverview;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ import java.io.IOException;
  * Time: 3:05 PM
  */
 public class JdbcStatisticsServlet extends HttpServlet {
+    private final static Logger logger = LoggerFactory.getLogger(JdbcStatisticsServlet.class);
 
     private String head;
     private String bottom;
@@ -84,7 +87,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
             resp.getWriter().print(bottom);
         }
 
-        System.out.println("Request ends, time="+ Util.formatNano(System.nanoTime() - nano) +", page="+page.getClass().getSimpleName());
+        logger.debug("Request ends, time=" + Util.formatNano(System.nanoTime() - nano) + ", page=" + page.getClass().getSimpleName());
     }
 
 }

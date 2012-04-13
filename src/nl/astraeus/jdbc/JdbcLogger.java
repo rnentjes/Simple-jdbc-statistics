@@ -107,6 +107,10 @@ public class JdbcLogger {
         cacheSize = 2500;
     }
 
+    public void clear() {
+        queries.clear();
+    }
+
     public int getCacheSize() {
         return cacheSize;
     }
