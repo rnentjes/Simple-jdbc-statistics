@@ -49,4 +49,4 @@ Drivers automatically discovered atm:
   org.h2.Driver
 ```
 
-If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("<driver class name"); )
+If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("<driver class name>"); )
