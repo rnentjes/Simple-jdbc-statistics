@@ -13,6 +13,34 @@ Add the following jar if you are not running in a web container:
 
 * servlet-api-2.5.jar
 
-Start your application and goto: http://<host app is running>:18080/
+Set your jdbc driver property to the following class:
+
+  nl.astraeus.jdbc.Driver
+  
+Add the following to the front of your current jdbc url:
+
+  jdbc:stat:
+  
+  (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat:jdbc:postgresql://localhost/mydb)
+ 
+Start your application and goto: http://<host app is running on>:18080/
 
 You will see an overview of the last 2500 queries run on your database and some timing stats about them.
+
+Drivers automatically discovered atm:
+
+  org.postgresql.Driver
+  oracle.jdbc.driver.OracleDriver
+  com.sybase.jdbc2.jdbc.SybDriver
+  net.sourceforge.jtds.jdbc.Driver
+  com.microsoft.jdbc.sqlserver.SQLServerDriver
+  com.microsoft.sqlserver.jdbc.SQLServerDriver
+  weblogic.jdbc.sqlserver.SQLServerDriver
+  com.informix.jdbc.IfxDriver
+  org.apache.derby.jdbc.ClientDriver
+  org.apache.derby.jdbc.EmbeddedDriver
+  com.mysql.jdbc.Driver
+  org.hsqldb.jdbcDriver
+  org.h2.Driver
+            
+            
