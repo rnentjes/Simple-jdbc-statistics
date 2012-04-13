@@ -43,11 +43,13 @@ public class QueryOverview extends TemplatePage {
         Map<String, Object> result = new HashMap<String, Object>();
 
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
-        Map<Integer, Integer> duplicateCount = new HashMap<Integer, Integer>();
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();
         long avgTime = 0;
+
+        Map<Integer, JdbcLogger.LogEntry> condensed = new HashMap<Integer, JdbcLogger.LogEntry>();
+        List<JdbcLogger.LogEntry> list;
 
         if (!entries.isEmpty()) {
             fromTime = entries.get(0).getTimeStamp();
@@ -58,30 +60,30 @@ public class QueryOverview extends TemplatePage {
             for (JdbcLogger.LogEntry le : entries) {
                 total += le.getNano();
 
-                Integer count = duplicateCount.get(le.getHash());
+                JdbcLogger.LogEntry entry = condensed.get(le.getHash());
 
-                if (count == null) {
-                    count = 1;
+                if (entry == null) {
+                    entry = new JdbcLogger.LogEntry(le);
+                    condensed.put(entry.getHash(), entry);
                 } else {
-                    count++;
+                    entry.addCount(le);
                 }
-
-                duplicateCount.put(le.getHash(), count);
-                le.setCount(count);
             }
 
             avgTime = total / entries.size();
         }
 
+        list = new LinkedList<JdbcLogger.LogEntry>(condensed.values());
+
         if (sortTotalCalls) {
-            Collections.sort(entries, new Comparator<JdbcLogger.LogEntry>() {
+            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
                 @Override
                 public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
                     return o2.getCount() - o1.getCount();
                 }
             });
         } else if (sortAvgTime) {
-            Collections.sort(entries, new Comparator<JdbcLogger.LogEntry>() {
+            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
                 @Override
                 public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
                     long n1 = o1.getNano() / o1.getCount();
@@ -97,7 +99,7 @@ public class QueryOverview extends TemplatePage {
                 }
             });
         } else if (sortTotalTime) {
-            Collections.sort(entries, new Comparator<JdbcLogger.LogEntry>() {
+            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
                 @Override
                 public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
                     if (o2.getNano() > o1.getNano()) {
@@ -111,7 +113,7 @@ public class QueryOverview extends TemplatePage {
             });
         }
 
-        result.put("queries", entries);
+        result.put("queries", list);
         result.put("count", entries.size());
 
         result.put("sortTotalCalls", sortTotalCalls);
@@ -119,7 +121,7 @@ public class QueryOverview extends TemplatePage {
         result.put("sortTotalTime", sortTotalTime);
 
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        DateFormat dateFormatter = new SimpleDateFormat("HH:ss:mm.SSS");
+        DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));

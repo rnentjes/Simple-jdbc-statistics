@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: riennentjes
@@ -37,6 +36,17 @@ public class JdbcLogger {
             this.sql = sql;
             this.milli = milli;
             this.nano = nano;
+            this.count = 1;
+        }
+
+        public LogEntry(LogEntry le) {
+            this.timeStamp = System.currentTimeMillis();
+            this.hash = le.hash;
+            this.type = le.type;
+            this.sql = le .sql;
+            this.milli = le.milli;
+            this.nano = le.nano;
+            this.count = le.count;
         }
 
         public int getCount() {
@@ -64,11 +74,11 @@ public class JdbcLogger {
         }
 
         public String getFormattedMilli() {
-            return Util.formatNano(milli*1000000);
+            return Util.formatNano(milli*1000000/count);
         }
 
         public String getFormattedNano() {
-            return Util.formatNano(nano);
+            return Util.formatNano(nano/count);
         }
 
         public String getTotal() {
@@ -77,6 +87,13 @@ public class JdbcLogger {
 
         public String getSql() {
             return sql;
+        }
+
+        public void addCount(LogEntry le) {
+            count++;
+            this.milli += le.getMilli();
+            this.nano += le.getNano();
+            this.timeStamp = 0;
         }
     }
 

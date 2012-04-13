@@ -11,7 +11,7 @@ import java.text.NumberFormat;
 public class Util {
     // utility functions
     public static String formatNano(long l) {
-        NumberFormat format = new DecimalFormat("###,##0.000000");
+        NumberFormat format = new DecimalFormat("###,##0.000");
 
         return format.format((double) l / 1000000.0);
     }
