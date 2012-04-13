@@ -1,5 +1,9 @@
 <div class="page-header">
-    <h3>Queries ({count})</h3>
+    <h3>Query overview</h3>
+
+    <div># Queries: {count}</div>
+    <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
+    <div>Avg. time/query: {avgTime}</div>
 </div>
 
 <ul class="nav nav-pills">
@@ -11,8 +15,8 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
-        <th>Total time</th>
-        <th>Avg. time</th>
+        <th>Total time (ms)</th>
+        <th>Avg. time (ms)</th>
         <th># Calls</th>
         <th>Sql</th>
     </tr>
@@ -21,7 +25,7 @@
     {foreach(queries as q)}
     <tr>
         <td>{q.total}</td>
-        <td>{q.nano}</td>
+        <td>{q.formattedNano}</td>
         <td>{q.count}</td>
         <td>{q.sql}</td>
     </tr>

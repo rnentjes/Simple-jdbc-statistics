@@ -22,40 +22,53 @@ public class JdbcLogger {
     }
 
     public final static class LogEntry {
-        public QueryType type;
-        public String sql;
-        public long milli;
-        public long nano;
-        public int count;
-        public int hash;
+        private QueryType type;
+        private String sql;
+        private long timeStamp;
+        private long milli;
+        private long nano;
+        private int hash;
+        private int count;
 
         public LogEntry(int hash, QueryType type, String sql, long milli, long nano) {
+            this.timeStamp = System.currentTimeMillis();
             this.hash = hash;
             this.type = type;
             this.sql = sql;
             this.milli = milli;
             this.nano = nano;
-            this.count = 1;
-        }
-
-        public void addCount(long milli, long nano) {
-            synchronized (this) {
-                count++;
-                this.milli += milli;
-                this.nano += nano;
-            }
         }
 
         public int getCount() {
             return count;
         }
 
-        public String getMilli() {
-            return Util.formatNano(milli*1000000/count);
+        public void setCount(int count) {
+            this.count = count;
         }
 
-        public String getNano() {
-            return Util.formatNano(nano/count);
+        public int getHash() {
+            return hash;
+        }
+
+        public long getTimeStamp() {
+            return timeStamp;
+        }
+
+        public long getMilli() {
+            return milli;
+        }
+
+        public long getNano() {
+            return nano;
+        }
+
+        public String getFormattedMilli() {
+            return Util.formatNano(milli*1000000);
+        }
+
+        public String getFormattedNano() {
+            return Util.formatNano(nano);
         }
 
         public String getTotal() {
@@ -67,37 +80,35 @@ public class JdbcLogger {
         }
     }
 
-    private Map<Integer, LogEntry> queries;
+    private final List<LogEntry> queries;
+    private long startTime;
+    private int cacheSize;
 
     public JdbcLogger() {
-        queries = new ConcurrentHashMap<Integer, LogEntry>();
+        queries = new LinkedList<LogEntry>();
+        startTime = System.currentTimeMillis();
+        cacheSize = 2500;
+    }
+
+    public int getCacheSize() {
+        return cacheSize;
+    }
+
+    public void setCacheSize(int cacheSize) {
+        this.cacheSize = cacheSize;
     }
 
     public void logEntry(QueryType type, String sql, long milli, long nano) {
         int hash = sql.hashCode();
-        LogEntry entry = queries.get(hash);
 
-        if (entry == null) {
-            entry = new LogEntry(hash, type, sql, milli, nano);
-            queries.put(hash, entry);
-        } else {
-            entry.addCount(milli, nano);
-        }
+        LogEntry entry = new LogEntry(hash, type, sql, milli, nano);
 
-        if (queries.size() > 1000) {
-            List<Integer> toRemove = new LinkedList<Integer>();
-            List<LogEntry> values = new LinkedList<LogEntry>(queries.values());
+        synchronized (queries) {
+            queries.add(entry);
 
-            Collections.sort(values, new Comparator<LogEntry>() {
-                @Override
-                public int compare(LogEntry o1, LogEntry o2) {
-                    return o1.count - o2.count;
-                }
-            });
-
-            while (queries.size() > 900) {
-                queries.remove(values.remove(0).hash);
-
+            while (queries.size() > cacheSize) {
+                entry = queries.remove(0);
+                startTime = entry.getMilli();
             }
         }
     }
@@ -106,8 +117,10 @@ public class JdbcLogger {
         instance.logEntry(type, sql, milli, nano);
     }
 
-    public Collection<LogEntry> getEntries() {
-        return queries.values();
+    public List<LogEntry> getEntries() {
+        synchronized (queries) {
+            return new LinkedList<LogEntry>(queries);
+        }
     }
 
 }
