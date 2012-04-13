@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ruleset level="Custom ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+  This ruleset checks my code for bad stuff
+    </description>
+
+	<!--
+        rulesets/basic.xml,
+        rulesets/braces.xml,
+        rulesets/clone.xml,
+        rulesets/codesize.xml,
+        rulesets/controversial.xml,
+        rulesets/coupling.xml,
+        rulesets/design.xml,
+        rulesets/finalizers.xml,
+        rulesets/imports.xml,
+        rulesets/j2ee.xml,
+        rulesets/javabeans.xml,
+        rulesets/junit.xml,
+        rulesets/logging-jakarta-commons.xml,
+        rulesets/logging-java.xml,
+        rulesets/migrating.xml,
+        rulesets/naming.xml,
+        rulesets/optimizations.xml,
+        rulesets/strictexception.xml,
+        rulesets/strings.xml,
+        rulesets/sunsecure.xml,
+        rulesets/unusedcode.xml
+        -->
+
+    <rule ref="rulesets/basic.xml">
+        <exclude level="CollapsibleIfStatements"/>
+        <exclude level="UselessOverridingMethod"/>
+        <exclude level="AvoidUsingHardCodedIP"/>
+    </rule>
+    <rule ref="rulesets/braces.xml"/>
+    
+    <!--
+    <rule ref="rulesets/controversial.xml">
+        <exclude level="CallSuperInConstructor"/>
+        <exclude level="DataflowAnomalyAnalysis"/>
+        <exclude level="NullAssignment"/>
+        <exclude level="OnlyOneReturn"/>
+    </rule>
+    -->
+
+    <rule ref="rulesets/coupling.xml">
+        <exclude level="ExcessiveImports"/>
+    </rule>
+    
+    <rule ref="rulesets/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+    <rule ref="rulesets/design.xml/CloseResource"/>
+    <rule ref="rulesets/design.xml/FinalFieldCouldBeStatic"/>
+    <rule ref="rulesets/design.xml/NonStaticInitializer"/>
+    <rule ref="rulesets/design.xml/NonThreadSafeSingleton"/>
+    <rule ref="rulesets/design.xml/OptimizableToArrayCall"/>
+    <rule ref="rulesets/design.xml/PreserveStackTrace"/>
+    <rule ref="rulesets/design.xml/SimpleDateFormatNeedsLocale"/>
+    <rule ref="rulesets/design.xml/SimplifyBooleanExpressions"/>
+    <rule ref="rulesets/design.xml/SimplifyBooleanReturns"/>
+    <rule ref="rulesets/design.xml/SimplifyConditional"/>
+    <!--
+    <rule ref="rulesets/design.xml/UseCollectionIsEmpty"/>
+    -->
+
+    <rule ref="rulesets/finalizers.xml"/>
+    <rule ref="rulesets/imports.xml"/>
+    <rule ref="rulesets/j2ee.xml"/>
+    <rule ref="rulesets/optimizations.xml">
+        <exclude level="AvoidInstantiatingObjectsInLoops" />
+        <exclude level="LocalVariableCouldBeFinal" />
+        <exclude level="MethodArgumentCouldBeFinal" />
+        <exclude level="UseStringBufferForStringAppends" />
+        <exclude level="LocalVariableCouldBeFinal" />
+        <exclude level="MethodArgumentCouldBeFinal" />
+        <exclude level="AvoidInstantiatingObjectsInLoops" />
+    </rule>
+
+</ruleset>
