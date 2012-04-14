@@ -1,0 +1,44 @@
+<div class="page-header">
+    <h3>Query overview</h3>
+</div>
+
+<div class="row">
+    <div class="span6">
+        <div># Queries: {count}</div>
+        <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
+        <div>Avg. time/query: {avgTime}</div>
+    </div>
+    <div class="span1 offset4">
+        <a onclick="submit('back')" class="btn btn-primary btn-large">Back</a>
+    </div>
+</div>
+
+<div class="hero-unit">
+    <p>{sql}</p>
+</div>
+
+<ul class="nav nav-pills">
+    <li {if(sortTime)}class="active"{endif}><a onclick="submit('sortTime')">Timestamp</a></li>
+    <li {if(sortAvgTime)}class="active"{endif}><a onclick="submit('sortAvgTime')">Avg. query time</a></li>
+</ul>
+
+<table class="table table-condensed table-striped " id="overview">
+    <thead>
+    <tr>
+        <th>Timestamp</th>
+        <th>Thread id</th>
+        <th>Type</th>
+        <th>Time (ms)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach(queries as q)}
+    <tr>
+        <td>{q.formattedTimestamp}</td>
+        <td>{q.threadId}</td>
+        <td>{q.type.description}</td>
+        <td>{q.total}</td>
+    </tr>
+    {eachend}
+    </tbody>
+</table>

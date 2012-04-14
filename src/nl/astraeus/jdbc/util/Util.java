@@ -2,6 +2,8 @@ package nl.astraeus.jdbc.util;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User: rnentjes
@@ -21,5 +23,11 @@ public class Util {
         System.out.println("Free  memory: "+(Runtime.getRuntime().freeMemory() / (1024*1024)));
         System.out.println("Total memory: "+(Runtime.getRuntime().totalMemory() / (1024*1024)));
         System.out.println("Max   memory: "+(Runtime.getRuntime().maxMemory() / (1024*1024)));
+    }
+
+    public static String formatTimestamp(long timeStamp) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+
+        return formatter.format(new Date(timeStamp));
     }
 }

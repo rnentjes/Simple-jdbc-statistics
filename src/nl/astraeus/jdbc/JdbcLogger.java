@@ -21,6 +21,7 @@ public class JdbcLogger {
     }
 
     public final static class LogEntry {
+        private long threadId;
         private QueryType type;
         private String sql;
         private long timeStamp;
@@ -30,6 +31,7 @@ public class JdbcLogger {
         private int count;
 
         public LogEntry(int hash, QueryType type, String sql, long milli, long nano) {
+            this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
             this.hash = hash;
             this.type = type;
@@ -49,6 +51,14 @@ public class JdbcLogger {
             this.count = le.count;
         }
 
+        public QueryType getType() {
+            return type;
+        }
+
+        public long getThreadId() {
+            return threadId;
+        }
+
         public int getCount() {
             return count;
         }
@@ -61,8 +71,12 @@ public class JdbcLogger {
             return hash;
         }
 
-        public long getTimeStamp() {
+        public long getTimestamp() {
             return timeStamp;
+        }
+
+        public String getFormattedTimestamp() {
+            return Util.formatTimestamp(timeStamp);
         }
 
         public long getMilli() {

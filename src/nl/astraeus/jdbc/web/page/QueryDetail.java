@@ -13,32 +13,31 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class QueryOverview extends TemplatePage {
+public class QueryDetail extends TemplatePage {
 
-    boolean sortTotalCalls = true;
+    private Page previous;
+    private int hash;
+    private String sql = null;
+
     boolean sortAvgTime = false;
-    boolean sortTotalTime = false;
+    boolean sortTime = false;
+
+    public QueryDetail(Page previous, int hash) {
+        this.previous = previous;
+        this.hash = hash;
+    }
 
     @Override
     public Page processRequest(HttpServletRequest request) {
-        if ("sortTotalCalls".equals(request.getParameter("action"))) {
-            sortTotalCalls = true;
-            sortAvgTime = false;
-            sortTotalTime = false;
-        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = true;
-            sortTotalTime = false;
-        } else if ("sortTotalTime".equals(request.getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = false;
-            sortTotalTime = true;
-        } else if ("clear".equals(request.getParameter("action"))) {
-            JdbcLogger.get().clear();
-        } else if ("select".equals(request.getParameter("action"))) {
-            String hash = request.getParameter("actionValue");
 
-            return new QueryDetail(this, Integer.parseInt(hash));
+        if ("sortTime".equals(request.getParameter("action"))) {
+            sortTime = true;
+            sortAvgTime = false;
+        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
+            sortTime = false;
+            sortAvgTime = true;
+        } else if ("back".equals(request.getParameter("action"))) {
+            return previous;
         }
 
         return this;
@@ -51,47 +50,36 @@ public class QueryOverview extends TemplatePage {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
-        long toTime = System.currentTimeMillis();
+        long toTime = 0;
         long avgTime = 0;
 
-        Map<Integer, JdbcLogger.LogEntry> condensed = new HashMap<Integer, JdbcLogger.LogEntry>();
         List<JdbcLogger.LogEntry> list;
+        list = new LinkedList<JdbcLogger.LogEntry>();
 
         if (!entries.isEmpty()) {
-            fromTime = entries.get(0).getTimestamp();
-            toTime = entries.get(entries.size()-1).getTimestamp();
-
             long total = 0;
-
             for (JdbcLogger.LogEntry le : entries) {
-                total += le.getNano();
+                if (hash == le.getHash()) {
+                    if (sql == null) {
+                        sql = le.getSql();
+                    }
 
-                JdbcLogger.LogEntry entry = condensed.get(le.getHash());
-
-                if (entry == null) {
-                    entry = new JdbcLogger.LogEntry(le);
-                    condensed.put(entry.getHash(), entry);
-                } else {
-                    entry.addCount(le);
+                    list.add(le);
+                    total += le.getMilli();
+                    fromTime = Math.min(fromTime, le.getTimestamp());
+                    toTime = Math.max(toTime, le.getTimestamp());
                 }
             }
 
             avgTime = total / entries.size();
         }
 
-        list = new LinkedList<JdbcLogger.LogEntry>(condensed.values());
 
-        if (sortTotalCalls) {
+        if (sortAvgTime) {
             Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
                 public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    return o2.getCount() - o1.getCount();
-                }
-            });
-        } else if (sortAvgTime) {
-            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
-                public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    long n1 = o1.getNano() / o1.getCount();
-                    long n2 = o2.getNano() / o2.getCount();
+                    long n1 = o1.getNano();
+                    long n2 = o2.getNano();
 
                     if (n2 > n1) {
                         return 1;
@@ -102,12 +90,12 @@ public class QueryOverview extends TemplatePage {
                     }
                 }
             });
-        } else if (sortTotalTime) {
+        } else if (sortTime) {
             Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
                 public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    if (o2.getNano() > o1.getNano()) {
+                    if (o2.getTimestamp() > o1.getTimestamp()) {
                         return 1;
-                    } else if (o2.getNano() < o1.getNano()) {
+                    } else if (o2.getTimestamp() < o1.getTimestamp()) {
                         return -1;
                     } else {
                         return 0;
@@ -117,11 +105,11 @@ public class QueryOverview extends TemplatePage {
         }
 
         result.put("queries", list);
-        result.put("count", entries.size());
+        result.put("count", list.size());
+        result.put("sql", sql);
 
-        result.put("sortTotalCalls", sortTotalCalls);
         result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTotalTime", sortTotalTime);
+        result.put("sortTime", sortTime);
 
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");

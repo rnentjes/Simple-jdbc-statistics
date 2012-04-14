@@ -23,6 +23,7 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
+        <th> </th>
         <th>Total time (ms)</th>
         <th>Avg. time (ms)</th>
         <th># Calls</th>
@@ -32,6 +33,7 @@
     <tbody>
     {foreach(queries as q)}
     <tr>
+        <td><a onclick="submit('select', '{q.hash}')"><i class=" icon-zoom-in"></i></a></td>
         <td>{q.total}</td>
         <td>{q.formattedNano}</td>
         <td>{q.count}</td>
