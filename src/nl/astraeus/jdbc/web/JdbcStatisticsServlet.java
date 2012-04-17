@@ -5,6 +5,7 @@ import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.page.Menu;
 import nl.astraeus.jdbc.web.page.Page;
 import nl.astraeus.jdbc.web.page.QueryOverview;
+import nl.astraeus.jdbc.web.page.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,8 @@ public class JdbcStatisticsServlet extends HttpServlet {
 
         if (page == null || "menumain".equals(req.getParameter("action"))) {
             page = new QueryOverview();
+        } else if ("menusettings".equals(req.getParameter("action"))) {
+            page = new Settings();
         } else if ("diagnostics".equals(req.getParameter("action"))) {
             //page = new Diagnostics();
         } else {

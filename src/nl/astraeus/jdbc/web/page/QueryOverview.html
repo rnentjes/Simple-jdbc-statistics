@@ -9,7 +9,10 @@
         <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
         <div>Avg. time/query: {avgTime}</div>
     </div>
-    <div class="span1 offset4">
+    <div class="span2 offset3">
+        <a onclick="submit('record')" class="btn {if(recording)}btn-warning{else}btn-info{endif} btn-large">{if(recording)}Recording{else}Not&nbsp;recording{endif}</a>
+    </div>
+    <div class="span1 ">
         <a onclick="submit('clear')" class="btn btn-danger btn-large">Clear</a>
     </div>
 </div>

@@ -3,13 +3,19 @@
 </div>
 
 <div class="row">
+    <div class="span1 ">
+        <a onclick="submit('back')" class="btn btn-primary btn-large">Back</a>
+    </div>
+    <div class="span1 offset10">
+        <a onclick="submit('refresh')" class="btn btn-primary btn-large">Refresh</a>
+    </div>
+</div>
+
+<div class="row">
     <div class="span6">
         <div># Queries: {count}</div>
         <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
         <div>Avg. time/query: {avgTime}</div>
-    </div>
-    <div class="span1 offset4">
-        <a onclick="submit('back')" class="btn btn-primary btn-large">Back</a>
     </div>
 </div>
 
@@ -25,6 +31,7 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
+        <th></th>
         <th>Timestamp</th>
         <th>Thread id</th>
         <th>Type</th>
@@ -34,6 +41,7 @@
     <tbody>
     {foreach(queries as q)}
     <tr>
+        <td>{if(q.stackTrace)}<a onclick="submit('stacktrace', '{q.timestamp}')"><i class=" icon-zoom-in"></i></a>{endif}</td>
         <td>{q.formattedTimestamp}</td>
         <td>{q.threadId}</td>
         <td>{q.type.description}</td>

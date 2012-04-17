@@ -89,7 +89,7 @@ public class ConnectionLogger implements Connection {
     }
 
     public Statement createStatement() throws SQLException {
-        return connection.createStatement();
+        return new StatementLogger(connection.createStatement());
     }
 
     public CallableStatement prepareCall(String sql) throws SQLException {
@@ -151,7 +151,7 @@ public class ConnectionLogger implements Connection {
     }
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return connection.createStatement(resultSetType, resultSetConcurrency);
+        return new StatementLogger(connection.createStatement(resultSetType, resultSetConcurrency));
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
@@ -244,27 +244,22 @@ public class ConnectionLogger implements Connection {
         return connection.createStruct(typeName, attributes);
     }
 
-    @Override
     public void setSchema(String schema) throws SQLException {
         connection.setSchema(schema);
     }
 
-    @Override
     public String getSchema() throws SQLException {
         return connection.getSchema();
     }
 
-    @Override
     public void abort(Executor executor) throws SQLException {
         connection.abort(executor);
     }
 
-    @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
         connection.setNetworkTimeout(executor, milliseconds);
     }
 
-    @Override
     public int getNetworkTimeout() throws SQLException {
         return connection.getNetworkTimeout();
     }

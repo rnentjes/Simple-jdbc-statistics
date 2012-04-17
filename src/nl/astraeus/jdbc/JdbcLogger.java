@@ -29,6 +29,7 @@ public class JdbcLogger {
         private long nano;
         private int hash;
         private int count;
+        private StackTraceElement[] stackTrace = null;
 
         public LogEntry(int hash, QueryType type, String sql, long milli, long nano) {
             this.threadId = Thread.currentThread().getId();
@@ -109,16 +110,37 @@ public class JdbcLogger {
             this.nano += le.getNano();
             this.timeStamp = 0;
         }
+
+        public boolean hasStackTrace() {
+            return stackTrace != null;
+        }
+
+        public void setStackTrace(StackTraceElement[] stackTrace) {
+            this.stackTrace = stackTrace;
+        }
+
+        public StackTraceElement[] getStackTrace() {
+            return stackTrace;
+        }
     }
 
     private final List<LogEntry> queries;
     private long startTime;
     private int cacheSize;
+    private boolean recording = false;
 
     public JdbcLogger() {
         queries = new LinkedList<LogEntry>();
         startTime = System.currentTimeMillis();
         cacheSize = 2500;
+    }
+
+    public boolean isRecording() {
+        return recording;
+    }
+
+    public void switchRecording() {
+        recording = !recording;
     }
 
     public void clear() {
@@ -137,6 +159,14 @@ public class JdbcLogger {
         int hash = sql.hashCode();
 
         LogEntry entry = new LogEntry(hash, type, sql, milli, nano);
+
+        if (recording) {
+            try {
+                throw new IllegalStateException();
+            } catch (IllegalStateException e) {
+                entry.setStackTrace(e.getStackTrace());
+            }
+        }
 
         synchronized (queries) {
             queries.add(entry);

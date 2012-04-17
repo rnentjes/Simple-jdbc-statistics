@@ -29,6 +29,7 @@ public class QueryDetail extends TemplatePage {
 
     @Override
     public Page processRequest(HttpServletRequest request) {
+        Page result = this;
 
         if ("sortTime".equals(request.getParameter("action"))) {
             sortTime = true;
@@ -36,11 +37,27 @@ public class QueryDetail extends TemplatePage {
         } else if ("sortAvgTime".equals(request.getParameter("action"))) {
             sortTime = false;
             sortAvgTime = true;
+        } else if ("stacktrace".equals(request.getParameter("action"))) {
+            long timestamp = Long.parseLong(request.getParameter("actionValue"));
+            JdbcLogger.LogEntry found = null;
+            for (JdbcLogger.LogEntry entry : JdbcLogger.get().getEntries()) {
+                if (entry.getHash() == hash && entry.getTimestamp() == timestamp) {
+                    found = entry;
+                    break;
+                }
+            }
+
+            if (found != null) {
+                result = new ShowStacktrace(this, found);
+            } else {
+                // warning ! found ....
+            }
+
         } else if ("back".equals(request.getParameter("action"))) {
-            return previous;
+            result = previous;
         }
 
-        return this;
+        return result;
     }
 
     @Override
@@ -118,7 +135,6 @@ public class QueryDetail extends TemplatePage {
         result.put("toTime", dateFormatter.format(new Date(toTime)));
         result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
         result.put("avgTime", Util.formatNano(avgTime));
-
 
         return result;
     }

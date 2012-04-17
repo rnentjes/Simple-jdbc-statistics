@@ -1,0 +1,32 @@
+<div class="page-header">
+    <h3>Query stacktrace</h3>
+</div>
+
+<div class="row">
+    <div class="span1 ">
+        <a onclick="submit('back')" class="btn btn-primary btn-large">Back</a>
+    </div>
+</div>
+
+<div class="hero-unit">
+    <p>{sql}</p>
+</div>
+
+<table class="table table-condensed table-striped " id="overview">
+    <thead>
+    <tr>
+        <th>Class</th>
+        <th>Method</th>
+        <th>Line</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach(trace as el)}
+    <tr>
+        <td>{el.className}</td>
+        <td>{el.methodName}</td>
+        <td>{el.lineNumber}</td>
+    </tr>
+    {eachend}
+    </tbody>
+</table>

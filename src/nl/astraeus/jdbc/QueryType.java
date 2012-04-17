@@ -9,7 +9,9 @@ public enum QueryType {
     PLAIN("plain"),
     PREPARED("prepared"),
     CALLABLE("callable"),
-    UNKNOWN("unknown");
+    STATEMENT("statement"),
+    UNKNOWN("unknown"),
+    BATCH("batch");
 
     private String description;
 
