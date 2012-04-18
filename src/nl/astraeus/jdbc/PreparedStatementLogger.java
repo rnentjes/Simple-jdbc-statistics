@@ -38,11 +38,11 @@ public class PreparedStatementLogger implements PreparedStatement {
         nano = System.nanoTime();
     }
 
-    private void log(QueryType type, String sql) {
+    private void log(QueryType type, String sql) throws SQLException {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(type, sql, m, n);
+        JdbcLogger.log(type, sql, m, n, getConnection().getAutoCommit());
     }
 
     public PreparedStatementLogger(Connection connection, String sql) throws SQLException {

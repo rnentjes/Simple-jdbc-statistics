@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h3>Query overview</h3>
+    <h3>Transaction overview</h3>
 </div>
 
 <div class="row">
@@ -26,7 +26,9 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
+        <!--
         <th> </th>
+        -->
         <th>Total time (ms)</th>
         <th>Avg. time (ms)</th>
         <th># Calls</th>
@@ -34,14 +36,16 @@
     </tr>
     </thead>
     <tbody>
-    {foreach(queries as q)}
+    {foreach(transactions as t)}
     <tr>
-        <td><a onclick="submit('select', '{q.hash}')"><i class=" icon-zoom-in"></i></a></td>
-        <td>{q.total}</td>
-        <td>{q.formattedNano}</td>
-        <td>{q.count}</td>
+        <!--
+        <td><a onclick="submit('select', '')"><i class=" icon-zoom-in"></i></a></td>
+        -->
+        <td>{t.totalTime}</td>
+        <td>{t.avgTime}</td>
+        <td>{t.count}</td>
         {escape(html|br)}
-        <td>{q.sql}</td>
+        <td>{t.sql}</td>
         {escapeend}
     </tr>
     {eachend}

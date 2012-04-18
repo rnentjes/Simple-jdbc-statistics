@@ -26,11 +26,11 @@ public class StatementLogger implements Statement {
         nano = System.nanoTime();
     }
 
-    private void log(QueryType type, String sql) {
+    private void log(QueryType type, String sql) throws SQLException {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(type, sql, m, n);
+        JdbcLogger.log(type, sql, m, n, getConnection() == null ? true : getConnection().getAutoCommit());
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {

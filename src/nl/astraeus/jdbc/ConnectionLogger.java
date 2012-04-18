@@ -27,11 +27,11 @@ public class ConnectionLogger implements Connection {
         nano = System.nanoTime();
     }
 
-    private void log(String sql) {
+    private void log(String sql) throws SQLException {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(QueryType.UNKNOWN, sql, m, n);
+        JdbcLogger.log(QueryType.UNKNOWN, sql, m, n, connection.getAutoCommit());
     }
 
     public void commit() throws SQLException {

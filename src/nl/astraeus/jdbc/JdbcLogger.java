@@ -29,9 +29,10 @@ public class JdbcLogger {
         private long nano;
         private int hash;
         private int count;
+        private boolean autoCommit;
         private StackTraceElement[] stackTrace = null;
 
-        public LogEntry(int hash, QueryType type, String sql, long milli, long nano) {
+        public LogEntry(int hash, QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
             this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
             this.hash = hash;
@@ -39,6 +40,7 @@ public class JdbcLogger {
             this.sql = sql;
             this.milli = milli;
             this.nano = nano;
+            this.autoCommit = isAutoCommit;
             this.count = 1;
         }
 
@@ -50,6 +52,7 @@ public class JdbcLogger {
             this.milli = le.milli;
             this.nano = le.nano;
             this.count = le.count;
+            this.autoCommit = le.autoCommit;
         }
 
         public QueryType getType() {
@@ -101,7 +104,23 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            return sql;
+            String tmp = sql.toLowerCase();
+
+            tmp = tmp.replaceAll("create table ", "CREATE TABLE ");
+            tmp = tmp.replaceAll("insert into ", "INSERT INTO ");
+            tmp = tmp.replaceAll("delete from ", "DELETE FROM ");
+
+            tmp = tmp.replaceAll("select ", "SELECT ");
+            tmp = tmp.replaceAll(" from ", " \nFROM ");
+            tmp = tmp.replaceAll(" where ", " \nWHERE ");
+            tmp = tmp.replaceAll(" order by ", " \nORDER BY ");
+            tmp = tmp.replaceAll(" group by ", " \nGROUP BY ");
+            tmp = tmp.replaceAll(" having ", " \nHAVING ");
+
+            tmp = tmp.replaceAll("update ", "UPDATE ");
+            tmp = tmp.replaceAll(" set ", " \nSET ");
+
+            return tmp;
         }
 
         public void addCount(LogEntry le) {
@@ -121,6 +140,10 @@ public class JdbcLogger {
 
         public StackTraceElement[] getStackTrace() {
             return stackTrace;
+        }
+
+        public boolean isAutoCommit() {
+            return autoCommit;
         }
     }
 
@@ -155,10 +178,10 @@ public class JdbcLogger {
         this.cacheSize = cacheSize;
     }
 
-    public void logEntry(QueryType type, String sql, long milli, long nano) {
+    public void logEntry(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
         int hash = sql.hashCode();
 
-        LogEntry entry = new LogEntry(hash, type, sql, milli, nano);
+        LogEntry entry = new LogEntry(hash, type, sql, milli, nano, isAutoCommit);
 
         if (recording) {
             try {
@@ -178,8 +201,8 @@ public class JdbcLogger {
         }
     }
 
-    public static void log(QueryType type, String sql, long milli, long nano) {
-        instance.logEntry(type, sql, milli, nano);
+    public static void log(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
+        instance.logEntry(type, sql, milli, nano, isAutoCommit);
     }
 
     public List<LogEntry> getEntries() {
