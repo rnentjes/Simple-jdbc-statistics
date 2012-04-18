@@ -27,7 +27,7 @@ Add the following to the front of your current jdbc url:
   (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat:jdbc:postgresql://localhost/mydb)
 ```
 
-Start your application and goto: http://<host app is running on>:18080/
+Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
 You will see an overview of the last 2500 queries run on your database and some timing stats about them.
 
@@ -49,4 +49,4 @@ Drivers automatically discovered atm:
   org.h2.Driver
 ```
 
-If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("<driver class name>"); )
+If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
