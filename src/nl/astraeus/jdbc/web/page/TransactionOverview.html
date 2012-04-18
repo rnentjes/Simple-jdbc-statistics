@@ -44,9 +44,7 @@
         <td>{t.totalTime}</td>
         <td>{t.avgTime}</td>
         <td>{t.count}</td>
-        {escape(html|br)}
-        <td>{t.sql}</td>
-        {escapeend}
+        <td><pre><code>{t.sql}</code></pre></td>
     </tr>
     {eachend}
     </tbody>

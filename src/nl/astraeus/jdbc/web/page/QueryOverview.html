@@ -40,9 +40,7 @@
         <td>{q.total}</td>
         <td>{q.formattedNano}</td>
         <td>{q.count}</td>
-        {escape(html|br)}
-        <td>{q.sql}</td>
-        {escapeend}
+        <td><pre><code>{q.sql}</code></pre></td>
     </tr>
     {eachend}
     </tbody>
