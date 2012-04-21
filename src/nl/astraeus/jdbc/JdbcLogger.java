@@ -104,23 +104,7 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            String tmp = sql.toLowerCase();
-
-            tmp = tmp.replaceAll("create table ", "CREATE TABLE ");
-            tmp = tmp.replaceAll("insert into ", "INSERT INTO ");
-            tmp = tmp.replaceAll("delete from ", "DELETE FROM ");
-
-            tmp = tmp.replaceAll("select ", "SELECT ");
-            tmp = tmp.replaceAll(" from ", " \nFROM ");
-            tmp = tmp.replaceAll(" where ", " \nWHERE ");
-            tmp = tmp.replaceAll(" order by ", " \nORDER BY ");
-            tmp = tmp.replaceAll(" group by ", " \nGROUP BY ");
-            tmp = tmp.replaceAll(" having ", " \nHAVING ");
-
-            tmp = tmp.replaceAll("update ", "UPDATE ");
-            tmp = tmp.replaceAll(" set ", " \nSET ");
-
-            return tmp;
+            return SqlFormatter.getHTMLFormattedSQL(sql);
         }
 
         public void addCount(LogEntry le) {

@@ -26,6 +26,8 @@ public class JdbcStatisticsExample {
         statement.execute("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255))");
         statement.close();
 
+        conn.setAutoCommit(false);
+
         boolean running = true;
         int count = 1;
         PreparedStatement ps = null;
@@ -58,9 +60,21 @@ public class JdbcStatisticsExample {
 
             Thread.sleep(10);
 
+            conn.commit();
             ps = conn.prepareStatement("SELECT * FROM "+TableName);
             ResultSet rs = ps.executeQuery();
+
             statement.close();
+
+            ps = conn.prepareStatement("UPDATE "+TableName+" SET NAME = ?");
+
+            ps.setString(1, "String  "+System.currentTimeMillis());
+
+            ps.execute();
+            ps.close();
+
+            conn.commit();
+            Thread.sleep(10);
         }
 
         conn.close();

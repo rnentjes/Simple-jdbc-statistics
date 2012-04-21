@@ -1,7 +1,10 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
@@ -14,10 +17,23 @@ import java.util.*;
  * Time: 9:16 PM
  */
 public class QueryOverview extends TemplatePage {
+    private static Logger logger = LoggerFactory.getLogger(QueryOverview.class);
 
     boolean sortTotalCalls = true;
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
+
+    private Object parser = null;
+
+    public QueryOverview() {
+        try {
+            Class.forName("net.sf.jsqlparser.parser.CCJSqlParserManager");
+
+            parser = new SqlFormatter();
+        } catch (ClassNotFoundException e) {
+            logger.warn("jsqlparser support not found");
+        }
+    }
 
     @Override
     public Page processRequest(HttpServletRequest request) {
@@ -116,6 +132,11 @@ public class QueryOverview extends TemplatePage {
                     }
                 }
             });
+        }
+
+        if (parser != null) {
+            //Statement statement
+            //CCJSqlParserManager p
         }
 
         result.put("queries", list);

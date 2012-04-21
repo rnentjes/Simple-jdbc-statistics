@@ -10,7 +10,9 @@
 
 <div class="row">
     <div class="span10 offset1">
+        {escape(none)}
         <p><pre><code>{sql}</code></pre></p>
+        {/escape}
     </div>
 </div>
 
@@ -23,12 +25,12 @@
     </tr>
     </thead>
     <tbody>
-    {foreach(trace as el)}
+    {each(trace as el)}
     <tr>
         <td>{el.className}</td>
         <td>{el.methodName}</td>
         <td>{el.lineNumber}</td>
     </tr>
-    {eachend}
+    {/each}
     </tbody>
 </table>

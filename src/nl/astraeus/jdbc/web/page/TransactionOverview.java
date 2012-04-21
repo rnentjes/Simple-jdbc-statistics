@@ -1,6 +1,7 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.util.Formatting;
 import nl.astraeus.jdbc.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,12 +68,34 @@ public class TransactionOverview extends TemplatePage {
             return nanoTime / getCount();
         }
 
+        public String getFormattedAvgTime() {
+            return Formatting.formatNanoDuration(nanoTime / getCount());
+        }
+
+        public String getFormattedTotalTime() {
+            return Formatting.formatNanoDuration(nanoTime);
+        }
+
+        public String getFormattedTimestamp() {
+            return Formatting.formatTimestamp(timestamp);
+        }
+
+        public String getFormattedEndTimestamp() {
+            return Formatting.formatTimestamp(timestamp + (nanoTime / 1000000L));
+        }
+
         public String getSql() {
             StringBuilder result = new StringBuilder();
+            boolean first = true;
 
             for (JdbcLogger.LogEntry entry : queries) {
+                if (first) {
+                    first = false;
+                } else {
+                    result.append("\n\n");
+                }
+
                 result.append(entry.getSql());
-                result.append("\n\n");
             }
 
             return result.toString();
