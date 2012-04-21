@@ -3,6 +3,7 @@ package nl.astraeus.jdbc.web.page;
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Formatting;
 import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.jdbc.web.model.TransactionEntry;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
@@ -19,6 +20,7 @@ public class TransactionOverview extends TemplatePage {
     boolean sortTotalCalls = true;
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
+    private List<JdbcLogger.LogEntry> entries = null;
 
     @Override
     public Page processRequest(HttpServletRequest request) {
@@ -47,66 +49,11 @@ public class TransactionOverview extends TemplatePage {
         return this;
     }
 
-    public static class TransactionEntry {
-        public List<JdbcLogger.LogEntry> queries = new LinkedList<JdbcLogger.LogEntry>();
-        public long nanoTime;
-        public long timestamp;
-
-        public long getTimestamp() {
-            return timestamp;
-        }
-
-        public int getCount() {
-            return queries.size();
-        }
-
-        public long getTotalTime() {
-            return nanoTime;
-        }
-
-        public long getAvgTime() {
-            return nanoTime / getCount();
-        }
-
-        public String getFormattedAvgTime() {
-            return Formatting.formatNanoDuration(nanoTime / getCount());
-        }
-
-        public String getFormattedTotalTime() {
-            return Formatting.formatNanoDuration(nanoTime);
-        }
-
-        public String getFormattedTimestamp() {
-            return Formatting.formatTimestamp(timestamp);
-        }
-
-        public String getFormattedEndTimestamp() {
-            return Formatting.formatTimestamp(timestamp + (nanoTime / 1000000L));
-        }
-
-        public String getSql() {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-
-            for (JdbcLogger.LogEntry entry : queries) {
-                if (first) {
-                    first = false;
-                } else {
-                    result.append("\n\n");
-                }
-
-                result.append(entry.getSql());
-            }
-
-            return result.toString();
-        }
-    }
-
     @Override
     public Map<String, Object> defineModel(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+        entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();
@@ -120,6 +67,7 @@ public class TransactionOverview extends TemplatePage {
             toTime = entries.get(entries.size()-1).getTimestamp();
 
             long total = 0;
+            int id = 1;
 
             for (JdbcLogger.LogEntry le : entries) {
                 total += le.getNano();
@@ -127,7 +75,7 @@ public class TransactionOverview extends TemplatePage {
                 TransactionEntry entry = currentTransactions.get(le.getThreadId());
 
                 if (entry == null) {
-                    entry = new TransactionEntry();
+                    entry = new TransactionEntry(id++);
                     entry.timestamp = le.getTimestamp();
                     entry.nanoTime = 0;
                     currentTransactions.put(le.getThreadId(), entry);
@@ -136,7 +84,7 @@ public class TransactionOverview extends TemplatePage {
                 entry.queries.add(le);
                 entry.nanoTime += le.getNano();
 
-                if (le.getSql().equals("commit") || le.getSql().equals("rollback") || le.isAutoCommit()) {
+                if (le.isEndOfTransaction()) {
                     transactions.add(entry);
                     currentTransactions.remove(le.getThreadId());
                 }

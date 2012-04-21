@@ -26,9 +26,7 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
-        <!--
         <th> </th>
-        -->
         <th>Total time (ms)</th>
         <th>Avg. time (ms)</th>
         <th># Calls</th>
@@ -38,9 +36,7 @@
     <tbody>
     {each(transactions as t)}
     <tr>
-        <!--
-        <td><a onclick="submit('select', '')"><i class=" icon-zoom-in"></i></a></td>
-        -->
+        <td><a onclick="submit('select', '{t.id}')"><i class=" icon-zoom-in"></i></a></td>
         <td>{t.formattedTotalTime}</td>
         <td>{t.formattedAvgTime}</td>
         <td>{t.count}</td>

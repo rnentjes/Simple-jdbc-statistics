@@ -43,14 +43,33 @@ public class ShowStacktrace extends TemplatePage {
         return this;
     }
 
+    public static class TraceElement {
+        private StackTraceElement element;
+        private boolean highlight;
+
+        public TraceElement(StackTraceElement element, boolean highlight) {
+            this.element = element;
+            this.highlight = highlight;
+        }
+
+        public StackTraceElement getElement() {
+            return element;
+        }
+
+        public boolean getHighlight() {
+            return highlight;
+        }
+    }
+
     @Override
     public Map<String, Object> defineModel(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        List<StackTraceElement> trace = new LinkedList<StackTraceElement>();
+        List<TraceElement> trace = new LinkedList<TraceElement>();
 
         for (int index = 4; index < logEntry.getStackTrace().length; index++) {
-            trace.add(logEntry.getStackTrace()[index]);
+            boolean hl = logEntry.getStackTrace()[index].getClassName().startsWith("com.brandcleaner");
+            trace.add(new TraceElement(logEntry.getStackTrace()[index], hl));
         }
 
         result.put("trace", trace);

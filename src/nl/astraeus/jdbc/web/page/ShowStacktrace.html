@@ -27,9 +27,13 @@
     <tbody>
     {each(trace as el)}
     <tr>
-        <td>{el.className}</td>
-        <td>{el.methodName}</td>
-        <td>{el.lineNumber}</td>
+        {if(el.highlight)}
+        <td><span style="color: blue;">{el.element.className}</span></td>
+        {else}
+        <td>{el.element.className}</td>
+        {/if}
+        <td>{el.element.methodName}</td>
+        <td>{el.element.lineNumber}</td>
     </tr>
     {/each}
     </tbody>

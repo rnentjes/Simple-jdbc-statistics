@@ -104,7 +104,17 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            return SqlFormatter.getHTMLFormattedSQL(sql);
+            if (QueryType.PREPARED == type) {
+                return SqlFormatter.getHTMLFormattedSQL(sql);
+            } else {
+                return sql;
+            }
+        }
+
+        public boolean isEndOfTransaction() {
+            return sql.toLowerCase().trim().equals("commit")
+                    || sql.toLowerCase().trim().equals("rollback")
+                    || isAutoCommit();
         }
 
         public void addCount(LogEntry le) {

@@ -1,9 +1,5 @@
 package nl.astraeus.jdbc;
 
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +19,8 @@ public class SqlFormatter {
         String tab = "    ";
         String ntab = "\n"+tab;
 
+        tmp = tmp.replaceAll(" left outer join ", ntab+blue("LEFT OUTER JOIN "));
+
         tmp = tmp.replaceAll(" create table ", blue("CREATE TABLE")+ntab);
         tmp = tmp.replaceAll(" insert into ", blue("INSERT INTO")+ntab);
         tmp = tmp.replaceAll(" delete from ", blue("DELETE FROM")+ntab);
@@ -41,6 +39,23 @@ public class SqlFormatter {
         tmp = tmp.replaceAll(" commit", "\n"+blue("COMMIT"));
         tmp = tmp.replaceAll(" rollback", "\n"+blue("ROLLBACK"));
         tmp = tmp.replaceAll(" close", "\n"+blue("CLOSE"));
+
+        tmp = tmp.replaceAll(" case ", ntab+blue("CASE "));
+        tmp = tmp.replaceAll(" when ", ntab+blue("WHEN "));
+        tmp = tmp.replaceAll(" is ", blue(" IS "));
+        tmp = tmp.replaceAll(" then ", blue(" THEN "));
+        tmp = tmp.replaceAll(" not ", blue(" NOT "));
+        tmp = tmp.replaceAll(" end ", blue(" END "));
+        tmp = tmp.replaceAll(" null ", blue(" NULL "));
+        tmp = tmp.replaceAll(" else ", blue(" ELSE "));
+
+        tmp = tmp.replaceAll(" on ", blue(" ON "));
+        tmp = tmp.replaceAll(" and ", ntab+blue("AND "));
+        tmp = tmp.replaceAll(" or ", ntab+blue("OR "));
+
+        tmp = tmp.replaceAll(" as ", blue(" AS "));
+
+        tmp = tmp.replaceAll(", ", ","+ntab);
 
         return tmp.trim();
     }
