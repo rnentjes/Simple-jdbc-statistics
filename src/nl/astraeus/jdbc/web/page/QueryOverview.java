@@ -23,18 +23,6 @@ public class QueryOverview extends TemplatePage {
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
 
-    private Object parser = null;
-
-    public QueryOverview() {
-        try {
-            Class.forName("net.sf.jsqlparser.parser.CCJSqlParserManager");
-
-            parser = new SqlFormatter();
-        } catch (ClassNotFoundException e) {
-            logger.warn("jsqlparser support not found");
-        }
-    }
-
     @Override
     public Page processRequest(HttpServletRequest request) {
         if ("sortTotalCalls".equals(request.getParameter("action"))) {
@@ -132,11 +120,6 @@ public class QueryOverview extends TemplatePage {
                     }
                 }
             });
-        }
-
-        if (parser != null) {
-            //Statement statement
-            //CCJSqlParserManager p
         }
 
         result.put("queries", list);

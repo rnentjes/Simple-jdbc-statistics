@@ -73,4 +73,21 @@ public class TransactionEntry {
 
         return result.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TransactionEntry that = (TransactionEntry) o;
+
+        if (!queries.equals(that.queries)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return queries.hashCode();
+    }
 }

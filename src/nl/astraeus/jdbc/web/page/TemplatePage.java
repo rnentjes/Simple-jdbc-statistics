@@ -1,7 +1,10 @@
 package nl.astraeus.jdbc.web.page;
 
+import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.util.Map;
  * Time: 3:20 PM
  */
 public abstract class TemplatePage extends Page {
+    private final static Logger logger = LoggerFactory.getLogger(TemplatePage.class);
 
     private SimpleTemplate template;
 
@@ -23,7 +27,19 @@ public abstract class TemplatePage extends Page {
     }
 
     public String render(HttpServletRequest request) {
-        return template.render(defineModel(request));
+        long time1 = System.nanoTime();
+
+        Map<String, Object> model = defineModel(request);
+
+        long time2 = System.nanoTime();
+
+        String result = template.render(model);
+
+        long time3 = System.nanoTime();
+
+        logger.info("Page " + this.getClass().getSimpleName() + ", define: " + Util.formatNano(time2-time1) + ", render: " + Util.formatNano(time3-time2) + ", total: " + Util.formatNano(time3-time1));
+
+        return result;
     }
 
     private static Map<Class, SimpleTemplate> templateCache = new HashMap<Class, SimpleTemplate>();

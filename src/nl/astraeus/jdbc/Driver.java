@@ -3,12 +3,14 @@ package nl.astraeus.jdbc;
 import nl.astraeus.http.SimpleWebServer;
 import nl.astraeus.jdbc.web.JdbcStatisticsServlet;
 import nl.astraeus.jdbc.web.ResourceServlet;
+import nl.astraeus.jdbc.web.model.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * User: riennentjes
@@ -19,6 +21,9 @@ public class Driver implements java.sql.Driver {
     private final static Logger log = LoggerFactory.getLogger(Driver.class);
 
     final private static String URL_PREFIX = "jdbc:stat:";
+    final private static String URL_SECURE_PREFIX = "jdbc:secstat:";
+
+    private static volatile boolean started = false;
 
     private java.sql.Driver driver = null;
     private String[] drivers = {
@@ -71,26 +76,46 @@ public class Driver implements java.sql.Driver {
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        url = url.substring(URL_PREFIX.length());
+        if (url.startsWith(URL_PREFIX)) {
+            Settings.get().setSecure(false);
+            url = url.substring(URL_PREFIX.length());
+        } else if (url.startsWith(URL_SECURE_PREFIX)) {
+            Settings.get().setSecure(true);
+            url = url.substring(URL_SECURE_PREFIX.length());
+        }
 
         if (driver == null) {
             driver = findDriver(url);
         }
 
-        if (driver != null) {
+        if (Settings.get().isSecure()) {
+            String user = info.getProperty("user");
+            String password = info.getProperty("password");
+
+            if (user == null || password == null) {
+                log.warn("User and/or password not found in jdbc connection information!");
+            } else {
+                Settings.get().setUser(user);
+                Settings.get().setPasswordHash(password.hashCode());
+            }
+        }
+
+        if (driver != null && !started) {
             SimpleWebServer server = new SimpleWebServer(18080);
 
             server.addServlet(new JdbcStatisticsServlet(), "/");
             server.addServlet(new ResourceServlet(), "/resources/*");
 
             server.start();
+
+            started = true;
         }
 
         return new ConnectionLogger(driver.connect(url, info));
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        return (url != null && url.startsWith(URL_PREFIX));
+        return (url != null && (url.startsWith(URL_PREFIX) || url.startsWith(URL_SECURE_PREFIX)));
     }
 
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {

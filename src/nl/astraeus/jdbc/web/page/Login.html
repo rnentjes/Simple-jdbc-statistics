@@ -1,0 +1,28 @@
+<div class="page-header">
+    <h3>Login</h3>
+</div>
+
+{if(warn)}
+<div class="alert alert-error">
+    <strong>Login failed! Please retry!</strong>
+</div>
+{/if}
+
+<fieldset>
+    <div class="control-group">
+        <label class="control-label" for="login">Login</label>
+        <div class="controls">
+            <input type="text" id="login" name="login" value="{login}" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+            <input type="password" id="password" name="password" value="" />
+        </div>
+    </div>
+    <div class="form-actions">
+        <a onclick="submit('save')" class="btn btn-primary">Login</a>
+    </div>
+</fieldset>

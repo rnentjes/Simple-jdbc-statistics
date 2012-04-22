@@ -1,0 +1,37 @@
+<div class="page-header">
+    <h3>Settings</h3>
+</div>
+
+<div class="well">
+    <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="queriesInput">Number of queries</label>
+            <div class="controls">
+                <select id="queriesInput" name="queries">
+                    <option value="1000" {if(q1000)}selected{/if}>1000</option>
+                    <option value="2500" {if(q2500)}selected{/if}>2500</option>
+                    <option value="5000" {if(q5000)}selected{/if}>5000</option>
+                    <option value="10000" {if(q10000)}selected{/if}>10000</option>
+                    <option value="15000" {if(q15000)}selected{/if}>15000</option>
+                    <option value="25000" {if(q25000)}selected{/if}>25000</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="fqcheck">Formatted queries</label>
+            <div class="controls">
+                <input type="checkbox" id="fqcheck" name="formattedQueries" {if(formattedQueries)}checked{/if}>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div class="row">
+    <div class="span1">
+        <a onclick="submit('cancel')" class="btn btn-large">Cancel</a>
+    </div>
+    <div class="span1">
+        <a onclick="submit('save')" class="btn btn-large btn-primary">Save</a>
+    </div>
+</div>

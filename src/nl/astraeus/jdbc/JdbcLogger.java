@@ -1,6 +1,7 @@
 package nl.astraeus.jdbc;
 
 import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.jdbc.web.model.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +105,7 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            if (QueryType.PREPARED == type) {
+            if (Settings.get().isFormattedQueries() && QueryType.PREPARED == type) {
                 return SqlFormatter.getHTMLFormattedSQL(sql);
             } else {
                 return sql;
@@ -143,13 +144,11 @@ public class JdbcLogger {
 
     private final List<LogEntry> queries;
     private long startTime;
-    private int cacheSize;
     private boolean recording = false;
 
     public JdbcLogger() {
         queries = new LinkedList<LogEntry>();
         startTime = System.currentTimeMillis();
-        cacheSize = 2500;
     }
 
     public boolean isRecording() {
@@ -162,14 +161,6 @@ public class JdbcLogger {
 
     public void clear() {
         queries.clear();
-    }
-
-    public int getCacheSize() {
-        return cacheSize;
-    }
-
-    public void setCacheSize(int cacheSize) {
-        this.cacheSize = cacheSize;
     }
 
     public void logEntry(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
@@ -188,7 +179,7 @@ public class JdbcLogger {
         synchronized (queries) {
             queries.add(entry);
 
-            while (queries.size() > cacheSize) {
+            while (queries.size() > Settings.get().getNumberOfQueries()) {
                 entry = queries.remove(0);
                 startTime = entry.getMilli();
             }
