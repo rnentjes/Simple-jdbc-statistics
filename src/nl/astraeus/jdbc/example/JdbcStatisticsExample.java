@@ -18,7 +18,7 @@ public class JdbcStatisticsExample {
     }
 
     public JdbcStatisticsExample() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:secstat:jdbc:h2:mem:test", "user", "password");
+        Connection conn = DriverManager.getConnection("jdbc:stat:jdbc:h2:mem:test", "user", "password");
 
         Statement statement = null;
 

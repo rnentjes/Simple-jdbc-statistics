@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: rnentjes
@@ -25,6 +27,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
 
     private String head;
     private String bottom;
+    private Map<String, Page> mapping = new HashMap<String, Page>();
 
     @Override
     public void init() throws ServletException {
@@ -37,10 +40,34 @@ public class JdbcStatisticsServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
+        mapping.put("queries", new QueryOverview());
+        mapping.put("login", new Login());
+
+        // queries/select/1234
+        // queries/page/2
+        // queries/cancel
+        // queries/select/1234/select/5432
+
+        // queries/action=select/actionValue=1234
+        // transactions/action=page&actionValue=3
+        // settings
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
+
+        String [] parts = uri.split("\\/");
+        int index = 0;
+
+        if (parts.length > 0) {
+            Page page = mapping.get(parts[index++]);
+
+            while(index < (parts.length - 1)) {
+                page = page.processGetRequest(parts[index++], parts[index++]);
+            }
+        }
+
         doPost(req, resp);
     }
 

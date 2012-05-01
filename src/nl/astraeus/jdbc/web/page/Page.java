@@ -9,7 +9,11 @@ import java.util.Map;
  * Time: 3:20 PM
  */
 public abstract class Page {
-    
+
+    public Page processGetRequest(String action, String value) {
+        return this;
+    }
+
     public abstract Page processRequest(HttpServletRequest request);
     public abstract Map<String, Object> defineModel(HttpServletRequest request);
     public abstract String render(HttpServletRequest request);

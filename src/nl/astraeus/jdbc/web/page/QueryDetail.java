@@ -1,6 +1,7 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +73,7 @@ public class QueryDetail extends TemplatePage {
 
         List<JdbcLogger.LogEntry> list;
         list = new LinkedList<JdbcLogger.LogEntry>();
+        SqlFormatter formatter = new SqlFormatter();
 
         if (!entries.isEmpty()) {
             long total = 0;

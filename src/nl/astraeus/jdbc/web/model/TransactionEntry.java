@@ -1,6 +1,7 @@
 package nl.astraeus.jdbc.web.model;
 
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Formatting;
 
 import java.util.LinkedList;
@@ -58,6 +59,7 @@ public class TransactionEntry {
     }
 
     public String getSql() {
+        SqlFormatter formatter = new SqlFormatter();
         StringBuilder result = new StringBuilder();
         boolean first = true;
 

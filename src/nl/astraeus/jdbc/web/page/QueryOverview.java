@@ -1,7 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
-import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,17 @@ public class QueryOverview extends TemplatePage {
     boolean sortTotalCalls = true;
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
+
+    @Override
+    public Page processGetRequest(String action, String value) {
+        Page result = this;
+
+        if ("select".equals(action)) {
+            return new QueryDetail(this, Integer.parseInt(value));
+        }
+
+        return result;
+    }
 
     @Override
     public Page processRequest(HttpServletRequest request) {

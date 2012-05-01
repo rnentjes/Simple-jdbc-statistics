@@ -105,8 +105,8 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            if (Settings.get().isFormattedQueries() && QueryType.PREPARED == type) {
-                return SqlFormatter.getHTMLFormattedSQL(sql);
+            if (Settings.get().isFormattedQueries()) {
+                return SqlFormatter.getHTMLFormattedSQL2(sql);
             } else {
                 return sql;
             }

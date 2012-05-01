@@ -1,13 +1,13 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
-import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.jdbc.SqlFormatter;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.KeyStore;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: rnentjes
@@ -71,6 +71,8 @@ public class ShowStacktrace extends TemplatePage {
             boolean hl = logEntry.getStackTrace()[index].getClassName().startsWith("com.brandcleaner");
             trace.add(new TraceElement(logEntry.getStackTrace()[index], hl));
         }
+
+        SqlFormatter formatter = new SqlFormatter();
 
         result.put("trace", trace);
         result.put("count", trace.size());

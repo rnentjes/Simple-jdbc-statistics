@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * User: riennentjes
@@ -103,7 +102,7 @@ public class Driver implements java.sql.Driver {
         if (driver != null && !started) {
             SimpleWebServer server = new SimpleWebServer(18080);
 
-            server.addServlet(new JdbcStatisticsServlet(), "/");
+            server.addServlet(new JdbcStatisticsServlet(), "/*");
             server.addServlet(new ResourceServlet(), "/resources/*");
 
             server.start();
