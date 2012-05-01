@@ -1,5 +1,11 @@
 A simple wrapper around jdbc drivers that will show some statistics about the running queries on a simple web page on port 18080.
 
+See a running example here:
+
+```
+  http://phoibe.astraeus.nl:18080//
+```
+
 To use:
 
 Add the following jars to your classpath:
@@ -26,6 +32,14 @@ Add the following to the front of your current jdbc url:
   
   (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat:jdbc:postgresql://localhost/mydb)
 ```
+
+If you want a login screen add the following instead:
+
+```text
+  jdbc:secstat:
+```
+
+Use the credentials in your jdbc properties to login
 
 Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
