@@ -101,14 +101,10 @@ public class JdbcStatisticsServlet extends HttpServlet {
                 page = new TransactionOverview();
             } else if ("menusettings".equals(req.getParameter("action"))) {
                 page = new SettingsOverview();
-            } else if ("diagnostics".equals(req.getParameter("action"))) {
-                //page = new Diagnostics();
             } else {
-                long time = System.nanoTime();
                 page = page .processRequest(req);
             }
         } else {
-            long time = System.nanoTime();
             page = page .processRequest(req);
         }
 
@@ -121,6 +117,8 @@ public class JdbcStatisticsServlet extends HttpServlet {
         }
 
         resp.getWriter().print(menu.render(req));
+        resp.getWriter().print(Warnings.get(req).render(req));
+
         long time = System.nanoTime();
         resp.getWriter().print(page.render(req));
 

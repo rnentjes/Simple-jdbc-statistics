@@ -4,10 +4,10 @@
 
 <div class="row">
     <div class="span1 ">
-        <a onclick="submit('back')" class="btn btn-primary btn-large">Back</a>
+        <a onclick="submit('back')" class="btn btn-primary">Back</a>
     </div>
     <div class="span1 offset10">
-        <a onclick="submit('refresh')" class="btn btn-primary btn-large">Refresh</a>
+        <a onclick="submit('refresh')" class="btn btn-primary">Refresh</a>
     </div>
 </div>
 
@@ -22,7 +22,7 @@
 <div class="row">
     <div class="span10 offset1">
         {escape(none)}
-        <p><pre><code class="sql">{sql}</code></pre></p>
+        <p><pre><code class="sql">{if(sql)}{sql}{/if}</code></pre></p>
         {/escape}
     </div>
 </div>

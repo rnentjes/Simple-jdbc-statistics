@@ -15,24 +15,54 @@ public class SqlTokenizer {
     public static void main(String [] args) {
         SqlTokenizer st = new SqlTokenizer();
 
-        List<SqlToken> result = st.parse("select auction0_.id as id3_, auction0_.account_id as account31_3_, " +
-                "auction0_.auctionEndTime as auctionE2_3_, auction0_.auctionSiteId as auctionS3_3_, " +
-                "auction0_.auctionStartTime as auctionS4_3_, auction0_.bidCount as bidCount3_, " +
-                "auction0_.buyItNowPrice as buyItNow6_3_, auction0_.countryCode as countryC7_3_, " +
-                "auction0_.currencyCode as currency8_3_, auction0_.ebaySite as ebaySite3_, " +
-                "auction0_.illegal as illegal3_, auction0_.item_id as item32_3_, auction0_.itemURL as itemURL3_, " +
-                "auction0_.lastStatusChange as lastSta12_3_, auction0_.price as price3_, " +
-                "auction0_.priceImage_id as priceImage34_3_, auction0_.receivedTime as receive14_3_, " +
-                "auction0_.screenshot_id as screenshot30_3_, auction0_.seller_id as seller29_3_, " +
-                "auction0_.shipping as shipping3_, auction0_.site_id as site33_3_, " +
-                "auction0_.spamValue as spamValue3_, auction0_.startPrice as startPrice3_, " +
-                "auction0_.status as status3_, auction0_.subTitle as subTitle3_, " +
-                "auction0_.takeScreenshot as takeScr20_3_, auction0_.takeScreenshotTime as takeScr21_3_, " +
-                "auction0_.title as title3_, auction0_.veroFailReason as veroFai23_3_, " +
-                "auction0_.veroPackedID as veroPac24_3_, auction0_.veroReason as veroReason3_, " +
-                "auction0_.veroStatus as veroStatus3_, auction0_.version as version3_, " +
-                "auction0_.whiteList as whiteList3_ from Auction auction0_ " +
-                "where auction0_.site_id=? and auction0_.auctionSiteId=? order by auction0_.id");
+        List<SqlToken> result = st.parse("select \n" +
+                "    seller0_.id as id26_2_ , \n" +
+                "     seller0_.auctionSiteSellerId as auctionS2_26_2_ , \n" +
+                "     seller0_.blackList as blackList26_2_ , \n" +
+                "     seller0_.lastUpdate as lastUpdate26_2_ , \n" +
+                "     seller0_.monitored as monitored26_2_ , \n" +
+                "     seller0_.monitoredSince as monitore6_26_2_ , \n" +
+                "     seller0_.nickName as nickName26_2_ , \n" +
+                "     seller0_.reported as reported26_2_ , \n" +
+                "     seller0_.sellerImage_id as sellerI14_26_2_ , \n" +
+                "     seller0_.site_id as site13_26_2_ , \n" +
+                "     seller0_.veroBlackListCode as veroBlac9_26_2_ , \n" +
+                "     seller0_.version as version26_2_ , \n" +
+                "     seller0_.warnings as warnings26_2_ , \n" +
+                "     seller0_.whiteList as whiteList26_2_ , \n" +
+                "     image1_.id as id8_0_ , \n" +
+                "     image1_.data_id as data7_8_0_ , \n" +
+                "     image1_.downloadAttempts as download2_8_0_ , \n" +
+                "     image1_.fileName as fileName8_0_ , \n" +
+                "     image1_.ok as ok8_0_ , \n" +
+                "     image1_.originalUrl as original5_8_0_ , \n" +
+                "     image1_.version as version8_0_ , \n" +
+                "     auctionsit2_.id as id5_1_ , \n" +
+                "     auctionsit2_.description as descript2_5_1_ , \n" +
+                "     auctionsit2_.name as name5_1_ , \n" +
+                "     auctionsit2_.url as url5_1_ , \n" +
+                "     auctionsit2_.version as version5_1_ , \n" +
+                "     auctionsit2_1_.applicationKey as applicat2_6_1_ , \n" +
+                "     auctionsit2_1_.certificateKey as certific3_6_1_ , \n" +
+                "     auctionsit2_1_.developerKey as develope4_6_1_ , \n" +
+                "     auctionsit2_1_.restToken as restToken6_1_ , \n" +
+                "     auctionsit2_1_.token as token6_1_ , \n" +
+                "     \n" +
+                "    case \n" +
+                "        when auctionsit2_1_.id is not null then 1 \n" +
+                "        when auctionsit2_.id is not null then 0 \n" +
+                "    end \n" +
+                "    as clazz_1_ \n" +
+                "from \n" +
+                "    Seller seller0_ \n" +
+                "    left outer join \n" +
+                "    Image image1_ on seller0_.sellerImage_id=image1_.id \n" +
+                "    left outer join \n" +
+                "    AuctionSite auctionsit2_ on seller0_.site_id=auctionsit2_.id \n" +
+                "    left outer join \n" +
+                "    Ebay auctionsit2_1_ on auctionsit2_.id=auctionsit2_1_.id \n" +
+                "where \n" +
+                "    seller0_.id=? ");
 
         for (SqlToken token : result) {
             System.out.println(token.getType()+"\t->\t"+token.getText());
@@ -68,6 +98,10 @@ public class SqlTokenizer {
         basicMapping.put("then", SqlTokenType.THEN);
         basicMapping.put("else", SqlTokenType.ELSE);
         basicMapping.put("end", SqlTokenType.END);
+
+        basicMapping.put("commit", SqlTokenType.COMMIT);
+        basicMapping.put("rollback", SqlTokenType.ROLLBACK);
+        basicMapping.put("close", SqlTokenType.CLOSE);
     }
 
     public List<SqlToken> parse(String sql) {
@@ -96,7 +130,12 @@ public class SqlTokenizer {
         SqlTokenType type = SqlTokenType.UNKNOWN;
         String part = null;
 
-        if (parts.get(0).startsWith("'")) {
+        if (parts.get(0).trim().length() == 0) {
+            parts.remove(0);
+
+            part = null;
+            type = SqlTokenType.EMPTY;
+        } else if (parts.get(0).startsWith("'")) {
             // find end of tekst
             String result = parts.remove(0);
             part = result.substring(1);
@@ -153,6 +192,10 @@ public class SqlTokenizer {
             part = parts.remove(0);
             part += " " + parts.remove(0);
             type = SqlTokenType.IS_NULL;
+        } else if (check(parts, "not", "null")) {
+            part = parts.remove(0);
+            part += " " + parts.remove(0);
+            type = SqlTokenType.NOT_NULL;
         } else if (check(parts, "left", "outer", "join")) {
             part = parts.remove(0);
             part += " " + parts.remove(0);

@@ -1,0 +1,11 @@
+{foreach(messages as message)}
+        <div class="alert
+            {if(message.success)}alert-success{/if}
+            {if(message.info)}alert-info{/if}
+            {if(message.error)}alert-error{/if}
+         ">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            {if(message.header)}<strong>{message.header}</strong>{/if}
+            {if(message.body)}{message.body}{/if}
+        </div>
+{/each}

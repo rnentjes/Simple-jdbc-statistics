@@ -26,6 +26,7 @@ public class JdbcLogger {
         private QueryType type;
         private String sql;
         private long timeStamp;
+        private long nanoTimeStamp;
         private long milli;
         private long nano;
         private int hash;
@@ -36,6 +37,7 @@ public class JdbcLogger {
         public LogEntry(int hash, QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
             this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
+            this.nanoTimeStamp = System.nanoTime();
             this.hash = hash;
             this.type = type;
             this.sql = sql;
@@ -47,6 +49,7 @@ public class JdbcLogger {
 
         public LogEntry(LogEntry le) {
             this.timeStamp = System.currentTimeMillis();
+            this.nanoTimeStamp = System.nanoTime();
             this.hash = le.hash;
             this.type = le.type;
             this.sql = le .sql;
@@ -80,6 +83,10 @@ public class JdbcLogger {
             return timeStamp;
         }
 
+        public long getNanoTimeStamp() {
+            return nanoTimeStamp;
+        }
+
         public String getFormattedTimestamp() {
             return Util.formatTimestamp(timeStamp);
         }
@@ -106,7 +113,7 @@ public class JdbcLogger {
 
         public String getSql() {
             if (Settings.get().isFormattedQueries()) {
-                return SqlFormatter.getHTMLFormattedSQL2(sql);
+                return SqlFormatter.getHTMLFormattedSQL(sql);
             } else {
                 return sql;
             }
@@ -115,6 +122,7 @@ public class JdbcLogger {
         public boolean isEndOfTransaction() {
             return sql.toLowerCase().trim().equals("commit")
                     || sql.toLowerCase().trim().equals("rollback")
+                    || sql.toLowerCase().trim().equals("close")
                     || isAutoCommit();
         }
 

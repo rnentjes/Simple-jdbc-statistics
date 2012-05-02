@@ -17,49 +17,79 @@ import java.util.*;
  */
 public class TransactionOverview extends TemplatePage {
 
-    boolean sortTotalCalls = true;
-    boolean sortAvgTime = false;
-    boolean sortTotalTime = false;
-    private List<JdbcLogger.LogEntry> entries = null;
+    private boolean sortTotalCalls = true;
+    private boolean sortAvgTime = false;
+    private boolean sortTotalTime = false;
+    private boolean sortQueryTime = false;
+
+    private List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
 
     @Override
     public Page processRequest(HttpServletRequest request) {
+        Page result = this;
+        
         if ("sortTotalCalls".equals(request.getParameter("action"))) {
             sortTotalCalls = true;
             sortAvgTime = false;
             sortTotalTime = false;
+            sortQueryTime = false;
         } else if ("sortAvgTime".equals(request.getParameter("action"))) {
             sortTotalCalls = false;
             sortAvgTime = true;
             sortTotalTime = false;
+            sortQueryTime = false;
         } else if ("sortTotalTime".equals(request.getParameter("action"))) {
             sortTotalCalls = false;
             sortAvgTime = false;
             sortTotalTime = true;
+            sortQueryTime = false;
+        } else if ("sortQueryTime".equals(request.getParameter("action"))) {
+            sortTotalCalls = false;
+            sortAvgTime = false;
+            sortTotalTime = false;
+            sortQueryTime = true;
         } else if ("record".equals(request.getParameter("action"))) {
             JdbcLogger.get().switchRecording();
         } else if ("clear".equals(request.getParameter("action"))) {
             JdbcLogger.get().clear();
-//        } else if ("select".equals(request.getParameter("action"))) {
-//            String hash = request.getParameter("actionValue");
-//
-//            return new QueryDetail(this, Integer.parseInt(hash));
+        } else if ("select".equals(request.getParameter("action"))) {
+            String id = request.getParameter("actionValue");
+
+            TransactionEntry entry = findTransaction(Integer.parseInt(id));
+            if (entry != null) {
+                result = new TransactionDetail(this, entry);
+            } else {
+                Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Transaction not found!", "Transaction with id '"+id+"' could not be found.");
+            }
         }
 
-        return this;
+        return result;
+    }
+    
+    private TransactionEntry findTransaction(int id) {
+        TransactionEntry result = null;
+        
+        for (TransactionEntry entry : transactions) {
+            if (entry.getId() == id) {
+                result = entry;
+                break;
+            }
+        }
+        
+        return result;
     }
 
     @Override
     public Map<String, Object> defineModel(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        entries = JdbcLogger.get().getEntries();
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();
         long avgTime = 0;
 
-        List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
+        transactions = new LinkedList<TransactionEntry>();
         Map<Long,TransactionEntry> currentTransactions = new HashMap<Long, TransactionEntry>();
 
         if (!entries.isEmpty()) {
@@ -77,14 +107,19 @@ public class TransactionOverview extends TemplatePage {
                 if (entry == null) {
                     entry = new TransactionEntry(id++);
                     entry.timestamp = le.getTimestamp();
-                    entry.nanoTime = 0;
+                    entry.queryNanoTime = 0;
+                    entry.totalNanoTime = le.getNanoTimeStamp() - le.getNano();
                     currentTransactions.put(le.getThreadId(), entry);
                 }
 
                 entry.queries.add(le);
-                entry.nanoTime += le.getNano();
+                entry.queryNanoTime += le.getNano();
 
                 if (le.isEndOfTransaction()) {
+                    entry.totalNanoTime = le.getNanoTimeStamp() - entry.totalNanoTime;
+                    if (entry.getCount() > 1) {
+                        entry.totalNanoTime += le.getNano();
+                    }
                     transactions.add(entry);
                     currentTransactions.remove(le.getThreadId());
                 }
@@ -102,8 +137,8 @@ public class TransactionOverview extends TemplatePage {
         } else if (sortAvgTime) {
             Collections.sort(transactions, new Comparator<TransactionEntry>() {
                 public int compare(TransactionEntry o1, TransactionEntry o2) {
-                    long n1 = o1.nanoTime / o1.queries.size();
-                    long n2 = o2.nanoTime / o2.queries.size();
+                    long n1 = o1.getAvgTime();
+                    long n2 = o2.getAvgTime();
 
                     if (n2 > n1) {
                         return 1;
@@ -117,9 +152,21 @@ public class TransactionOverview extends TemplatePage {
         } else if (sortTotalTime) {
             Collections.sort(transactions, new Comparator<TransactionEntry>() {
                 public int compare(TransactionEntry o1, TransactionEntry o2) {
-                    if (o2.nanoTime > o1.nanoTime) {
+                    if (o2.getTotalTime() > o1.getTotalTime()) {
                         return 1;
-                    } else if (o2.nanoTime < o1.nanoTime) {
+                    } else if (o2.getTotalTime() < o1.getTotalTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+        } else if (sortQueryTime) {
+            Collections.sort(transactions, new Comparator<TransactionEntry>() {
+                public int compare(TransactionEntry o1, TransactionEntry o2) {
+                    if (o2.getQueryTime() > o1.getQueryTime()) {
+                        return 1;
+                    } else if (o2.getQueryTime() < o1.getQueryTime()) {
                         return -1;
                     } else {
                         return 0;
@@ -134,6 +181,7 @@ public class TransactionOverview extends TemplatePage {
         result.put("sortTotalCalls", sortTotalCalls);
         result.put("sortAvgTime", sortAvgTime);
         result.put("sortTotalTime", sortTotalTime);
+        result.put("sortQueryTime", sortQueryTime);
 
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");

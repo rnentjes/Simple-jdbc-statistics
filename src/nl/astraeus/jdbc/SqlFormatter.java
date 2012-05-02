@@ -99,18 +99,18 @@ public class SqlFormatter {
 
         mapping.put(SqlTokenType.AND, new LayoutMapping(0, 0, Newline.PRE));
         mapping.put(SqlTokenType.OR, new LayoutMapping(0, 0, Newline.PRE));
-
-        mapping.put(SqlTokenType.NULL, new LayoutMapping(0, 0, Newline.PRE));
+        mapping.put(SqlTokenType.NOT, new LayoutMapping(0, 0, Newline.NONE));
 
         mapping.put(SqlTokenType.JOIN, new LayoutMapping(0, 0, Newline.PREPOST));
+        mapping.put(SqlTokenType.ON, new LayoutMapping(0, 0, Newline.NONE));
 
-        mapping.put(SqlTokenType.CREATE_TABLE, new LayoutMapping(0, 0, Newline.POST));
-        mapping.put(SqlTokenType.ALTER_TABLE, new LayoutMapping(0, 0, Newline.PRE));
+        mapping.put(SqlTokenType.CREATE_TABLE, new LayoutMapping(-1, 1, Newline.POST));
+        mapping.put(SqlTokenType.ALTER_TABLE, new LayoutMapping(-1, 1, Newline.PRE));
         mapping.put(SqlTokenType.ADD, new LayoutMapping(0, 0, Newline.PRE));
 
-        mapping.put(SqlTokenType.DELETE_FROM, new LayoutMapping(0, 0, Newline.PRE));
+        mapping.put(SqlTokenType.DELETE_FROM, new LayoutMapping(-1, 1, Newline.PREPOST));
 
-        mapping.put(SqlTokenType.CASE, new LayoutMapping(0, 1, Newline.PREPOST));
+        mapping.put(SqlTokenType.CASE, new LayoutMapping(0, 1, Newline.NONE));
         mapping.put(SqlTokenType.WHEN, new LayoutMapping(0, 0, Newline.PRE));
         mapping.put(SqlTokenType.THEN, new LayoutMapping(0, 0, Newline.NONE));
         mapping.put(SqlTokenType.ELSE, new LayoutMapping(0, 0, Newline.NONE));
@@ -118,12 +118,18 @@ public class SqlFormatter {
 
         mapping.put(SqlTokenType.EXISTS, new LayoutMapping(0, 0, Newline.NONE));
 
-        mapping.put(SqlTokenType.NULL, new LayoutMapping(0, 0, Newline.PRE));
+        mapping.put(SqlTokenType.NULL, new LayoutMapping(0, 0, Newline.NONE));
+        mapping.put(SqlTokenType.IS_NULL, new LayoutMapping(0, 0, Newline.NONE));
+        mapping.put(SqlTokenType.NOT_NULL, new LayoutMapping(0, 0, Newline.NONE));
+
+        mapping.put(SqlTokenType.COMMIT, new LayoutMapping(0, 0, Newline.NONE));
+        mapping.put(SqlTokenType.ROLLBACK, new LayoutMapping(0, 0, Newline.NONE));
+        mapping.put(SqlTokenType.CLOSE, new LayoutMapping(0, 0, Newline.NONE));
     }
 
     private Map<Integer, String> cache = new HashMap<Integer, String>();
 
-    public static String getHTMLFormattedSQL2(String sql) {
+    public static String getHTMLFormattedSQL(String sql) {
         String formatted = null; //cache.get(sql.hashCode());
 
         if (formatted == null) {
@@ -179,68 +185,10 @@ public class SqlFormatter {
         }
     }
 
-    public static String getHTMLFormattedSQL(String sql) {
-        StringBuilder tmp = new StringBuilder(" "+sql.toLowerCase());
-        String tab = "    ";
-        String ntab = "\n"+tab;
-
-        replaceAll(tmp, " left outer join ", ntab+blue("LEFT OUTER JOIN "));
-
-        replaceAll(tmp, " create table ", blue("CREATE TABLE")+ntab);
-        replaceAll(tmp, " insert into ", blue("INSERT INTO")+ntab);
-        replaceAll(tmp, " delete from ", blue("DELETE FROM")+ntab);
-        replaceAll(tmp, " values\\(", "\n"+blue("VALUES")+"(");
-
-        replaceAll(tmp, " select ", blue("SELECT")+ntab);
-        replaceAll(tmp, " from ", "\n"+blue("FROM")+ntab);
-        replaceAll(tmp, " where ", "\n"+blue("WHERE")+ntab);
-        replaceAll(tmp, " order by ", "\n"+blue("ORDER BY")+ntab);
-        replaceAll(tmp, " group by ", "\n"+blue("GROUP BY")+ntab);
-        replaceAll(tmp, " having ", "\n"+blue("HAVING")+tab);
-
-        replaceAll(tmp, " update ", blue("UPDATE")+ntab);
-        replaceAll(tmp, " set ", "\n"+blue("SET")+ntab);
-
-        replaceAll(tmp, " commit", "\n"+blue("COMMIT"));
-        replaceAll(tmp, " rollback", "\n"+blue("ROLLBACK"));
-        replaceAll(tmp, " close", "\n"+blue("CLOSE"));
-
-        replaceAll(tmp, " case ", ntab+blue("CASE "));
-        replaceAll(tmp, " when ", ntab+blue("WHEN "));
-        replaceAll(tmp, " is ", blue(" IS "));
-        replaceAll(tmp, " then ", blue(" THEN "));
-        replaceAll(tmp, " not ", blue(" NOT "));
-        replaceAll(tmp, " end ", blue(" END "));
-        replaceAll(tmp, " null ", blue(" NULL "));
-        replaceAll(tmp, " else ", blue(" ELSE "));
-
-        replaceAll(tmp, " on ", blue(" ON "));
-        replaceAll(tmp, " and ", ntab+blue("AND "));
-        replaceAll(tmp, " or ", ntab+blue("OR "));
-
-        replaceAll(tmp, " as ", blue(" AS "));
-
-        replaceAll(tmp, ", ", ","+ntab);
-
-        return tmp.toString();
-    }
-
-    private static void replaceAll(StringBuilder str, String txt, String repl) {
-        int index = -1;
-
-        while((index = str.indexOf(txt)) > -1) {
-            str.replace(index, index + txt.length(), repl);
-        }
-    }
-
-    public static String blue(String text) {
-        return "<span style=\"color: blue;\">"+text+"</span>";
-    }
-
     public static void main(String [] args) {
         SqlFormatter f = new SqlFormatter();
 
-        System.out.println(f.getHTMLFormattedSQL2("CREATE TABLE TEST291 (ID INT PRIMARY KEY, NAME VARCHAR(255))"));
+        System.out.println(f.getHTMLFormattedSQL("select screenshot0_.Auction_id as Auction1_1_, screenshot0_.screenshots_id as screensh2_1_, image1_.id as id8_0_, image1_.data_id as data7_8_0_, image1_.downloadAttempts as download2_8_0_, image1_.fileName as fileName8_0_, image1_.ok as ok8_0_, image1_.originalUrl as original5_8_0_, image1_.version as version8_0_ from auction_screenshots screenshot0_ left outer join Image image1_ on screenshot0_.screenshots_id=image1_.id where screenshot0_.Auction_id=?"));
     }
 
 }

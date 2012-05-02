@@ -30,6 +30,8 @@ public class SettingsOverview extends TemplatePage {
             } else {
                 Settings.get().setFormattedQueries(false);
             }
+            
+            Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
         }
 
         return result;

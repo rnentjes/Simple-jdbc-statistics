@@ -10,7 +10,7 @@ public enum SqlTokenType {
     SELECT, FROM, WHERE, ORDER_BY, GROUP_BY, HAVING,
     AND, OR,
     JOIN,
-    NOT, NULL, IS_NULL,
+    NOT, NULL, IS_NULL, NOT_NULL,
     AS, ON,
     EXISTS,
     EXPRESSION_OPEN, EXPRESSION_CLOSE,
@@ -19,5 +19,6 @@ public enum SqlTokenType {
     DELETE_FROM,
     CREATE_TABLE,
     ALTER_TABLE, ADD,
-    CASE, WHEN, THEN, ELSE, END
+    CASE, WHEN, THEN, ELSE, END,
+    COMMIT, ROLLBACK, CLOSE
 }

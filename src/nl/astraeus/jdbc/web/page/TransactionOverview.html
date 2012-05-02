@@ -10,17 +10,18 @@
         <div>Avg. time/query: {avgTime}</div>
     </div>
     <div class="span3 offset2">
-        <a onclick="submit('record')" class="btn {if(recording)}btn-warning{else}btn-success{/if} btn-large">{if(recording)}Recording&nbsp;stacktraces{else}Not&nbsp;recording&nbsp;stacktraces{/if}</a>
+        <a onclick="submit('record')" class="btn {if(recording)}btn-warning{else}btn-success{/if}">{if(recording)}Recording&nbsp;stacktraces{else}Not&nbsp;recording&nbsp;stacktraces{/if}</a>
     </div>
     <div class="span1 ">
-        <a onclick="submit('clear')" class="btn btn-danger btn-large">Clear</a>
+        <a onclick="submit('clear')" class="btn btn-danger">Clear</a>
     </div>
 </div>
 
 <ul class="nav nav-pills">
     <li {if(sortTotalTime)}class="active"{/if}><a onclick="submit('sortTotalTime')">Total time</a></li>
+    <li {if(sortQueryTime)}class="active"{/if}><a onclick="submit('sortQueryTime')">Query time</a></li>
     <li {if(sortAvgTime)}class="active"{/if}><a onclick="submit('sortAvgTime')">Avg. time</a></li>
-    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="submit('sortTotalCalls')"># Calls</a></li>
+    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="submit('sortTotalCalls')"># Queries</a></li>
 </ul>
 
 <table class="table table-condensed table-striped " id="overview">
@@ -28,6 +29,7 @@
     <tr>
         <th> </th>
         <th>Total time (ms)</th>
+        <th>Query time (ms)</th>
         <th>Avg. time (ms)</th>
         <th># Queries</th>
         <th>Sql</th>
@@ -38,6 +40,7 @@
     <tr>
         <td><a onclick="submit('select', '{t.id}')"><i class=" icon-zoom-in"></i></a></td>
         <td>{t.formattedTotalTime}</td>
+        <td>{t.formattedQueryTime}</td>
         <td>{t.formattedAvgTime}</td>
         <td>{t.count}</td>
         {escape(none)}

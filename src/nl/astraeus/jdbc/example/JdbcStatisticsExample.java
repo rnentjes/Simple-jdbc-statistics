@@ -19,6 +19,7 @@ public class JdbcStatisticsExample {
 
     public JdbcStatisticsExample() throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:stat:jdbc:h2:mem:test", "user", "password");
+        conn.setAutoCommit(false);
 
         Statement statement = null;
 
@@ -26,15 +27,13 @@ public class JdbcStatisticsExample {
         statement.execute("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255))");
         statement.close();
 
-        conn.setAutoCommit(false);
+        conn.commit();
 
         boolean running = true;
         int count = 1;
         PreparedStatement ps = null;
 
         while (running) {
-            Thread.sleep(10);
-
             String TableName = "TEST"+(System.nanoTime() % 1000);
 
             try {
@@ -58,9 +57,10 @@ public class JdbcStatisticsExample {
             ps.execute();
             ps.close();
 
+            conn.commit();
+
             Thread.sleep(10);
 
-            conn.commit();
             ps = conn.prepareStatement("SELECT * FROM "+TableName);
             ResultSet rs = ps.executeQuery();
 
@@ -74,6 +74,7 @@ public class JdbcStatisticsExample {
             ps.close();
 
             conn.commit();
+
             Thread.sleep(10);
         }
 
