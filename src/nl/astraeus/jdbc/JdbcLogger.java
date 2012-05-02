@@ -112,7 +112,7 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            if (Settings.get().isFormattedQueries()) {
+            if (JdbcLogger.get().isFormattedQueries()) {
                 return SqlFormatter.getHTMLFormattedSQL(sql);
             } else {
                 return sql;
@@ -153,6 +153,9 @@ public class JdbcLogger {
     private final List<LogEntry> queries;
     private long startTime;
     private boolean recording = false;
+    
+    private int numberOfQueries = 2500;
+    private boolean formattedQueries = true;
 
     public JdbcLogger() {
         queries = new LinkedList<LogEntry>();
@@ -187,7 +190,7 @@ public class JdbcLogger {
         synchronized (queries) {
             queries.add(entry);
 
-            while (queries.size() > Settings.get().getNumberOfQueries()) {
+            while (queries.size() > getNumberOfQueries()) {
                 entry = queries.remove(0);
                 startTime = entry.getMilli();
             }
@@ -204,4 +207,19 @@ public class JdbcLogger {
         }
     }
 
+    public int getNumberOfQueries() {
+        return numberOfQueries;
+    }
+
+    public void setNumberOfQueries(int numberOfQueries) {
+        this.numberOfQueries = numberOfQueries;
+    }
+
+    public boolean isFormattedQueries() {
+        return formattedQueries;
+    }
+
+    public void setFormattedQueries(boolean formattedQueries) {
+        this.formattedQueries = formattedQueries;
+    }
 }

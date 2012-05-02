@@ -1,5 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
+import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.web.model.Settings;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,19 +18,24 @@ public class SettingsOverview extends TemplatePage {
     public Page processRequest(HttpServletRequest request) {
         Page result = this;
 
+        Settings settings = Settings.get();
+
         if ("save".equals(request.getParameter("action"))) {
             String nrq = request.getParameter("queries");
             String pq = request.getParameter("formattedQueries");
 
             if (nrq != null) {
-                Settings.get().setNumberOfQueries(Integer.parseInt(nrq));
+                settings.setNumberOfQueries(Integer.parseInt(nrq));
             }
 
             if (pq != null) {
-                Settings.get().setFormattedQueries(true);
+                settings.setFormattedQueries(true);
             } else {
-                Settings.get().setFormattedQueries(false);
+                settings.setFormattedQueries(false);
             }
+
+            JdbcLogger.get().setNumberOfQueries(settings.getNumberOfQueries());
+            JdbcLogger.get().setFormattedQueries(settings.isFormattedQueries());
             
             Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
         }
@@ -40,8 +46,9 @@ public class SettingsOverview extends TemplatePage {
     @Override
     public Map<String, Object> defineModel(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<String, Object>();
+        Settings settings = Settings.get();
 
-        int nrq = Settings.get().getNumberOfQueries();
+        int nrq = settings.getNumberOfQueries();
         result.put("q1000", nrq == 1000);
         result.put("q2500", nrq == 2500);
         result.put("q5000", nrq == 5000);
@@ -49,7 +56,7 @@ public class SettingsOverview extends TemplatePage {
         result.put("q15000", nrq == 15000);
         result.put("q25000", nrq == 25000);
 
-        result.put("formattedQueries", Settings.get().isFormattedQueries());
+        result.put("formattedQueries", settings.isFormattedQueries());
 
         return result;
     }

@@ -79,6 +79,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
         boolean ajax = "true".equals(req.getParameter("ajax"));
 
         resp.setContentType("text/html");
+
         Settings.get().readSettings(req);
 
         Page page = (Page)session.getAttribute("page");
@@ -120,7 +121,9 @@ public class JdbcStatisticsServlet extends HttpServlet {
         resp.getWriter().print(Warnings.get(req).render(req));
 
         long time = System.nanoTime();
+        resp.getWriter().println("<div class=\"container-fluid\">");
         resp.getWriter().print(page.render(req));
+        resp.getWriter().println("</div>");
 
         Settings.get().saveSettings(resp);
 

@@ -1,0 +1,49 @@
+
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 95%;
+}
+
+body {
+    padding-top: 50px;
+}
+
+div#loading {
+    /*make invisible*/
+    display:none;
+    z-index:9999;
+
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 90%;
+    text-align:center;
+
+    /*in supporting browsers, make it
+  a little transparent*/
+    background: #fff url('/resources/images/loading.gif');
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-position:center;
+
+    _background: none; /*this line removes the background in IE*/
+    opacity:.5;
+    border-top: 0 solid #ddd;
+    border-bottom: 0 solid #ddd;
+
+    /*set the padding, so that the content
+of the div is centered vertically*/
+    padding-top:0%;
+}
+
+code.sql {
+    color: black;
+    font-weight: bold
+}
+code.sql b {
+    color: blue;
+    /*font-weight: normal;*/
+}
