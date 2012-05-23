@@ -3,7 +3,7 @@ A simple wrapper around jdbc drivers that will show some statistics about the ru
 See a running example here:
 
 ```
-  http://phoibe.astraeus.nl:18080//
+  http://phoibe.astraeus.nl:18080/
 ```
 
 To use:
