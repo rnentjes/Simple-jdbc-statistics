@@ -149,12 +149,6 @@ public class QueryOverview extends TemplatePage {
 
         result.put("recording", JdbcLogger.get().isRecording());
 
-        result.put("test", getTest());
-
         return result;
-    }
-
-    public String getTest() {
-        return "Test HaHa";
     }
 }
