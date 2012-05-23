@@ -119,10 +119,12 @@ public class JdbcStatisticsServlet extends HttpServlet {
         }
 
         resp.getWriter().print(menu.render(req));
+
+        resp.getWriter().println("<div class=\"container\">");
+
         resp.getWriter().print(Warnings.get(req).render(req));
 
         long time = System.nanoTime();
-        resp.getWriter().println("<div class=\"container-fluid\">");
         resp.getWriter().print(page.render(req));
         resp.getWriter().println("</div>");
 

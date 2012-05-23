@@ -46,9 +46,7 @@
         <td>{q.type}</td>
         <td>{q.formattedTimestamp}</td>
         <td>{q.formattedNano}</td>
-        {escape(none)}
-        <td><pre><code class="sql">{q.sql}</code></pre></td>
-        {/escape}
+        <td><pre><code class="sql">{!q.sql}</code></pre></td>
     </tr>
     {/each}
     </tbody>

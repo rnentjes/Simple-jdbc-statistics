@@ -23,6 +23,7 @@ public class SettingsOverview extends TemplatePage {
         if ("save".equals(request.getParameter("action"))) {
             String nrq = request.getParameter("queries");
             String pq = request.getParameter("formattedQueries");
+            String rs = request.getParameter("recordingStacktraces");
 
             if (nrq != null) {
                 settings.setNumberOfQueries(Integer.parseInt(nrq));
@@ -34,9 +35,12 @@ public class SettingsOverview extends TemplatePage {
                 settings.setFormattedQueries(false);
             }
 
-            JdbcLogger.get().setNumberOfQueries(settings.getNumberOfQueries());
-            JdbcLogger.get().setFormattedQueries(settings.isFormattedQueries());
-            
+            if (rs != null) {
+                settings.setRecordingStacktraces(true);
+            } else {
+                settings.setRecordingStacktraces(false);
+            }
+
             Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
         }
 
@@ -57,6 +61,7 @@ public class SettingsOverview extends TemplatePage {
         result.put("q25000", nrq == 25000);
 
         result.put("formattedQueries", settings.isFormattedQueries());
+        result.put("recordingStacktraces", settings.isRecordingStacktraces());
 
         return result;
     }

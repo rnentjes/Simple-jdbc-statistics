@@ -31,12 +31,16 @@ public class Settings {
             if (c.getName().equals("SJS-formatted-queries")) {
                 setFormattedQueries("true".equals(c.getValue()));
             }
+            if (c.getName().equals("SJS-recording-stacktraces")) {
+                setRecordingStacktraces("true".equals(c.getValue()));
+            }
         }
     }
 
     public void saveSettings(HttpServletResponse response) {
         response.addCookie(createLongLivedCookie("SJS-number-of-queries", String.valueOf(getNumberOfQueries())));
         response.addCookie(createLongLivedCookie("SJS-formatted-queries", String.valueOf(isFormattedQueries())));
+        response.addCookie(createLongLivedCookie("SJS-recording-stacktraces", String.valueOf(isRecordingStacktraces())));
     }
 
     private Cookie createLongLivedCookie(String name, String value) {
@@ -50,6 +54,7 @@ public class Settings {
 
     private int numberOfQueries = 2500;
     private boolean formattedQueries = false;
+    private boolean recordingStacktraces = false;
     private boolean secure = true;
     private String user = null;
     private int passwordHash = 0;
@@ -90,4 +95,11 @@ public class Settings {
         return (user != null && password != null && user.equals(this.user) && password.hashCode() == passwordHash);
     }
 
+    public boolean isRecordingStacktraces() {
+        return recordingStacktraces;
+    }
+
+    public void setRecordingStacktraces(boolean recordingStacktraces) {
+        this.recordingStacktraces = recordingStacktraces;
+    }
 }

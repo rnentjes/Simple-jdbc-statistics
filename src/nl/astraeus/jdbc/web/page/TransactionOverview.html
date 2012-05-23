@@ -9,11 +9,8 @@
         <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
         <div>Avg. time/query: {avgTime}</div>
     </div>
-    <div class="span3 offset2">
-        <a onclick="return Sjs.submit('record')" class="btn {if(recording)}btn-warning{else}btn-success{/if}">{if(recording)}Recording&nbsp;stacktraces{else}Not&nbsp;recording&nbsp;stacktraces{/if}</a>
-    </div>
-    <div class="span1 ">
-        <a onclick="return Sjs.submit('clear')" class="btn btn-danger">Clear</a>
+    <div class="span3 pull-right">
+        <a onclick="return Sjs.submit('clear')" class="btn btn-danger">Clear queries</a>
     </div>
 </div>
 
@@ -43,9 +40,7 @@
         <td>{t.formattedQueryTime}</td>
         <td>{t.formattedAvgTime}</td>
         <td>{t.count}</td>
-        {escape(none)}
-        <td><pre><code class="sql">{t.sql}</code></pre></td>
-        {/escape}
+        <td><pre><code class="sql">{!t.sql}</code></pre></td>
     </tr>
     {/each}
     </tbody>

@@ -123,6 +123,7 @@
         <mkdir dir="${build.dir}/testreports"/>
         <mkdir dir="${build.dir}/javadoc"/>
         <mkdir dir="${jar.dir}"/>
+        <mkdir dir="${jarnodeb.dir}"/>
     </target>
 
     <!-- =================================================================== -->
@@ -400,6 +401,13 @@
                 <attribute name="Class-Path" value="${manifest.classpath}"/>
             </manifest>
         </jar>
+
+    </target>
+
+    <target name="jar-nodeb" depends="compile, copynonjavafiles" description="Create jar distribution dir">
+
+        <unzip src="${lib.dir}/servlet-api-2.5.jar" dest="${jarnodeb.dir}" />
+        <unjar src="${lib.dir}/slf4j-api-1.6.4.jar" dest="${jarnodeb.dir}" />
 
     </target>
 

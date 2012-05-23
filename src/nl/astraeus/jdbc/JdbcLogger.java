@@ -112,7 +112,7 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            if (JdbcLogger.get().isFormattedQueries()) {
+            if (Settings.get().isFormattedQueries()) {
                 return SqlFormatter.getHTMLFormattedSQL(sql);
             } else {
                 return sql;
@@ -152,22 +152,10 @@ public class JdbcLogger {
 
     private final List<LogEntry> queries;
     private long startTime;
-    private boolean recording = false;
-    
-    private int numberOfQueries = 2500;
-    private boolean formattedQueries = true;
 
     public JdbcLogger() {
         queries = new LinkedList<LogEntry>();
         startTime = System.currentTimeMillis();
-    }
-
-    public boolean isRecording() {
-        return recording;
-    }
-
-    public void switchRecording() {
-        recording = !recording;
     }
 
     public void clear() {
@@ -179,7 +167,7 @@ public class JdbcLogger {
 
         LogEntry entry = new LogEntry(hash, type, sql, milli, nano, isAutoCommit);
 
-        if (recording) {
+        if (Settings.get().isRecordingStacktraces()) {
             try {
                 throw new IllegalStateException();
             } catch (IllegalStateException e) {
@@ -190,7 +178,7 @@ public class JdbcLogger {
         synchronized (queries) {
             queries.add(entry);
 
-            while (queries.size() > getNumberOfQueries()) {
+            while (queries.size() > Settings.get().getNumberOfQueries()) {
                 entry = queries.remove(0);
                 startTime = entry.getMilli();
             }
@@ -205,21 +193,5 @@ public class JdbcLogger {
         synchronized (queries) {
             return new LinkedList<LogEntry>(queries);
         }
-    }
-
-    public int getNumberOfQueries() {
-        return numberOfQueries;
-    }
-
-    public void setNumberOfQueries(int numberOfQueries) {
-        this.numberOfQueries = numberOfQueries;
-    }
-
-    public boolean isFormattedQueries() {
-        return formattedQueries;
-    }
-
-    public void setFormattedQueries(boolean formattedQueries) {
-        this.formattedQueries = formattedQueries;
     }
 }

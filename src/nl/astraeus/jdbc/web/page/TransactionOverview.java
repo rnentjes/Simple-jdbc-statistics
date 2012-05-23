@@ -48,8 +48,6 @@ public class TransactionOverview extends TemplatePage {
             sortAvgTime = false;
             sortTotalTime = false;
             sortQueryTime = true;
-        } else if ("record".equals(request.getParameter("action"))) {
-            JdbcLogger.get().switchRecording();
         } else if ("clear".equals(request.getParameter("action"))) {
             JdbcLogger.get().clear();
         } else if ("select".equals(request.getParameter("action"))) {
@@ -190,9 +188,6 @@ public class TransactionOverview extends TemplatePage {
         result.put("toTime", dateFormatter.format(new Date(toTime)));
         result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
         result.put("avgTime", Util.formatNano(avgTime));
-
-        result.put("recording", JdbcLogger.get().isRecording());
-
 
         return result;
     }
