@@ -18,6 +18,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="Simple-servlet-runner" />
+    <orderEntry type="module" module-name="Very-simple-templates" />
   </component>
 </module>
 

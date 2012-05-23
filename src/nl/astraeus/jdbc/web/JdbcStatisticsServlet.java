@@ -7,7 +7,6 @@ import nl.astraeus.jdbc.web.page.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.login.LoginContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -98,6 +97,8 @@ public class JdbcStatisticsServlet extends HttpServlet {
         } else if (!(page instanceof Login)) {
             if (page == null || "menumain".equals(req.getParameter("action"))) {
                 page = new QueryOverview();
+            } else if ("menulive".equals(req.getParameter("action"))) {
+                page = new LiveOverview();
             } else if ("menutransactions".equals(req.getParameter("action"))) {
                 page = new TransactionOverview();
             } else if ("menusettings".equals(req.getParameter("action"))) {

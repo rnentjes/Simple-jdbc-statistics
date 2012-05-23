@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<canvas id="chart" width="400px" height="300px" style="border: 2px solid red;"></canvas>
+
+<script type="text/javascript">
+    var canvas = document.getElementById("chart");
+
+    var c2d = canvas.getContext("2d");
+
+    // setup the line style
+    c2d.lineWidth = 2;
+    c2d.lineCap = 'round';
+
+    c2d.globalAlpha = 0.5;
+    c2d.globalCompositeOperation = 'xor';
+
+    c2d.strokeStyle = '#ffff00';
+    c2d.fillStyle = '#0000ff';
+    c2d.fillRect(10, 20, 200, 100);
+    c2d.strokeRect(10, 20, 200, 100);
+
+    c2d.strokeStyle = '#0000ff';
+    c2d.fillStyle = 'red';
+    c2d.fillRect(50, 70, 250, 150);
+    c2d.strokeRect(50, 70, 250, 150);
+
+    c2d.globalAlpha = 1.0;
+    c2d.globalCompositeOperation = 'copy';
+
+    c2d.strokeStyle = '#000000';
+    c2d.fillStyle = '#000000';
+    c2d.font= '40px Arial';
+    c2d.fontSize
+    c2d.fillText("Hello!", 100, 100);
+</script>
+
+</body>
+</html>

@@ -15,8 +15,8 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class QueryOverview extends TemplatePage {
-    private static Logger logger = LoggerFactory.getLogger(QueryOverview.class);
+public class LiveOverview extends TemplatePage {
+    private static Logger logger = LoggerFactory.getLogger(LiveOverview.class);
 
     boolean sortTotalCalls = true;
     boolean sortAvgTime = false;

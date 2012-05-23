@@ -9,13 +9,16 @@
             <a class="brand" href="#">Simple JDBC Statistics</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class=""><a onclick="submit('menumain');">Queries</a></li>
+                    <li class=""><a onclick="return Sjs.submit('menulive');">Live view</a></li>
                 </ul>
                 <ul class="nav">
-                    <li class=""><a onclick="submit('menutransactions');">Transactions</a></li>
+                    <li class=""><a href="#Queries" onclick="return Sjs.submit('menumain');">Queries</a></li>
                 </ul>
                 <ul class="nav">
-                    <li class=""><a onclick="submit('menusettings');">Settings</a></li>
+                    <li class=""><a href="#Transactions" onclick="return Sjs.submit('menutransactions');">Transactions</a></li>
+                </ul>
+                <ul class="nav">
+                    <li class=""><a href="#Settings" onclick="return Sjs.submit('menusettings');">Settings</a></li>
                 </ul>
 
                 {if(user.superuser)}
@@ -28,8 +31,8 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class=""><a onclick="submit('diagnostics');">Diagnostics</a></li>
-                            <li class=""><a onclick="submit('showmembers');">Show members</a></li>
+                            <li class=""><a onclick="return Sjs.submit('diagnostics');">Diagnostics</a></li>
+                            <li class=""><a onclick="return Sjs.submit('showmembers');">Show members</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -37,10 +40,11 @@
 
                 <ul class="nav pull-right">
                     {if(user.nickName)}
-                    <li class=""><a onclick="submit('menulogout');">Logout {user.nickName}</a></li>
+                    <li class=""><a onclick="return Sjs.submit('menulogout');">Logout {user.nickName}</a></li>
+
                     {else}
                     <!--
-                    <li class=""><a onclick="submit('menulogin');">Login</a></li>
+                    <li class=""><a onclick="return Sjs.submit('menulogin');">Login</a></li>
                     -->
                     {/if}
                 </ul>

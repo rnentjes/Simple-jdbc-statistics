@@ -105,6 +105,8 @@ public class Driver implements java.sql.Driver {
             server.addServlet(new JdbcStatisticsServlet(), "/*");
             server.addServlet(new ResourceServlet(), "/resources/*");
 
+            server.setNumberOfConnections(5);
+
             server.start();
 
             started = true;

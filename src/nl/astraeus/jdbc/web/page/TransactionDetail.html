@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="span1 ">
-        <a onclick="submit('back')" class="btn btn-primary">Back</a>
+        <a onclick="return Sjs.submit('back')" class="btn btn-primary">Back</a>
     </div>
 </div>
 
@@ -23,10 +23,10 @@
 
         <!--
 <ul class="nav nav-pills">
-    <li {if(sortTotalTime)}class="active"{/if}><a onclick="submit('sortTotalTime')">Total time</a></li>
-    <li {if(sortQueryTime)}class="active"{/if}><a onclick="submit('sortQueryTime')">Query time</a></li>
-    <li {if(sortAvgTime)}class="active"{/if}><a onclick="submit('sortAvgTime')">Avg. time</a></li>
-    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="submit('sortTotalCalls')"># Queries</a></li>
+    <li {if(sortTotalTime)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalTime')">Total time</a></li>
+    <li {if(sortQueryTime)}class="active"{/if}><a onclick="return Sjs.submit('sortQueryTime')">Query time</a></li>
+    <li {if(sortAvgTime)}class="active"{/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. time</a></li>
+    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalCalls')"># Queries</a></li>
 </ul>-->
 
 <table class="table table-condensed table-striped " id="overview">
@@ -42,7 +42,7 @@
     <tbody>
     {each(transaction.queries as q)}
     <tr>
-        <td>{if(q.stackTrace)}<a onclick="submit('stacktrace', '{q.timestamp}')"><i class=" icon-zoom-in"></i></a>{/if}</td>
+        <td>{if(q.stackTrace)}<a onclick="return Sjs.submit('stacktrace', '{q.timestamp}')"><i class=" icon-zoom-in"></i></a>{/if}</td>
         <td>{q.type}</td>
         <td>{q.formattedTimestamp}</td>
         <td>{q.formattedNano}</td>

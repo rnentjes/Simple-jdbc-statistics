@@ -1,0 +1,54 @@
+<div class="page-header">
+    <h3>Live overview</h3>
+</div>
+
+<div class="row">
+    <div class="span6">
+
+        <div># Queries: {count}</div>
+        <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
+        <div>Avg. time/query: {avgTime}</div>
+    </div>
+</div>
+
+<ul class="nav nav-pills">
+    <li {if(sortTotalTime)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalTime')">Total time</a></li>
+    <li {if(sortAvgTime)}class="active"{/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. time</a></li>
+    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalCalls')"># Calls</a></li>
+</ul>
+
+<canvas id="chart" width="800" height="200"></canvas>
+
+<script type="text/javascript">
+    // Randomly add a data point every 500ms
+    var random = new TimeSeries();
+
+    setInterval(function() \{
+        random.append(new Date().getTime(), Math.random() * 10000);
+    \}, 500);
+
+    $(document).ready(function() \{
+            var chart = new SmoothieChart(
+            \{
+            grid: \{
+
+                strokeStyle: 'rgba(75, 75, 75, 0.4)',
+                fillStyle: 'rgba(255, 255, 255, 0.2)',
+                lineWidth: 2,
+                millisPerLine: 500,
+                verticalSections: 6
+                \}
+            \}
+       );
+
+       chart.addTimeSeries(random,
+        \{
+
+            strokeStyle: 'rgba(0, 255, 0, 1)',
+            fillStyle: 'rgba(0, 255, 0, 0.2)',
+            lineWidth: 2
+        \});
+
+        chart.streamTo(document.getElementById("chart"), 500);
+    \});
+</script>

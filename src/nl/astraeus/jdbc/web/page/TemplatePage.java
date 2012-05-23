@@ -45,7 +45,7 @@ public abstract class TemplatePage extends Page {
     private static Map<Class, SimpleTemplate> templateCache = new HashMap<Class, SimpleTemplate>();
 
     public synchronized static SimpleTemplate getSimpleTemplate(Class cls) {
-        SimpleTemplate result = templateCache.get(cls);
+        SimpleTemplate result = null; //templateCache.get(cls);
 
         if (result == null) {
             InputStream in = null;

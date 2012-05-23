@@ -20,30 +20,49 @@
     <![endif]-->
 
     <script type="text/javascript" src="resources/js/jquery.js"></script>
+    <script type="text/javascript" src="resources/js/smoothie.js"></script>
 
     <script type="text/javascript">
-        function submit(action, actionValue) {
-            var params = 'ajax=true&action=' + action + '&actionValue=' + actionValue + '&' + $("#form").serialize();
+        Sjs = function() {
 
-            if(document.selection && document.selection.empty) {
-                document.selection.empty();
-            } else if(window.getSelection) {
-                var sel = window.getSelection();
-                sel.removeAllRanges();
+            function submit_ajax(action, actionValue) {
+                var params = 'ajax=true&action=' + encodeURIComponent(action) + '&actionValue=' + encodeURIComponent(actionValue) + '&' + $("#form").serialize();
+
+                if(document.selection && document.selection.empty) {
+                    document.selection.empty();
+                } else if(window.getSelection) {
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                }
+
+                $("#loading").show();
+                $.post("?ts="+new Date().getMilliseconds(), params, function(data) {
+                    $("#content").html(data);
+                    $("#loading").hide();
+                }, "html")
+                        .error(function(data) {
+                            $("#content").html(data.responseText);
+                            $("#loading").hide();
+                        });
+
+                return false;
             }
 
-            $("#loading").show();
-            $.post("?ts="+new Date().getMilliseconds(), params, function(data) {
-                $("#content").html(data);
-                $("#loading").hide();
-            }, "html")
-                    .error(function(data) {
-                        $("#content").html(data.responseText);
-                        $("#loading").hide();
-                    });
+            return {
+                submit: function(action, actionValue) {
+                    return submit_ajax(action, actionValue);
+                },
 
-            return false;
-        }
+                log: function(p1,p2,p3,p4,p5) {
+                    if (console.log) {
+                        console.log(p1,p2,p3,p4,p5);
+                    }
+                }
+
+            };
+
+        }();
+
     </script>
 
 </head>

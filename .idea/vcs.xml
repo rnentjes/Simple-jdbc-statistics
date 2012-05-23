@@ -2,6 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Simple-servlet-runner" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Very-simple-templates" vcs="Git" />
   </component>
 </project>
 
