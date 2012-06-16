@@ -28,7 +28,7 @@ Set your jdbc driver property to the following class:
 Add the following to the front of your current jdbc url:
 
 ```text
-  jdbc:stat:&lt;settings&gt;:
+  jdbc:stat:<settings>:
   
   (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat::jdbc:postgresql://localhost/mydb)
 ```
@@ -36,12 +36,12 @@ Add the following to the front of your current jdbc url:
 If you want a login screen add the following instead:
 
 ```text
-  jdbc:secstat:&lt;settings&gt;:
+  jdbc:secstat:<settings>:
 ```
 
 Use the same credentials as in your jdbc properties to login.
 
-Start your application and goto: http://&lt;host app is running on&gt;:18080/
+Start your application and goto: http://<host app is running on>:18080/
 
 You will see an overview of the last 2500 queries run on your database and some timing stats about them.
 
@@ -63,7 +63,7 @@ Drivers automatically discovered atm:
   org.h2.Driver
 ```
 
-If your driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
+If your driver is not in there, make sure it's known before you connect to the database (eg Class.forName("<driver class name>"); )
 
 There are some settings that can be passed in the jdbc url. There is a settings menu where you can change them at runtime and it will show you an example for your jdbc url.
 
