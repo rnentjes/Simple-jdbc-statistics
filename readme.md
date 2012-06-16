@@ -41,7 +41,7 @@ If you want a login screen add the following instead:
 
 Use the same credentials as in your jdbc properties to login.
 
-Start your application and goto: http://<host app is running on>:18080/
+Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
 You will see an overview of the last 2500 queries run on your database and some timing stats about them.
 
