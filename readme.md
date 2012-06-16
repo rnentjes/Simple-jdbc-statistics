@@ -63,7 +63,7 @@ Drivers automatically discovered atm:
   org.h2.Driver
 ```
 
-If your driver is not in there, make sure it's known before you connect to the database (eg Class.forName("<driver class name>"); )
+If your driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
 
 There are some settings that can be passed in the jdbc url. There is a settings menu where you can change them at runtime and it will show you an example for your jdbc url.
 
