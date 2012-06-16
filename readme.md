@@ -10,7 +10,7 @@ To use:
 
 Add the following jars to your classpath:
 
-* jdbc-stats-0.1.jar
+* jdbc-stats-1.0.jar
 * slf4j-api-1.6.4.jar (add a slf4j binding if you want to see some logging)
 * ssr-0.5.jar
 * vst-0.5.jar
@@ -39,7 +39,7 @@ If you want a login screen add the following instead:
   jdbc:secstat:&lt;settings&gt;:
 ```
 
-Use the credentials in your jdbc properties to login
+Use the same credentials as in your jdbc properties to login.
 
 Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
@@ -63,8 +63,8 @@ Drivers automatically discovered atm:
   org.h2.Driver
 ```
 
-If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
+If your driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
 
-There are some settings that can be passed in the jdbc url. There is a settings menu where you can change them runtime and it will show you an example for your settings.
+There are some settings that can be passed in the jdbc url. There is a settings menu where you can change them at runtime and it will show you an example for your jdbc url.
 
-Example (default values): webServerConnections=5;numberOfQueries=2500;logStacktraces=true;formattedQueries=true
+Example (default values): webServerPort=18080;webServerConnections=2;numberOfQueries=2500;logStacktraces=true;formattedQueries=true
