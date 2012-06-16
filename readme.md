@@ -6,7 +6,7 @@ See a running example here:
   http://phoibe.astraeus.nl:18080/
 ```
 
-To use:
+How to use:
 
 Add the following jars to your classpath:
 
