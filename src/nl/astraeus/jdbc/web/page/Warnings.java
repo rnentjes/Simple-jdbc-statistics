@@ -1,7 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class Warnings extends TemplatePage {
         
         return result;
     }
-    
+
     public static class Message {
         public static enum Type {
             SUCCESS,
@@ -91,6 +90,23 @@ public class Warnings extends TemplatePage {
     
     public void addMessage(Message.Type type, String header, String body) {
         messages.add(new Message(type, header, body));
+    }
+
+    public boolean hasMessages() {
+        return !messages.isEmpty();
+    }
+
+    public boolean hasWarnings() {
+        boolean result = false;
+
+        for (Message message : messages) {
+            if (message.getError() || message.getWarning()) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     @Override

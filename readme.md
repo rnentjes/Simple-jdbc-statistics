@@ -12,8 +12,8 @@ Add the following jars to your classpath:
 
 * jdbc-stats-0.1.jar
 * slf4j-api-1.6.4.jar (add a slf4j binding if you want to see some logging)
-* ssr-0.1.jar
-* vst-0.4.jar
+* ssr-0.5.jar
+* vst-0.5.jar
 
 Add the following jar if you are not running in a web container:
 
@@ -28,15 +28,15 @@ Set your jdbc driver property to the following class:
 Add the following to the front of your current jdbc url:
 
 ```text
-  jdbc:stat:
+  jdbc:stat:&lt;settings&gt;:
   
-  (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat:jdbc:postgresql://localhost/mydb)
+  (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat::jdbc:postgresql://localhost/mydb)
 ```
 
 If you want a login screen add the following instead:
 
 ```text
-  jdbc:secstat:
+  jdbc:secstat:&lt;settings&gt;:
 ```
 
 Use the credentials in your jdbc properties to login
@@ -64,3 +64,7 @@ Drivers automatically discovered atm:
 ```
 
 If yours driver is not in there, make sure it's known before you connect to the database (eg Class.forName("&lt;driver class name&gt;"); )
+
+There are some settings that can be passed in the jdbc url. There is a settings menu where you can change them runtime and it will show you an example for your settings.
+
+Example (default values): webServerConnections=5;numberOfQueries=2500;logStacktraces=true;formattedQueries=true

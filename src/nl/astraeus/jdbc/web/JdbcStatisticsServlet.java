@@ -79,8 +79,6 @@ public class JdbcStatisticsServlet extends HttpServlet {
 
         resp.setContentType("text/html");
 
-        Settings.get().readSettings(req);
-
         Page page = (Page)session.getAttribute("page");
         Page menu = (Page)session.getAttribute("menu");
 
@@ -127,8 +125,6 @@ public class JdbcStatisticsServlet extends HttpServlet {
         long time = System.nanoTime();
         resp.getWriter().print(page.render(req));
         resp.getWriter().println("</div>");
-
-        Settings.get().saveSettings(resp);
 
         if (!ajax) {
             resp.getWriter().print(bottom);

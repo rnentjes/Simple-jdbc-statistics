@@ -31,7 +31,35 @@
                     <input type="checkbox" id="fqcheck" name="formattedQueries" {if(formattedQueries)}checked{/if}>
                 </div>
             </div>
+
+            <div class="control-group">
+                <label class="control-label" for="wscon">Web server threads <span class="label label-info">1</span></label>
+                <div class="controls">
+                    <input type="text" id="wscon" name="webServerConnections" value="{webServerConnections}">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="wsport">Web server port <span class="label label-info">1</span></label>
+                <div class="controls">
+                    <input type="text" id="wsport" name="webServerPort" value="{webServerPort}">
+                </div>
+            </div>
         </fieldset>
+        <div class="control-group">
+            <label class="control-label" >Jdbc url example:</label>
+            <div class="controls" id="settings">
+                {jdbcUrl}
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <span class="label label-info">1</span> These settings won't take effect until after a restart, add them to your jdbc url.
+            </div>
+        </div>
+
+
     </div>
 
     <div class="row">

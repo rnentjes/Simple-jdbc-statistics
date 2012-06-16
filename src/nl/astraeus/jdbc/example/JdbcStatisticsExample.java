@@ -18,7 +18,8 @@ public class JdbcStatisticsExample {
     }
 
     public JdbcStatisticsExample() throws Exception {
-        Connection conn = DriverManager.getConnection("jdbc:stat:jdbc:h2:mem:test", "user", "password");
+        // webServerConnections=1;numberOfQueries=2500;logStacktraces=true;formattedQueries=true
+        Connection conn = DriverManager.getConnection("jdbc:stat::jdbc:h2:mem:test", "user", "password");
         conn.setAutoCommit(false);
 
         Statement statement = null;

@@ -1,6 +1,5 @@
 package nl.astraeus.jdbc.web.page;
 
-import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.web.model.Settings;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +23,49 @@ public class SettingsOverview extends TemplatePage {
             String nrq = request.getParameter("queries");
             String pq = request.getParameter("formattedQueries");
             String rs = request.getParameter("recordingStacktraces");
+            String wsc = request.getParameter("webServerConnections");
+            String wsp = request.getParameter("webServerPort");
+
+            if (wsp != null) {
+                try {
+                    int port = Integer.parseInt(wsp);
+
+                    if (port < 1025 || port > 65535) {
+                        Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Web server port should be a number between 1025 and 65535.");
+                    } else {
+                        settings.setWebServerPort(port);
+                    }
+                } catch (NumberFormatException e) {
+                    Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Web server port should be a number between 1025 and 65535.");
+                }
+            }
+
+            if (wsc != null) {
+                try {
+                    int nrcon = Integer.parseInt(wsc);
+
+                    if (nrcon < 1 || nrcon > 25) {
+                        Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Number of web server threads should be a number between 1 and 25.");
+                    } else {
+                        settings.setWebServerConnections(nrcon);
+                    }
+                } catch (NumberFormatException e) {
+                    Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Number of web server threads should be a number between 1 and 25.");
+                }
+            }
 
             if (nrq != null) {
-                settings.setNumberOfQueries(Integer.parseInt(nrq));
+                try {
+                    int nrquery = Integer.parseInt(nrq);
+
+                    if (nrquery < 1 || nrquery > 25000) {
+                        Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
+                    } else {
+                        settings.setNumberOfQueries(nrquery);
+                    }
+                } catch (NumberFormatException e) {
+                    Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
+                }
             }
 
             if (pq != null) {
@@ -41,7 +80,9 @@ public class SettingsOverview extends TemplatePage {
                 settings.setRecordingStacktraces(false);
             }
 
-            Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
+            if (!Warnings.get(request).hasWarnings()) {
+                Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
+            }
         }
 
         return result;
@@ -62,6 +103,12 @@ public class SettingsOverview extends TemplatePage {
 
         result.put("formattedQueries", settings.isFormattedQueries());
         result.put("recordingStacktraces", settings.isRecordingStacktraces());
+        result.put("webServerConnections", String.valueOf(settings.getWebServerConnections()));
+        result.put("webServerPort", String.valueOf(settings.getWebServerPort()));
+
+        result.put("jdbcUrl", Settings.get().isSecure() ?
+                "jdbc:secstat:"+Settings.get().getSettings()+":<original jdbc url>" :
+                "jdbc:stat:"+Settings.get().getSettings()+":<original jdbc url>");
 
         return result;
     }

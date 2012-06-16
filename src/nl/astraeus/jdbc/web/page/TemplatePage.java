@@ -37,7 +37,7 @@ public abstract class TemplatePage extends Page {
 
         long time3 = System.nanoTime();
 
-        logger.info("Page " + this.getClass().getSimpleName() + ", define: " + Util.formatNano(time2-time1) + ", render: " + Util.formatNano(time3-time2) + ", total: " + Util.formatNano(time3-time1));
+        logger.debug("Page " + this.getClass().getSimpleName() + ", define: " + Util.formatNano(time2-time1) + ", render: " + Util.formatNano(time3-time2) + ", total: " + Util.formatNano(time3-time1));
 
         return result;
     }
@@ -53,7 +53,7 @@ public abstract class TemplatePage extends Page {
             try {
                 in = cls.getResourceAsStream(cls.getSimpleName() + ".html");
 
-                result = SimpleTemplate.readTemplate('{','}', EscapeMode.HTML, in);
+                result = SimpleTemplate.readTemplate("{","}", EscapeMode.HTML, in);
 
                 templateCache.put(cls, result);
             } catch (IOException e) {

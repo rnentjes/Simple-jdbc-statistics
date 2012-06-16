@@ -77,14 +77,29 @@ public class Driver implements java.sql.Driver {
     public Connection connect(String url, Properties info) throws SQLException {
         if (url.startsWith(URL_PREFIX)) {
             Settings.get().setSecure(false);
-            url = url.substring(URL_PREFIX.length());
         } else if (url.startsWith(URL_SECURE_PREFIX)) {
             Settings.get().setSecure(true);
-            url = url.substring(URL_SECURE_PREFIX.length());
+        }
+
+        String [] parts = url.split("\\:");
+        String settings = "webServerConnections=5;numberOfQueries=2500;logStacktraces=true;formattedQueries=true";
+
+        if (parts.length > 3) {
+            settings = parts[2];
+        }
+
+        Settings.get().setSettings(settings);
+
+        StringBuilder targetUrl = new StringBuilder();
+        for (int index = 3; index < parts.length; index++) {
+            if (index > 3) {
+                targetUrl.append(":");
+            }
+            targetUrl.append(parts[index]);
         }
 
         if (driver == null) {
-            driver = findDriver(url);
+            driver = findDriver(targetUrl.toString());
         }
 
         if (Settings.get().isSecure()) {
@@ -100,19 +115,21 @@ public class Driver implements java.sql.Driver {
         }
 
         if (driver != null && !started) {
-            SimpleWebServer server = new SimpleWebServer(18080);
+            SimpleWebServer server = new SimpleWebServer(Settings.get().getWebServerPort());
 
             server.addServlet(new JdbcStatisticsServlet(), "/*");
             server.addServlet(new ResourceServlet(), "/resources/*");
 
-            server.setNumberOfConnections(5);
+            server.setNumberOfConnections(Settings.get().getWebServerConnections());
 
             server.start();
+
+            System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
 
             started = true;
         }
 
-        return new ConnectionLogger(driver.connect(url, info));
+        return new ConnectionLogger(driver.connect(targetUrl.toString(), info));
     }
 
     public boolean acceptsURL(String url) throws SQLException {
