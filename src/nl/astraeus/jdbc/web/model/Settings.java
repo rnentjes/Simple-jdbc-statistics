@@ -118,57 +118,58 @@ public class Settings {
     }
 
     public void setSettings(String settings) {
-        String [] parts = settings.split("\\;");
+        if (settings != null && settings.length() > 0) {
+            String [] parts = settings.split("\\;");
 
-        for (String part : parts) {
-            String [] subParts = part.split("\\=");
+            for (String part : parts) {
+                String [] subParts = part.split("\\=");
 
-            if (subParts.length != 2) {
-                logger.warn("Unknown setting: "+part);
-            } else {
-                String name = subParts[0];
-                String value = subParts[1];
+                if (subParts.length != 2) {
+                    logger.warn("Unknown setting: "+part);
+                } else {
+                    String name = subParts[0];
+                    String value = subParts[1];
 
-                if (WEBSERVER_PORT.equalsIgnoreCase(name)) {
-                    int port = getValueAsInt(value);
+                    if (WEBSERVER_PORT.equalsIgnoreCase(name)) {
+                        int port = getValueAsInt(value);
 
-                    if (port > 1024 && port < 65536) {
-                        setWebServerPort(port);
-                    } else {
-                        logger.warn(WEBSERVER_PORT+" has an illegal value, should be a number between 1025 and 65535.");
-                    }
-                } else if (CONNECTION_POOLS.equalsIgnoreCase(name)) {
-                    int cons = getValueAsInt(value);
+                        if (port > 1024 && port < 65536) {
+                            setWebServerPort(port);
+                        } else {
+                            logger.warn(WEBSERVER_PORT+" has an illegal value, should be a number between 1025 and 65535.");
+                        }
+                    } else if (CONNECTION_POOLS.equalsIgnoreCase(name)) {
+                        int cons = getValueAsInt(value);
 
-                    if (cons > 0 && cons < 26) {
-                        setWebServerConnections(cons);
-                    } else {
-                        logger.warn(CONNECTION_POOLS+" has an illegal value, should be a number between 1 and 25.");
-                    }
-                } else if (NUMBER_OF_QUERIES.equalsIgnoreCase(name)) {
-                    int nrQueries = getValueAsInt(value);
+                        if (cons > 0 && cons < 26) {
+                            setWebServerConnections(cons);
+                        } else {
+                            logger.warn(CONNECTION_POOLS+" has an illegal value, should be a number between 1 and 25.");
+                        }
+                    } else if (NUMBER_OF_QUERIES.equalsIgnoreCase(name)) {
+                        int nrQueries = getValueAsInt(value);
 
-                    if (nrQueries > 0 && nrQueries < 25001) {
-                        setNumberOfQueries(nrQueries);
-                    } else {
-                        logger.warn(NUMBER_OF_QUERIES + " has an illegal value, should be a number between 1 and 25000.");
-                    }
-                } else if (LOG_STACKTRACES.equalsIgnoreCase(name)) {
-                    if ("false".equals(value) || "0".equals(value)) {
-                        setRecordingStacktraces(false);
-                    } else {
-                        setRecordingStacktraces(true);
-                    }
-                } else if (FORMATTED_QUERIES.equalsIgnoreCase(name)) {
-                    if ("false".equals(value) || "0".equals(value)) {
-                        setFormattedQueries(false);
-                    } else {
-                        setFormattedQueries(true);
+                        if (nrQueries > 0 && nrQueries < 25001) {
+                            setNumberOfQueries(nrQueries);
+                        } else {
+                            logger.warn(NUMBER_OF_QUERIES + " has an illegal value, should be a number between 1 and 25000.");
+                        }
+                    } else if (LOG_STACKTRACES.equalsIgnoreCase(name)) {
+                        if ("false".equals(value) || "0".equals(value)) {
+                            setRecordingStacktraces(false);
+                        } else {
+                            setRecordingStacktraces(true);
+                        }
+                    } else if (FORMATTED_QUERIES.equalsIgnoreCase(name)) {
+                        if ("false".equals(value) || "0".equals(value)) {
+                            setFormattedQueries(false);
+                        } else {
+                            setFormattedQueries(true);
+                        }
                     }
                 }
             }
         }
-        // parse settings
     }
 
     public String getSettings() {
