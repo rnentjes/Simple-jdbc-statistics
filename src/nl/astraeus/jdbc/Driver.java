@@ -23,6 +23,11 @@ public class Driver implements java.sql.Driver {
     final private static String URL_SECURE_PREFIX = "jdbc:secstat:";
 
     private static volatile boolean started = false;
+    private static SimpleWebServer server = null;
+
+    public static SimpleWebServer getServer() {
+        return server;
+    }
 
     private java.sql.Driver driver = null;
     private String[] drivers = {
@@ -115,7 +120,7 @@ public class Driver implements java.sql.Driver {
         }
 
         if (driver != null && !started) {
-            SimpleWebServer server = new SimpleWebServer(Settings.get().getWebServerPort());
+            server = new SimpleWebServer(Settings.get().getWebServerPort());
 
             server.addServlet(new JdbcStatisticsServlet(), "/*");
             server.addServlet(new ResourceServlet(), "/resources/*");

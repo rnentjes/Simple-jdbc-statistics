@@ -101,6 +101,8 @@ public class JdbcStatisticsServlet extends HttpServlet {
                 page = new TransactionOverview();
             } else if ("menusettings".equals(req.getParameter("action"))) {
                 page = new SettingsOverview();
+            } else if ("menuinfo".equals(req.getParameter("action"))) {
+                page = new ServerInfo();
             } else {
                 page = page .processRequest(req);
             }

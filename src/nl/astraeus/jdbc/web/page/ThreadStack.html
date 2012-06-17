@@ -1,0 +1,32 @@
+<div class="page-header">
+    <h3>Thread stacktrace</h3>
+</div>
+
+<div class="row">
+    <div class="span1 ">
+        <a onclick="return Sjs.submit('back')" class="btn btn-primary">Back</a>
+    </div>
+</div>
+
+<table class="table table-condensed table-striped " id="overview">
+    <thead>
+    <tr>
+        <th>Class</th>
+        <th>Method</th>
+        <th>Line</th>
+    </tr>
+    </thead>
+    <tbody>
+    {each(trace as el)}
+    <tr>
+        {if(el.highlight)}
+        <td><span style="color: blue;">{el.element.className}</span></td>
+        {else}
+        <td>{el.element.className}</td>
+        {/if}
+        <td>{el.element.methodName}</td>
+        <td>{el.element.lineNumber}</td>
+    </tr>
+    {/each}
+    </tbody>
+</table>

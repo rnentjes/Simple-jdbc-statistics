@@ -1,0 +1,28 @@
+<div class="page-header">
+    <h3>Server info</h3>
+</div>
+
+<table class="table table-condensed table-striped " id="overview">
+    <thead>
+    <tr>
+        <th> </th>
+        <th>Name</th>
+        <th>Running</th>
+        <th>Handling</th>
+        <th>State</th>
+        <th>Alive</th>
+    </tr>
+    </thead>
+    <tbody>
+    {each(threads as thread)}
+    <tr>
+        <td><a onclick="return Sjs.submit('select', '{thread.name}')"><i class=" icon-zoom-in"></i></a></td>
+        <td>{thread.name}</td>
+        <td>{thread.running}</td>
+        <td>{thread.handling}</td>
+        <td>{thread.state}</td>
+        <td>{thread.alive}</td>
+    </tr>
+    {/each}
+    </tbody>
+</table>
