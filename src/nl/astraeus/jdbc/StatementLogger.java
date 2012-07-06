@@ -29,8 +29,13 @@ public class StatementLogger implements Statement {
     private void log(QueryType type, String sql) throws SQLException {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
+        boolean autocommit = true;
+        
+        if (!statement.isClosed() && getConnection() != null) {
+            autocommit = getConnection().getAutoCommit();
+        }
 
-        JdbcLogger.log(type, sql, m, n, getConnection() == null ? true : getConnection().getAutoCommit());
+        JdbcLogger.log(type, sql, m, n, autocommit);
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
