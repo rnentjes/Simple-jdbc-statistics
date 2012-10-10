@@ -181,8 +181,8 @@ public class TransactionOverview extends TemplatePage {
         result.put("sortTotalTime", sortTotalTime);
         result.put("sortQueryTime", sortQueryTime);
 
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));
