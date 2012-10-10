@@ -130,8 +130,8 @@ public class QueryDetail extends TemplatePage {
         result.put("sortAvgTime", sortAvgTime);
         result.put("sortTime", sortTime);
 
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));
