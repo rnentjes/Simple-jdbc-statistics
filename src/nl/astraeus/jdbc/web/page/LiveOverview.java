@@ -137,11 +137,13 @@ public class LiveOverview extends TemplatePage {
         result.put("sortAvgTime", sortAvgTime);
         result.put("sortTotalTime", sortTotalTime);
 
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));
+
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
         result.put("avgTime", Util.formatNano(avgTime));
 

@@ -138,10 +138,12 @@ public class QueryOverview extends TemplatePage {
         result.put("sortTotalTime", sortTotalTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));
+
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
         result.put("avgTime", Util.formatNano(avgTime));
 

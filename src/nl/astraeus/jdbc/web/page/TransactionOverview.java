@@ -1,7 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
-import nl.astraeus.jdbc.util.Formatting;
 import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.model.TransactionEntry;
 
@@ -182,10 +181,12 @@ public class TransactionOverview extends TemplatePage {
         result.put("sortQueryTime", sortQueryTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         result.put("fromTime", dateFormatter.format(new Date(fromTime)));
         result.put("toTime", dateFormatter.format(new Date(toTime)));
+
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
         result.put("avgTime", Util.formatNano(avgTime));
 
