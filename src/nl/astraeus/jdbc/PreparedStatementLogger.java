@@ -22,15 +22,17 @@ public class PreparedStatementLogger implements PreparedStatement {
 
     private String sql;
     private QueryType type;
+    private boolean autocommit;
     private long milli;
     private long nano;
 
     //private ArrayList parameters;
 
-    public PreparedStatementLogger(PreparedStatement statement) {
+    public PreparedStatementLogger(PreparedStatement statement) throws SQLException {
         this.statement = statement;
         this.sql = "";
         this.type = QueryType.UNKNOWN;
+        this.autocommit = statement.getConnection().getAutoCommit();
     }
 
     private void clearTime() {
@@ -42,7 +44,7 @@ public class PreparedStatementLogger implements PreparedStatement {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(type, sql, m, n, getConnection().getAutoCommit());
+        JdbcLogger.log(type, sql, m, n, autocommit);
     }
 
     public PreparedStatementLogger(Connection connection, String sql) throws SQLException {

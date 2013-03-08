@@ -12,13 +12,15 @@ public class StatementLogger implements Statement {
     private Statement statement;
 
     private String sql;
+    private boolean autocommit;
     private long milli;
     private long nano;
 
-    public StatementLogger(Statement statement) {
+    public StatementLogger(Statement statement) throws SQLException {
         this.statement = statement;
 
         this.sql = "";
+        this.autocommit = statement.getConnection().getAutoCommit();
     }
 
     private void clearTime() {
@@ -29,11 +31,6 @@ public class StatementLogger implements Statement {
     private void log(QueryType type, String sql) throws SQLException {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
-        boolean autocommit = true;
-        
-        if (!statement.isClosed() && getConnection() != null) {
-            autocommit = getConnection().getAutoCommit();
-        }
 
         JdbcLogger.log(type, sql, m, n, autocommit);
     }
