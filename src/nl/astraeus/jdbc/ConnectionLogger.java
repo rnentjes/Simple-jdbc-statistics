@@ -31,7 +31,7 @@ public class ConnectionLogger implements Connection {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(QueryType.UNKNOWN, sql, m, n, connection.getAutoCommit());
+        JdbcLogger.log(QueryType.UNKNOWN, sql, m, n, true); //connection.getAutoCommit());
     }
 
     public void commit() throws SQLException {
