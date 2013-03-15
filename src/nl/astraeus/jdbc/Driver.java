@@ -119,19 +119,23 @@ public class Driver implements java.sql.Driver {
             }
         }
 
-        if (driver != null && !started) {
-            server = new SimpleWebServer(Settings.get().getWebServerPort());
+        if (driver != null) {
+            try {
+                server = new SimpleWebServer(Settings.get().getWebServerPort());
 
-            server.addServlet(new JdbcStatisticsServlet(), "/*");
-            server.addServlet(new ResourceServlet(), "/resources/*");
+                server.addServlet(new JdbcStatisticsServlet(), "/*");
+                server.addServlet(new ResourceServlet(), "/resources/*");
 
-            server.setNumberOfConnections(Settings.get().getWebServerConnections());
+                server.setNumberOfConnections(Settings.get().getWebServerConnections());
 
-            server.start();
+                server.start();
 
-            System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
+                System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
 
-            started = true;
+                started = true;
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
         }
 
         return new ConnectionLogger(driver.connect(targetUrl.toString(), info));
