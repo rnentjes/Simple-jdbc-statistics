@@ -119,7 +119,7 @@ public class Driver implements java.sql.Driver {
             }
         }
 
-        if (driver != null) {
+        if (driver != null && !started) {
             try {
                 server = new SimpleWebServer(Settings.get().getWebServerPort());
 
