@@ -53,7 +53,9 @@ public class ConnectionLogger implements Connection {
     public void close() throws SQLException {
         clearTime();
 
-        connection.close();
+        if (!connection.isClosed()) {
+            connection.close();
+        }
 
         log("close");
     }
