@@ -109,15 +109,15 @@ public class ConnectionLogger implements Connection {
     }
 
     public boolean getAutoCommit() throws SQLException {
-        return connection.getAutoCommit();
+        return connection == null || connection.getAutoCommit();
     }
 
     public boolean isClosed() throws SQLException {
-        return connection.isClosed();
+        return connection == null || connection.isClosed();
     }
 
     public DatabaseMetaData getMetaData() throws SQLException {
-        return connection.getMetaData();
+        return connection == null ? null : connection.getMetaData();
     }
 
     public void setReadOnly(boolean readOnly) throws SQLException {
