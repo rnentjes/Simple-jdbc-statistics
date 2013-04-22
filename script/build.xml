@@ -456,7 +456,7 @@
     <!-- Hudson                              jdepend                         -->
     <!-- =================================================================== -->
     <target name="all"
-            depends="clean, init, prepare, javadoc, ncss, findbugs, pmd, cpd, jar, dist">
+            depends="init, prepare, javadoc, ncss, findbugs, pmd, cpd, jar">
         <echo>Done.</echo>
     </target>
 
