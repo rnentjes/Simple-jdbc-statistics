@@ -25,6 +25,7 @@ public class SettingsOverview extends TemplatePage {
             String rs = request.getParameter("recordingStacktraces");
             String wsc = request.getParameter("webServerConnections");
             String wsp = request.getParameter("webServerPort");
+            String pstart = request.getParameter("packageStart");
 
             if (wsp != null) {
                 try {
@@ -80,6 +81,10 @@ public class SettingsOverview extends TemplatePage {
                 settings.setRecordingStacktraces(false);
             }
 
+            if (pstart != null) {
+                settings.setPackageStart(pstart);
+            }
+
             if (!Warnings.get(request).hasWarnings()) {
                 Warnings.get(request).addMessage(Warnings.Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
             }
@@ -105,6 +110,7 @@ public class SettingsOverview extends TemplatePage {
         result.put("recordingStacktraces", settings.isRecordingStacktraces());
         result.put("webServerConnections", String.valueOf(settings.getWebServerConnections()));
         result.put("webServerPort", String.valueOf(settings.getWebServerPort()));
+        result.put("packageStart", settings.getPackageStart());
 
         result.put("jdbcUrl", Settings.get().isSecure() ?
                 "jdbc:secstat:"+Settings.get().getSettings()+":<original jdbc url>" :

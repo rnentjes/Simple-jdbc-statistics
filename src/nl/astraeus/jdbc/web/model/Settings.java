@@ -20,6 +20,7 @@ public class Settings {
     private final static String FORMATTED_QUERIES = "formattedQueries";
     private final static String CONNECTION_POOLS  = "webServerThreads";
     private final static String WEBSERVER_PORT    = "webServerPort";
+    private final static String PACKAGE_START     = "packageStart";
 
 
     public static Settings get() {
@@ -44,6 +45,16 @@ public class Settings {
     private boolean secure = true;
     private String user = null;
     private int passwordHash = 0;
+
+    private String packageStart = "";
+
+    public String getPackageStart() {
+        return packageStart;
+    }
+
+    public void setPackageStart(String packageStart) {
+        this.packageStart = packageStart;
+    }
 
     public int getWebServerPort() {
         return webServerPort;
@@ -166,6 +177,8 @@ public class Settings {
                         } else {
                             setFormattedQueries(true);
                         }
+                    } else if (PACKAGE_START.equalsIgnoreCase(name)) {
+                        setPackageStart(value);
                     }
                 }
             }
@@ -201,6 +214,12 @@ public class Settings {
         result.append(FORMATTED_QUERIES);
         result.append("=");
         result.append(this.formattedQueries);
+
+        result.append(";");
+
+        result.append(PACKAGE_START);
+        result.append("=");
+        result.append(packageStart);
 
         return result.toString();
     }

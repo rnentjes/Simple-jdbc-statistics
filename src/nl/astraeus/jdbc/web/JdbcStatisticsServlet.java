@@ -41,6 +41,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
 
         mapping.put("queries", new QueryOverview());
         mapping.put("login", new Login());
+        mapping.put("jvm", new JvmStats());
 
         // queries/select/1234
         // queries/page/2
@@ -103,6 +104,8 @@ public class JdbcStatisticsServlet extends HttpServlet {
                 page = new SettingsOverview();
             } else if ("menuinfo".equals(req.getParameter("action"))) {
                 page = new ServerInfo();
+            } else if ("jvmstats".equals(req.getParameter("action"))) {
+                page = new JvmStats();
             } else {
                 page = page .processRequest(req);
             }

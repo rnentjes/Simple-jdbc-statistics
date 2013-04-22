@@ -2,6 +2,7 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.SqlFormatter;
+import nl.astraeus.jdbc.web.model.Settings;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class ShowStacktrace extends TemplatePage {
         }
 
         public boolean getHighlight() {
-            return highlight;
+            return element.getClassName().startsWith(Settings.get().getPackageStart());
         }
     }
 
