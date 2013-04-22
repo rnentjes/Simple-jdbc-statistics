@@ -8,7 +8,7 @@ See a running example here:
 
 Download:
 
-[jdbc-stats-1.1.jar]
+[jdbc-stats-1.1.jar](https://github.com/rnentjes/Simple-jdbc-statistics/blob/master/dist/jdbc-stats-1.1.zip?raw=true)
 
 How to use:
 
