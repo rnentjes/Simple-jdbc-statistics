@@ -21,7 +21,7 @@ public class JvmSampler extends Thread {
     private boolean running;
     private int samplesPerSecond = 100;
     private long samples = 0;
-    private Map<String, Integer> count = new HashMap<>();
+    private Map<String, Integer> count = new HashMap<String, Integer>();
 
     public JvmSampler() {
         super("JvmSampler");
@@ -96,7 +96,7 @@ public class JvmSampler extends Thread {
     }
 
     public synchronized Set<SampleInfo> getSampleCount() {
-        Set<SampleInfo> result = new TreeSet<>();
+        Set<SampleInfo> result = new TreeSet<SampleInfo>();
 
         for(Map.Entry<String, Integer> entry : count.entrySet()) {
             result.add(new SampleInfo(entry.getKey(), entry.getValue()));
@@ -126,7 +126,6 @@ public class JvmSampler extends Thread {
             return location.startsWith(Settings.get().getPackageStart());
         }
 
-        @Override
         public int compareTo(SampleInfo o) {
             int result = o.count - this.count;
 
