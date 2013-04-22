@@ -6,11 +6,15 @@ See a running example here:
   http://phoibe.astraeus.nl:18080/ /* demo might be down */
 ```
 
+Download:
+
+[jdbc-stats-1.1.jar]
+
 How to use:
 
 Add the following jars to your classpath:
 
-* jdbc-stats-1.0.jar
+* jdbc-stats-1.1.jar
 * slf4j-api-1.6.4.jar (add a slf4j binding if you want to see some logging)
 * ssr-0.5.jar
 * vst-0.5.jar
