@@ -30,7 +30,7 @@ public class JvmStats extends TemplatePage {
 
     @Override
     public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("running", SamplerManager.get().getSampler().isRunning());
         result.put("samples", SamplerManager.get().getSampler().getSampleCount());
