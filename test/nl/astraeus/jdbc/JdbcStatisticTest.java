@@ -1,6 +1,7 @@
 package nl.astraeus.jdbc;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -8,6 +9,7 @@ import org.junit.Test;
  * Date: 4/13/12
  * Time: 10:55 PM
  */
+@Ignore
 public class JdbcStatisticTest {
 
     @Test
