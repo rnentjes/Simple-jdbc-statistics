@@ -4,13 +4,13 @@
 
 <div class="row">
     <div class="span1 ">
-        <a onclick="return Sjs.submit('back')" class="btn btn-primary">Back</a>
+        <a href="/query/${hash}" class="btn btn-primary">Back</a>
     </div>
 </div>
 
 <div class="row">
     <div class="span10 offset1">
-        <p><pre><code class="sql">{!sql}</code></pre></p>
+        <p><pre><code class="sql">${!sql}</code></pre></p>
     </div>
 </div>
 
@@ -23,16 +23,16 @@
     </tr>
     </thead>
     <tbody>
-    {each(trace as el)}
+    ${each(trace as el)}
     <tr>
-        {if(el.highlight)}
-        <td><span style="color: blue;">{el.element.className}</span></td>
-        {else}
-        <td>{el.element.className}</td>
-        {/if}
-        <td>{el.element.methodName}</td>
-        <td>{el.element.lineNumber}</td>
+        ${if(el.highlight)}
+        <td><span style="color: blue;">${el.element.className}</span></td>
+        ${else}
+        <td>${el.element.className}</td>
+        ${/if}
+        <td>${el.element.methodName}</td>
+        <td>${el.element.lineNumber}</td>
     </tr>
-    {/each}
+    ${/each}
     </tbody>
 </table>

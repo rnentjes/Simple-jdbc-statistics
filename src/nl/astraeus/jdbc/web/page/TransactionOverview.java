@@ -3,8 +3,8 @@ package nl.astraeus.jdbc.web.page;
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.model.TransactionEntry;
+import nl.astraeus.web.page.Message;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,7 +14,7 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class TransactionOverview extends TemplatePage {
+public class TransactionOverview extends StatsPage {
 
     private boolean sortTotalCalls = true;
     private boolean sortAvgTime = false;
@@ -24,43 +24,42 @@ public class TransactionOverview extends TemplatePage {
     private List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
-        Page result = this;
-        
-        if ("sortTotalCalls".equals(request.getParameter("action"))) {
+    public void get() {
+        if ("sortTotalCalls".equals(getParameter("action"))) {
             sortTotalCalls = true;
             sortAvgTime = false;
             sortTotalTime = false;
             sortQueryTime = false;
-        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
+        } else if ("sortAvgTime".equals(getParameter("action"))) {
             sortTotalCalls = false;
             sortAvgTime = true;
             sortTotalTime = false;
             sortQueryTime = false;
-        } else if ("sortTotalTime".equals(request.getParameter("action"))) {
+        } else if ("sortTotalTime".equals(getParameter("action"))) {
             sortTotalCalls = false;
             sortAvgTime = false;
             sortTotalTime = true;
             sortQueryTime = false;
-        } else if ("sortQueryTime".equals(request.getParameter("action"))) {
+        } else if ("sortQueryTime".equals(getParameter("action"))) {
             sortTotalCalls = false;
             sortAvgTime = false;
             sortTotalTime = false;
             sortQueryTime = true;
-        } else if ("clear".equals(request.getParameter("action"))) {
+        } else if ("clear".equals(getParameter("action"))) {
             JdbcLogger.get().clear();
-        } else if ("select".equals(request.getParameter("action"))) {
-            String id = request.getParameter("actionValue");
+        } else if ("select".equals(getParameter("action"))) {
+            String id = getParameter("actionValue");
 
             TransactionEntry entry = findTransaction(Integer.parseInt(id));
             if (entry != null) {
-                result = new TransactionDetail(this, entry);
+                // redirect
+                // result = new TransactionDetail(this, entry);
             } else {
-                Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Transaction not found!", "Transaction with id '"+id+"' could not be found.");
+                addMessage(Message.Type.ERROR, "Transaction not found!", "Transaction with id '"+id+"' could not be found.");
             }
         }
 
-        return result;
+        set();
     }
     
     private TransactionEntry findTransaction(int id) {
@@ -76,10 +75,7 @@ public class TransactionOverview extends TemplatePage {
         return result;
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-
+    public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
@@ -172,25 +168,23 @@ public class TransactionOverview extends TemplatePage {
             });
         }
 
-        result.put("transactions", transactions);
-        result.put("count", entries.size());
+        set("transactions", transactions);
+        set("count", entries.size());
 
-        result.put("sortTotalCalls", sortTotalCalls);
-        result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTotalTime", sortTotalTime);
-        result.put("sortQueryTime", sortQueryTime);
+        set("sortTotalCalls", sortTotalCalls);
+        set("sortAvgTime", sortAvgTime);
+        set("sortTotalTime", sortTotalTime);
+        set("sortQueryTime", sortQueryTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
-        result.put("fromTime", dateFormatter.format(new Date(fromTime)));
-        result.put("toTime", dateFormatter.format(new Date(toTime)));
+        set("fromTime", dateFormatter.format(new Date(fromTime)));
+        set("toTime", dateFormatter.format(new Date(toTime)));
 
         dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
-        result.put("avgTime", Util.formatNano(avgTime));
-
-        return result;
+        set("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
+        set("avgTime", Util.formatNano(avgTime));
     }
 
 }

@@ -4,30 +4,30 @@
 
 <div class="row">
     <div class="span1 ">
-        <a onclick="return Sjs.submit('back')" class="btn btn-primary">Back</a>
+        <a href="/queries" class="btn btn-primary">Back</a>
     </div>
     <div class="span1 offset10">
-        <a onclick="return Sjs.submit('refresh')" class="btn btn-primary">Refresh</a>
+        <a href="/query/${hash}" class="btn btn-primary">Refresh</a>
     </div>
 </div>
 
 <div class="row">
     <div class="span6">
-        <div># Queries: {count}</div>
-        <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
-        <div>Avg. time/query: {avgTime}</div>
+        <div># Queries: ${count}</div>
+        <div>Time span: ${deltaTime} (${fromTime} - ${toTime})</div>
+        <div>Avg. time/query: ${avgTime}</div>
     </div>
 </div>
 
 <div class="row">
     <div class="span10 offset1">
-        <p><pre><code class="sql">{if(sql)}{!sql}{/if}</code></pre></p>
+        <p><pre><code class="sql">${if(sql)}${!sql}${/if}</code></pre></p>
     </div>
 </div>
 
 <ul class="nav nav-pills">
-    <li {if(sortTime)}class="active"{/if}><a onclick="return Sjs.submit('sortTime')">Timestamp</a></li>
-    <li {if(sortAvgTime)}class="active"{/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. query time</a></li>
+    <li ${if(sortTime)}class="active"${/if}><a onclick="return Sjs.submit('sortTime')">Timestamp</a></li>
+    <li ${if(sortAvgTime)}class="active"${/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. query time</a></li>
 </ul>
 
 <table class="table table-condensed table-striped " id="overview">
@@ -41,14 +41,14 @@
     </tr>
     </thead>
     <tbody>
-    {each(queries as q)}
+    ${each(queries as q)}
     <tr>
-        <td>{if(q.stackTrace)}<a onclick="return Sjs.submit('stacktrace', '{q.timestamp}')"><i class=" icon-zoom-in"></i></a>{/if}</td>
-        <td>{q.formattedTimestamp}</td>
-        <td>{q.threadId}</td>
-        <td>{q.type.description}</td>
-        <td>{q.total}</td>
+        <td>${if(q.stackTrace)}<a href="/stacktrace/${hash}/${q.timestamp}"><i class=" icon-zoom-in"></i></a>${/if}</td>
+        <td>${q.formattedTimestamp}</td>
+        <td>${q.threadId}</td>
+        <td>${q.type.description}</td>
+        <td>${q.total}</td>
     </tr>
-    {/each}
+    ${/each}
     </tbody>
 </table>

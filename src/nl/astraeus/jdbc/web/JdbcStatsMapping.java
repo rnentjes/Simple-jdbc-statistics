@@ -1,8 +1,6 @@
 package nl.astraeus.jdbc.web;
 
-import nl.astraeus.jdbc.web.page.JvmStats;
-import nl.astraeus.jdbc.web.page.Login;
-import nl.astraeus.jdbc.web.page.QueryOverview;
+import nl.astraeus.jdbc.web.page.*;
 import nl.astraeus.web.page.Page;
 import nl.astraeus.web.page.PageMapping;
 
@@ -11,9 +9,21 @@ import nl.astraeus.web.page.PageMapping;
  * Time: 10:27 AM
  */
 public enum JdbcStatsMapping implements PageMapping {
-    QERIES("queries", QueryOverview.class),
-    LOGIN("login", Login.class),
+    QUERIES("queries", QueryOverview.class),
+    QUERY("query", QueryDetail.class),
+
+    TRANSACTIONS("transactions", TransactionOverview.class),
+    TRANSACTION("transaction", TransactionDetail.class),
+
     JVM("jvm", JvmStats.class),
+
+    SETTINGS("settings", SettingsOverview.class),
+
+    LOGIN("login", Login.class),
+    STACKTRACE("stacktrace", ShowStacktrace.class),
+
+    NOTFOUND("login", Login.class),
+    MAIN("", QueryOverview.class),
     ;
 
     private String uri;

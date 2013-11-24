@@ -3,10 +3,8 @@ package nl.astraeus.jdbc.web.page;
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
-import nl.astraeus.web.page.Page;
-import nl.astraeus.web.page.TemplatePage;
+import nl.astraeus.jdbc.web.JdbcStatsMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,32 +14,28 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class QueryDetail extends TemplatePage {
+public class QueryDetail extends StatsPage {
 
-    private Page previous;
     private int hash;
     private String sql = null;
 
     boolean sortAvgTime = false;
     boolean sortTime = false;
 
-    public QueryDetail(Page previous, int hash) {
-        this.previous = previous;
-        this.hash = hash;
+    public QueryDetail(String hash) {
+        this.hash = Integer.parseInt(hash);
     }
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
-        Page result = this;
-
-        if ("sortTime".equals(request.getParameter("action"))) {
+    public void get() {
+        if ("sortTime".equals(getParameter("action"))) {
             sortTime = true;
             sortAvgTime = false;
-        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
+        } else if ("sortAvgTime".equals(getParameter("action"))) {
             sortTime = false;
             sortAvgTime = true;
-        } else if ("stacktrace".equals(request.getParameter("action"))) {
-            long timestamp = Long.parseLong(request.getParameter("actionValue"));
+        } else if ("stacktrace".equals(getParameter("action"))) {
+            long timestamp = Long.parseLong(getParameter("actionValue"));
             JdbcLogger.LogEntry found = null;
             for (JdbcLogger.LogEntry entry : JdbcLogger.get().getEntries()) {
                 if (entry.getHash() == hash && entry.getTimestamp() == timestamp) {
@@ -51,22 +45,21 @@ public class QueryDetail extends TemplatePage {
             }
 
             if (found != null) {
-                result = new ShowStacktrace(this, found);
+                redirect(JdbcStatsMapping.JVM, Integer.toString(hash), Long.toString(timestamp));
+                //result = new ShowStacktrace(this, found);
             } else {
                 // warning ! found ....
             }
 
-        } else if ("back".equals(request.getParameter("action"))) {
-            result = previous;
+        } else if ("back".equals(getParameter("action"))) {
+            redirect(JdbcStatsMapping.QUERIES);
         }
 
-        return result;
+        set();
+        //return result;
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-
+    public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
@@ -125,24 +118,23 @@ public class QueryDetail extends TemplatePage {
             });
         }
 
-        result.put("queries", list);
-        result.put("count", list.size());
-        result.put("sql", sql);
+        set("queries", list);
+        set("count", list.size());
+        set("sql", sql);
 
-        result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTime", sortTime);
+        set("sortAvgTime", sortAvgTime);
+        set("sortTime", sortTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
-        result.put("fromTime", dateFormatter.format(new Date(fromTime)));
-        result.put("toTime", dateFormatter.format(new Date(toTime)));
+        set("fromTime", dateFormatter.format(new Date(fromTime)));
+        set("toTime", dateFormatter.format(new Date(toTime)));
 
         dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
-        result.put("avgTime", Util.formatNano(avgTime));
-
-        return result;
+        set("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
+        set("avgTime", Util.formatNano(avgTime));
+        set("hash", hash);
     }
 
 }

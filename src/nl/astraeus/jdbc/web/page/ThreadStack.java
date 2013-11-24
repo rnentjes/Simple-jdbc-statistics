@@ -6,37 +6,28 @@ import nl.astraeus.jdbc.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: rnentjes
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class ThreadStack extends TemplatePage {
+public class ThreadStack extends StatsPage {
     private static Logger logger = LoggerFactory.getLogger(ThreadStack.class);
 
-    private Page previous;
     private String threadName;
 
-    public ThreadStack(Page previous, String threadName) {
-        this.previous = previous;
+    public ThreadStack(String threadName) {
         this.threadName = threadName;
     }
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
-        Page result = this;
-
-        if ("back".equals(request.getParameter("action"))) {
-            result = previous;
+    public void get() {
+        if ("back".equals(getParameter("action"))) {
+            //result = previous;
         }
-
-        return result;
     }
 
     public static class TraceElement {
@@ -57,9 +48,7 @@ public class ThreadStack extends TemplatePage {
         }
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    public void set() {
         SimpleWebServer server = Driver.getServer();
 
         ConnectionHandlerThread thread = null;
@@ -78,10 +67,8 @@ public class ThreadStack extends TemplatePage {
             trace.add(new TraceElement(thread.getStackTrace()[index], hl));
         }
 
-        result.put("thread", thread);
-        result.put("trace", trace);
-        result.put("threads", server.getThreads());
-
-        return result;
+        set("thread", thread);
+        set("trace", trace);
+        set("threads", server.getThreads());
     }
 }

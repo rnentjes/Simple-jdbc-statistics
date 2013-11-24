@@ -2,22 +2,24 @@
     <h3>Jvm stats</h3>
 </div>
 
-<div class="row">
-    <div class="span6">
-        # Samples: {totalSamples}
-        <a onclick="return Sjs.submit('refresh')" class="btn btn-success">Refresh</a>
+<form method="post">
+    <div class="row">
+        <div class="span6">
+            # Samples: ${totalSamples}
+            <input type="submit" name="refresh" value="Refresh" class="btn btn-success" />
+        </div>
+        <div class="span3 pull-right">
+            ${if(running)}
+            <span style="color: red">Running</span>
+            <input type="submit" name="stopRunning" value="Stop" class="btn btn-success" />
+            ${else}
+            <span style="color: blue">Stopped</span>
+            <input type="submit" name="startRunning" value="Start" class="btn btn-danger" />
+            ${/if}
+            <input type="submit" name="clear" value="Clear" class="btn btn-danger" />
+        </div>
     </div>
-    <div class="span3 pull-right">
-        {if(running)}
-        <span style="color: red">Running</span>
-        <a onclick="return Sjs.submit('stopRunning')" class="btn btn-success">Stop</a>
-        {else}
-        <span style="color: blue">Stopped</span>
-        <a onclick="return Sjs.submit('startRunning')" class="btn btn-danger">Start</a>
-        {/if}
-        <a onclick="return Sjs.submit('clear')" class="btn btn-danger">Clear</a>
-    </div>
-</div>
+</form>
 
 <ul class="nav nav-pills">
     <!--<li ><a onclick="return Sjs.submit('sortTotalTime')">Total time</a></li>-->
@@ -26,26 +28,23 @@
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
-        <th> </th>
         <th>Location</th>
         <th>Count</th>
     </tr>
     </thead>
     <tbody>
-    {each(samples as sample)}
+    ${each(samples as sample)}
     <tr>
-        <td><a onclick="return Sjs.submit('select', '')"><i class=" icon-zoom-in"></i></a></td>
-
-        {if(sample.highlight)}
-            <td><span style="color: blue;">{sample.location}</span></td>
-            <td><span style="color: blue;">{sample.count}</span></td>
-        {else}
-            <td>{sample.location}</td>
-            <td>{sample.count}</td>
-        {/if}
+        ${if(sample.highlight)}
+            <td><span style="color: blue;">${sample.location}</span></td>
+            <td><span style="color: blue;">${sample.count}</span></td>
+        ${else}
+            <td>${sample.location}</td>
+            <td>${sample.count}</td>
+        ${/if}
 
 
     </tr>
-    {/each}
+    ${/each}
     </tbody>
 </table>

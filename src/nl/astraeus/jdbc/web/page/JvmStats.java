@@ -2,40 +2,35 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.thread.SamplerManager;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * User: rnentjes
  * Date: 4/22/13
  * Time: 8:45 PM
  */
-public class JvmStats extends TemplatePage {
+public class JvmStats extends StatsPage {
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
-        if ("startRunning".equals(request.getParameter("action"))) {
-            SamplerManager.get().getSampler().startRunning();
-        }
-        if ("stopRunning".equals(request.getParameter("action"))) {
-            SamplerManager.get().getSampler().stopRunning();
-        }
-        if ("clear".equals(request.getParameter("action"))) {
-            SamplerManager.get().getSampler().clear();
-        }
-
-        return this;
+    public void get() {
+        set();
     }
 
     @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    public void post() {
+        if (getParameter("startRunning") != null) {
+            SamplerManager.get().getSampler().startRunning();
+        }
+        if (getParameter("stopRunning") != null) {
+            SamplerManager.get().getSampler().stopRunning();
+        }
+        if (getParameter("clear") != null) {
+            SamplerManager.get().getSampler().clear();
+        }
+        set();
+    }
 
-        result.put("running", SamplerManager.get().getSampler().isRunning());
-        result.put("samples", SamplerManager.get().getSampler().getSampleCount());
-        result.put("totalSamples", SamplerManager.get().getSampler().getSamples());
-
-        return result;
+    public void set() {
+        set("running", SamplerManager.get().getSampler().isRunning());
+        set("samples", SamplerManager.get().getSampler().getSampleCount());
+        set("totalSamples", SamplerManager.get().getSampler().getSamples());
     }
 }

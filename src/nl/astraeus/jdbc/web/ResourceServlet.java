@@ -16,6 +16,8 @@ import java.io.InputStream;
  */
 public class ResourceServlet extends HttpServlet {
 
+    private long startup = System.currentTimeMillis();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
@@ -38,6 +40,9 @@ public class ResourceServlet extends HttpServlet {
                 } else if (uri.endsWith("gif")) {
                     resp.setContentType("image/gif");
                 }
+
+                resp.setHeader("Cache-Control", "max-age=3600");
+                resp.setHeader("ETag", Long.toHexString(startup));
 
                 IOUtils.copy(in, resp.getOutputStream());
             } finally {

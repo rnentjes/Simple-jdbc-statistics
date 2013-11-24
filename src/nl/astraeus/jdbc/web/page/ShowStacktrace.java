@@ -1,47 +1,61 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.QueryType;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.web.model.Settings;
+import nl.astraeus.web.page.Message;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: rnentjes
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class ShowStacktrace extends TemplatePage {
+public class ShowStacktrace extends StatsPage {
 
-    private Page previous;
+    private int hash;
     private JdbcLogger.LogEntry logEntry;
 
     boolean sortAvgTime = false;
     boolean sortTime = false;
 
-    public ShowStacktrace(Page previous, JdbcLogger.LogEntry logEntry) {
-        this.previous = previous;
-        this.logEntry = logEntry;
+    public ShowStacktrace(String hashStr, String timestamp) {
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+
+        hash = Integer.parseInt(hashStr);
+        long tsValue = Long.parseLong(timestamp);
+
+        for (JdbcLogger.LogEntry entry : entries) {
+            if (entry.getHash() == hash && entry.getTimestamp() == tsValue) {
+                this.logEntry = entry;
+                break;
+            }
+        }
+
+        if (logEntry == null) {
+            addMessage(Message.Type.ERROR, "Error", "Stacktrace not found!");
+            logEntry = new JdbcLogger.LogEntry(-1, QueryType.UNKNOWN, "", 0, 0, false);
+            logEntry.setStackTrace(new StackTraceElement[0]);
+        }
     }
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
+    public void get() {
 
-        if ("sortTime".equals(request.getParameter("action"))) {
+        if ("sortTime".equals(getParameter("action"))) {
             sortTime = true;
             sortAvgTime = false;
-        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
+        } else if ("sortAvgTime".equals(getParameter("action"))) {
             sortTime = false;
             sortAvgTime = true;
-        } else if ("back".equals(request.getParameter("action"))) {
-            return previous;
+        } else if ("back".equals(getParameter("action"))) {
+            // go back (?)
         }
 
-        return this;
+        set();
     }
 
     public static class TraceElement {
@@ -62,10 +76,7 @@ public class ShowStacktrace extends TemplatePage {
         }
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-
+    public void set() {
         List<TraceElement> trace = new LinkedList<TraceElement>();
 
         for (int index = 4; index < logEntry.getStackTrace().length; index++) {
@@ -75,14 +86,13 @@ public class ShowStacktrace extends TemplatePage {
 
         SqlFormatter formatter = new SqlFormatter();
 
-        result.put("trace", trace);
-        result.put("count", trace.size());
-        result.put("sql", logEntry.getSql());
+        set("hash", hash);
+        set("trace", trace);
+        set("count", trace.size());
+        set("sql", logEntry.getSql());
 
-        result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTime", sortTime);
-
-        return result;
+        set("sortAvgTime", sortAvgTime);
+        set("sortTime", sortTime);
     }
 
 }

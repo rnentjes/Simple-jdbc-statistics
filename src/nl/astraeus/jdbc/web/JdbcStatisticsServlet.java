@@ -1,9 +1,6 @@
 package nl.astraeus.jdbc.web;
 
 import nl.astraeus.jdbc.util.IOUtils;
-import nl.astraeus.jdbc.util.Util;
-import nl.astraeus.jdbc.web.model.Settings;
-import nl.astraeus.jdbc.web.page.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * User: rnentjes
@@ -26,7 +20,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
 
     private String head;
     private String bottom;
-    private Map<String, Page> mapping = new HashMap<String, Page>();
+//    private Map<String, Page> mapping = new HashMap<String, Page>();
 
     @Override
     public void init() throws ServletException {
@@ -39,9 +33,11 @@ public class JdbcStatisticsServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
+/*
         mapping.put("queries", new QueryOverview());
         mapping.put("login", new Login());
         mapping.put("jvm", new JvmStats());
+*/
 
         // queries/select/1234
         // queries/page/2
@@ -57,6 +53,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
 
+/*
         String [] parts = uri.split("\\/");
         int index = 0;
 
@@ -67,6 +64,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
                 page = page.processGetRequest(parts[index++], parts[index++]);
             }
         }
+*/
 
         doPost(req, resp);
     }
@@ -75,6 +73,7 @@ public class JdbcStatisticsServlet extends HttpServlet {
     protected void doPost(final HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         long nano = System.nanoTime();
         
+/*
         HttpSession session =  req.getSession();
         boolean ajax = "true".equals(req.getParameter("ajax"));
 
@@ -134,8 +133,9 @@ public class JdbcStatisticsServlet extends HttpServlet {
         if (!ajax) {
             resp.getWriter().print(bottom);
         }
+*/
 
-        logger.debug("Request ends, time=" + Util.formatNano(System.nanoTime() - nano) + ", page=" + page.getClass().getSimpleName());
+        //logger.debug("Request ends, time=" + Util.formatNano(System.nanoTime() - nano) + ", page=" + page.getClass().getSimpleName());
     }
 
 }

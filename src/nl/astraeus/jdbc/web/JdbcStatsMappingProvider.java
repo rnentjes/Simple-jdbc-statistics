@@ -24,14 +24,19 @@ public class JdbcStatsMappingProvider implements MappingProvider {
     }
 
     public PageMapping getMapping(String uri) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+        for (JdbcStatsMapping mapping : JdbcStatsMapping.values()) {
+            if (uri.startsWith(mapping.getUri())) {
+                return mapping;
+            }
+        }
+
+        return null;    }
 
     public PageMapping getLoginPage() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return JdbcStatsMapping.LOGIN;
     }
 
     public PageMapping get404Page() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return JdbcStatsMapping.NOTFOUND;
     }
 }

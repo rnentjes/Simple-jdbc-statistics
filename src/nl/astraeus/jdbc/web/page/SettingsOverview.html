@@ -1,3 +1,4 @@
+<form method="post">
     <div class="page-header">
         <h3>Settings</h3>
     </div>
@@ -8,12 +9,12 @@
                 <label class="control-label" for="queriesInput">Number of queries</label>
                 <div class="controls">
                     <select id="queriesInput" name="queries">
-                        <option value="1000" {if(q1000)}selected{/if}>1000</option>
-                        <option value="2500" {if(q2500)}selected{/if}>2500</option>
-                        <option value="5000" {if(q5000)}selected{/if}>5000</option>
-                        <option value="10000" {if(q10000)}selected{/if}>10000</option>
-                        <option value="15000" {if(q15000)}selected{/if}>15000</option>
-                        <option value="25000" {if(q25000)}selected{/if}>25000</option>
+                        <option value="1000" ${if(q1000)}selected${/if}>1000</option>
+                        <option value="2500" ${if(q2500)}selected${/if}>2500</option>
+                        <option value="5000" ${if(q5000)}selected${/if}>5000</option>
+                        <option value="10000" ${if(q10000)}selected${/if}>10000</option>
+                        <option value="15000" ${if(q15000)}selected${/if}>15000</option>
+                        <option value="25000" ${if(q25000)}selected${/if}>25000</option>
                     </select>
                 </div>
             </div>
@@ -21,42 +22,42 @@
             <div class="control-group">
                 <label class="control-label" for="rscheck">Recording stacktraces</label>
                 <div class="controls">
-                    <input type="checkbox" id="rscheck" name="recordingStacktraces" {if(recordingStacktraces)}checked{/if}>
+                    <input type="checkbox" id="rscheck" name="recordingStacktraces" ${if(recordingStacktraces)}checked${/if}>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="fqcheck">Formatted queries</label>
                 <div class="controls">
-                    <input type="checkbox" id="fqcheck" name="formattedQueries" {if(formattedQueries)}checked{/if}>
+                    <input type="checkbox" id="fqcheck" name="formattedQueries" ${if(formattedQueries)}checked${/if}>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="wscon">Web server threads <span class="label label-info">1</span></label>
                 <div class="controls">
-                    <input type="text" id="wscon" name="webServerConnections" value="{webServerConnections}">
+                    <input type="text" id="wscon" name="webServerConnections" value="${webServerConnections}">
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="wsport">Web server port <span class="label label-info">1</span></label>
                 <div class="controls">
-                    <input type="text" id="wsport" name="webServerPort" value="{webServerPort}">
+                    <input type="text" id="wsport" name="webServerPort" value="${webServerPort}">
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="pstart">Package start</label>
                 <div class="controls">
-                    <input type="text" id="pstart" name="packageStart" value="{packageStart}">
+                    <input type="text" id="pstart" name="packageStart" value="${packageStart}">
                 </div>
             </div>
         </fieldset>
         <div class="control-group">
             <label class="control-label" >Jdbc url example:</label>
             <div class="controls" id="settings">
-                {jdbcUrl}
+                ${jdbcUrl}
             </div>
         </div>
 
@@ -71,7 +72,8 @@
 
     <div class="row">
         <div class="span1">
-            <a onclick="return Sjs.submit('save')" class="btn btn-primary">Save</a>
+            <input type="submit" name="save" value="Save" class="btn btn-primary" />
         </div>
     </div>
-</div>
+
+</form>

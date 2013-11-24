@@ -2,7 +2,6 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
-import nl.astraeus.web.page.TemplatePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +14,14 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class QueryOverview extends TemplatePage {
+public class QueryOverview extends StatsPage {
     private static Logger logger = LoggerFactory.getLogger(QueryOverview.class);
 
     boolean sortTotalCalls = true;
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
 
-    public QueryOverview() {
-    }
+    public QueryOverview() {}
 
     public QueryOverview(String sorting) {
         sortTotalCalls = false;
@@ -31,14 +29,13 @@ public class QueryOverview extends TemplatePage {
         sortTotalTime = false;
 
         if ("total".equals(sorting)) {
-            sortTotalCalls = true;
+            sortTotalTime = true;
         } else if ("average".equals(sorting)) {
             sortAvgTime = true;
         } else if ("calls".equals(sorting)) {
-            sortTotalTime = true;
+            sortTotalCalls = true;
         }
     }
-
 
     @Override
     public void get() {
@@ -47,9 +44,11 @@ public class QueryOverview extends TemplatePage {
 
     @Override
     public void post() {
-        if ("clear".equals(getParameter("action"))) {
+        if ("Clear queries".equals(getParameter("action"))) {
             JdbcLogger.get().clear();
         }
+
+        set();
     }
 
     public void set() {
@@ -138,4 +137,5 @@ public class QueryOverview extends TemplatePage {
         set("deltaTime", dateFormatter.format(new Date(toTime - fromTime)));
         set("avgTime", Util.formatNano(avgTime));
     }
+
 }

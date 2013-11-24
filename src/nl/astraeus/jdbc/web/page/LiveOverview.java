@@ -2,6 +2,7 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.web.page.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ import java.util.*;
  * Date: 4/12/12
  * Time: 9:16 PM
  */
-public class LiveOverview extends TemplatePage {
+public class LiveOverview extends StatsPage {
     private static Logger logger = LoggerFactory.getLogger(LiveOverview.class);
 
     boolean sortTotalCalls = true;
@@ -23,17 +24,16 @@ public class LiveOverview extends TemplatePage {
     boolean sortTotalTime = false;
 
     @Override
-    public Page processGetRequest(String action, String value) {
+    public void get() {
         Page result = this;
 
-        if ("select".equals(action)) {
-            return new QueryDetail(this, Integer.parseInt(value));
-        }
+//        if ("select".equals(action)) {
+//            return new QueryDetail(this, Integer.parseInt(value));
+//        }
 
-        return result;
+//        return result;
     }
 
-    @Override
     public Page processRequest(HttpServletRequest request) {
         if ("sortTotalCalls".equals(request.getParameter("action"))) {
             sortTotalCalls = true;
@@ -49,19 +49,12 @@ public class LiveOverview extends TemplatePage {
             sortTotalTime = true;
         } else if ("clear".equals(request.getParameter("action"))) {
             JdbcLogger.get().clear();
-        } else if ("select".equals(request.getParameter("action"))) {
-            String hash = request.getParameter("actionValue");
-
-            return new QueryDetail(this, Integer.parseInt(hash));
         }
 
         return this;
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-
+    public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
@@ -130,26 +123,24 @@ public class LiveOverview extends TemplatePage {
             });
         }
 
-        result.put("queries", list);
-        result.put("count", entries.size());
+        set("queries", list);
+        set("count", entries.size());
 
-        result.put("sortTotalCalls", sortTotalCalls);
-        result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTotalTime", sortTotalTime);
+        set("sortTotalCalls", sortTotalCalls);
+        set("sortAvgTime", sortAvgTime);
+        set("sortTotalTime", sortTotalTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
-        result.put("fromTime", dateFormatter.format(new Date(fromTime)));
-        result.put("toTime", dateFormatter.format(new Date(toTime)));
+        set("fromTime", dateFormatter.format(new Date(fromTime)));
+        set("toTime", dateFormatter.format(new Date(toTime)));
 
         dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
-        result.put("avgTime", Util.formatNano(avgTime));
+        set("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
+        set("avgTime", Util.formatNano(avgTime));
 
-        result.put("test", getTest());
-
-        return result;
+        set("test", getTest());
     }
 
     public String getTest() {

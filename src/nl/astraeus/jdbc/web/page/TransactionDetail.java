@@ -2,32 +2,28 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.web.model.TransactionEntry;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import nl.astraeus.web.page.Message;
+import nl.astraeus.web.page.Page;
 
 /**
  * User: rnentjes
  * Date: 5/2/12
  * Time: 2:16 PM
  */
-public class TransactionDetail extends TemplatePage {
+public class TransactionDetail extends StatsPage {
     
-    private Page previous;
     private TransactionEntry transaction;
     
-    public TransactionDetail(Page previous, TransactionEntry entry) {
-        this.previous = previous;
-        this.transaction = entry;
+    public TransactionDetail(String transactionEntry) {
+        //this.transaction = entry;
     }
 
     @Override
-    public Page processRequest(HttpServletRequest request) {
+    public void get() {
         Page result = this;
 
-        if ("stacktrace".equals(request.getParameter("action"))) {
-            long timestamp = Long.parseLong(request.getParameter("actionValue"));
+        if ("stacktrace".equals(getParameter("action"))) {
+            long timestamp = Long.parseLong(getParameter("actionValue"));
             
             JdbcLogger.LogEntry found = null;
             for (JdbcLogger.LogEntry entry : transaction.getQueries()) {
@@ -38,24 +34,19 @@ public class TransactionDetail extends TemplatePage {
             }
     
             if (found != null) {
-                result = new ShowStacktrace(this, found);
+                //redirect();
+                //result = new ShowStacktrace(this, found);
             } else {
-                Warnings.get(request).addMessage(Warnings.Message.Type.ERROR, "Stacktrace not found!", "Query stacktrace not found!");
+                addMessage(Message.Type.ERROR, "Stacktrace not found!", "Query stacktrace not found!");
             }
-        } else if ("back".equals(request.getParameter("action"))) {
-            result = previous;
+        } else if ("back".equals(getParameter("action"))) {
+            // redirect back
+//            result = previous;
         }
-        
-        return result;
     }
 
-    @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-
-        result.put("transaction", transaction);
-        
-        return result;
+    public void set() {
+        set("transaction", transaction);
     }
 
 }

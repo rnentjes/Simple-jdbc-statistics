@@ -1,23 +1,24 @@
 <div class="page-header">
     <h3>Query overview</h3>
 </div>
-
+<form method="post">
 <div class="row">
     <div class="span6">
 
-        <div># Queries: {count}</div>
-        <div>Time span: {deltaTime} ({fromTime} - {toTime})</div>
-        <div>Avg. time/query: {avgTime}</div>
+        <div># Queries: ${count}</div>
+        <div>Time span: ${deltaTime} (${fromTime} - ${toTime})</div>
+        <div>Avg. time/query: ${avgTime}</div>
     </div>
     <div class="span3 pull-right">
-        <a onclick="return Sjs.submit('clear')" class="btn btn-danger">Clear queries</a>
+        <input type="submit" name="action" value="Clear queries" class="btn btn-danger" />
     </div>
 </div>
+</form>
 
 <ul class="nav nav-pills">
-    <li {if(sortTotalTime)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalTime')">Total time</a></li>
-    <li {if(sortAvgTime)}class="active"{/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. time</a></li>
-    <li {if(sortTotalCalls)}class="active"{/if}><a onclick="return Sjs.submit('sortTotalCalls')"># Calls</a></li>
+    <li ${if(sortTotalTime)}class="active"${/if}><a href="/queries/total">Total time</a></li>
+    <li ${if(sortAvgTime)}class="active"${/if}><a href="/queries/average">Avg. time</a></li>
+    <li ${if(sortTotalCalls)}class="active"${/if}><a href="/queries/calls"># Calls</a></li>
 </ul>
 
 <table class="table table-condensed table-striped " id="overview">
@@ -31,14 +32,14 @@
     </tr>
     </thead>
     <tbody>
-    {each(queries as q)}
+    ${each(queries as q)}
     <tr>
-        <td><a onclick="return Sjs.submit('select', '{q.hash}')"><i class=" icon-zoom-in"></i></a></td>
-        <td>{q.total}</td>
-        <td>{q.formattedNano}</td>
-        <td>{q.count}</td>
-        <td><pre><code class="sql">{!q.sql}</code></pre></td>
+        <td><a href="/query/${q.hash}"><i class=" icon-zoom-in"></i></a></td>
+        <td>${q.total}</td>
+        <td>${q.formattedNano}</td>
+        <td>${q.count}</td>
+        <td><pre><code class="sql">${!q.sql}</code></pre></td>
     </tr>
-    {/each}
+    ${/each}
     </tbody>
 </table>
