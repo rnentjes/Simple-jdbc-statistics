@@ -1,12 +1,15 @@
 package nl.astraeus.jdbc;
 
 import nl.astraeus.http.SimpleWebServer;
-import nl.astraeus.jdbc.web.JdbcStatisticsServlet;
+import nl.astraeus.jdbc.web.JdbcStatsMappingProvider;
 import nl.astraeus.jdbc.web.ResourceServlet;
 import nl.astraeus.jdbc.web.model.Settings;
+import nl.astraeus.web.SimpleWeb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -123,7 +126,31 @@ public class Driver implements java.sql.Driver {
             try {
                 server = new SimpleWebServer(Settings.get().getWebServerPort());
 
-                server.addServlet(new JdbcStatisticsServlet(), "/*");
+                SimpleWeb web = new SimpleWeb();
+
+                web.init(new ServletConfig() {
+                    public String getServletName() {
+                        return null;
+                    }
+
+                    public ServletContext getServletContext() {
+                        return null;
+                    }
+
+                    public String getInitParameter(String s) {
+                        if (s.equals("simple.web.mapping")) {
+                            return JdbcStatsMappingProvider.class.getName();
+                        } else {
+                            return null;
+                        }
+                    }
+
+                    public Enumeration getInitParameterNames() {
+                        return null;
+                    }
+                });
+
+                server.addServlet(web, "/*");
                 server.addServlet(new ResourceServlet(), "/resources/*");
 
                 server.setNumberOfConnections(Settings.get().getWebServerConnections());

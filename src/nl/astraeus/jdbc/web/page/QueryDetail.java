@@ -3,6 +3,8 @@ package nl.astraeus.jdbc.web.page;
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.web.page.Page;
+import nl.astraeus.web.page.TemplatePage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
