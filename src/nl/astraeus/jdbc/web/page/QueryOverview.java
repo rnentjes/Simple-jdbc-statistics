@@ -2,10 +2,10 @@ package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.web.page.TemplatePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,46 +22,37 @@ public class QueryOverview extends TemplatePage {
     boolean sortAvgTime = false;
     boolean sortTotalTime = false;
 
-    @Override
-    public Page processGetRequest(String action, String value) {
-        Page result = this;
-
-        if ("select".equals(action)) {
-            return new QueryDetail(this, Integer.parseInt(value));
-        }
-
-        return result;
+    public QueryOverview() {
     }
 
-    @Override
-    public Page processRequest(HttpServletRequest request) {
-        if ("sortTotalCalls".equals(request.getParameter("action"))) {
+    public QueryOverview(String sorting) {
+        sortTotalCalls = false;
+        sortAvgTime = false;
+        sortTotalTime = false;
+
+        if ("total".equals(sorting)) {
             sortTotalCalls = true;
-            sortAvgTime = false;
-            sortTotalTime = false;
-        } else if ("sortAvgTime".equals(request.getParameter("action"))) {
-            sortTotalCalls = false;
+        } else if ("average".equals(sorting)) {
             sortAvgTime = true;
-            sortTotalTime = false;
-        } else if ("sortTotalTime".equals(request.getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = false;
+        } else if ("calls".equals(sorting)) {
             sortTotalTime = true;
-        } else if ("clear".equals(request.getParameter("action"))) {
-            JdbcLogger.get().clear();
-        } else if ("select".equals(request.getParameter("action"))) {
-            String hash = request.getParameter("actionValue");
-
-            return new QueryDetail(this, Integer.parseInt(hash));
         }
+    }
 
-        return this;
+
+    @Override
+    public void get() {
+        set();
     }
 
     @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    public void post() {
+        if ("clear".equals(getParameter("action"))) {
+            JdbcLogger.get().clear();
+        }
+    }
 
+    public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
         long fromTime = System.currentTimeMillis();
@@ -130,23 +121,21 @@ public class QueryOverview extends TemplatePage {
             });
         }
 
-        result.put("queries", list);
-        result.put("count", entries.size());
+        set("queries", list);
+        set("count", entries.size());
 
-        result.put("sortTotalCalls", sortTotalCalls);
-        result.put("sortAvgTime", sortAvgTime);
-        result.put("sortTotalTime", sortTotalTime);
+        set("sortTotalCalls", sortTotalCalls);
+        set("sortAvgTime", sortAvgTime);
+        set("sortTotalTime", sortTotalTime);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
-        result.put("fromTime", dateFormatter.format(new Date(fromTime)));
-        result.put("toTime", dateFormatter.format(new Date(toTime)));
+        set("fromTime", dateFormatter.format(new Date(fromTime)));
+        set("toTime", dateFormatter.format(new Date(toTime)));
 
         dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        result.put("deltaTime", dateFormatter.format(new Date(toTime-fromTime)));
-        result.put("avgTime", Util.formatNano(avgTime));
-
-        return result;
+        set("deltaTime", dateFormatter.format(new Date(toTime - fromTime)));
+        set("avgTime", Util.formatNano(avgTime));
     }
 }

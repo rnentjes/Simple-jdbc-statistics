@@ -19,6 +19,11 @@ public class JvmSampler extends Thread {
 
     private boolean stopped;
     private boolean running;
+
+    private boolean sampleActiveThreadsOnly = true;
+    private boolean includeSampleThread = false;
+    private boolean onlySampleCurrentMethod = false;
+
     private int samplesPerSecond = 100;
     private long samples = 0;
     private Map<String, Integer> count = new HashMap<String, Integer>();
@@ -60,18 +65,18 @@ public class JvmSampler extends Thread {
     public void run() {
         while(!stopped) {
             try {
-            if (running) {
-                Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
+                if (running) {
+                    Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
 
-                processAllThreads(map);
-                samples++;
+                    processAllThreads(map);
+                    samples++;
 
-                long nanos = 1000000000/samplesPerSecond;
+                    long nanos = 1000000000/samplesPerSecond;
 
-                Thread.sleep(nanos / 1000000, (int)(nanos % 1000000));
-            } else {
-                Thread.sleep(10);
-            }
+                    Thread.sleep(nanos / 1000000, (int)(nanos % 1000000));
+                } else {
+                    Thread.sleep(10);
+                }
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
             }
@@ -80,19 +85,30 @@ public class JvmSampler extends Thread {
     }
 
     private synchronized void processAllThreads(Map<Thread, StackTraceElement[]> map) {
-        for(Map.Entry<Thread, StackTraceElement[]> entry : map.entrySet()) {
-            for(StackTraceElement element : entry.getValue()) {
-                String name = element.getClassName()+"."+element.getMethodName()+"()";
-                Integer samples = this.count.get(name);
-
-                if (samples == null) {
-                    samples = 0;
+        for(Thread thread : map.keySet()) {
+            if ((!sampleActiveThreadsOnly || thread.getState() == State.RUNNABLE) && (
+                    includeSampleThread || !thread.equals(Thread.currentThread()))) {
+                if (onlySampleCurrentMethod) {
+                    addSample(map.get(thread)[0]);
+                } else {
+                    for(StackTraceElement element : map.get(thread)) {
+                        addSample(element);
+                    }
                 }
-
-                samples++;
-                this.count.put(name, samples);
             }
         }
+    }
+
+    private void addSample(StackTraceElement element) {
+        String name = element.getClassName()+"."+element.getMethodName()+"()";
+        Integer samples = this.count.get(name);
+
+        if (samples == null) {
+            samples = 0;
+        }
+
+        samples++;
+        this.count.put(name, samples);
     }
 
     public synchronized Set<SampleInfo> getSampleCount() {
