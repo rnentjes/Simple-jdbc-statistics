@@ -1,38 +1,44 @@
 package nl.astraeus.jdbc.web.page;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: rnentjes
  * Date: 3/28/12
  * Time: 9:07 PM
  */
-public class Warnings extends TemplatePage {
+public class Warnings extends TemplatePage implements Serializable {
+    private static final long serialVersionUID = 1;
 
-    public static Warnings get(HttpServletRequest request) {
+    public static Warnings getWarnings(HttpServletRequest request) {
         Warnings result = (Warnings)request.getAttribute("warnings");
-        
+
         if (result == null) {
             result = new Warnings();
-            
+
             request.setAttribute("warnings", result);
         }
-        
+
         return result;
     }
 
-    public static class Message {
+    public static class Message implements Serializable {
+        private static final long serialVersionUID = 1;
+
+        private static int ids = 1;
+
         public static enum Type {
             SUCCESS,
             INFO,
             WARNING,
-            ERROR            
+            ERROR
         }
-        
+
         public boolean success = false;
         public boolean info = false;
         public boolean warning = false;
@@ -40,6 +46,7 @@ public class Warnings extends TemplatePage {
 
         public String header;
         public String body;
+        private int id;
 
         public Message(Type type, String header, String body) {
             switch(type) {
@@ -59,6 +66,7 @@ public class Warnings extends TemplatePage {
 
             this.header = header;
             this.body = body;
+            this.id = ids++;
         }
 
         public boolean getSuccess() {
@@ -84,10 +92,14 @@ public class Warnings extends TemplatePage {
         public String getBody() {
             return body;
         }
+
+        public int getId() {
+            return id;
+        }
     }
-    
+
     private List<Message> messages = new LinkedList<Message>();
-    
+
     public void addMessage(Message.Type type, String header, String body) {
         messages.add(new Message(type, header, body));
     }
@@ -109,17 +121,17 @@ public class Warnings extends TemplatePage {
         return result;
     }
 
-    @Override
-    public Page processRequest(HttpServletRequest request) {
-         return this;
+    public synchronized void add(Warnings other) {
+        if (other.messages != null) {
+            messages.addAll(other.messages);
+        }
     }
 
     @Override
-    public Map<String, Object> defineModel(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        
-        result.put("messages", messages);
+    public void render(OutputStream out) throws IOException {
+        set("messages", messages);
 
-        return result;
+        super.render(out);
     }
+
 }
