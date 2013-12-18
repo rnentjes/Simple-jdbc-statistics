@@ -3,7 +3,6 @@ package nl.astraeus.jdbc.web.page;
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.model.TransactionEntry;
-import nl.astraeus.web.page.Message;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,58 +22,38 @@ public class TransactionOverview extends StatsPage {
 
     private List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
 
+    public TransactionOverview() {}
+
+    public TransactionOverview(String sorting) {
+        sortTotalCalls = false;
+        sortAvgTime = false;
+        sortTotalTime = false;
+        sortQueryTime = false;
+
+        if ("sortTotalCalls".equals(sorting)) {
+            sortTotalCalls = true;
+        } else if ("sortAvgTime".equals(sorting)) {
+            sortAvgTime = true;
+        } else if ("sortTotalTime".equals(sorting)) {
+            sortTotalTime = true;
+        } else if ("sortQueryTime".equals(sorting)) {
+            sortQueryTime = true;
+        }
+    }
+
     @Override
     public void get() {
-        if ("sortTotalCalls".equals(getParameter("action"))) {
-            sortTotalCalls = true;
-            sortAvgTime = false;
-            sortTotalTime = false;
-            sortQueryTime = false;
-        } else if ("sortAvgTime".equals(getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = true;
-            sortTotalTime = false;
-            sortQueryTime = false;
-        } else if ("sortTotalTime".equals(getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = false;
-            sortTotalTime = true;
-            sortQueryTime = false;
-        } else if ("sortQueryTime".equals(getParameter("action"))) {
-            sortTotalCalls = false;
-            sortAvgTime = false;
-            sortTotalTime = false;
-            sortQueryTime = true;
-        } else if ("clear".equals(getParameter("action"))) {
-            JdbcLogger.get().clear();
-        } else if ("select".equals(getParameter("action"))) {
-            String id = getParameter("actionValue");
+        set();
+    }
 
-            TransactionEntry entry = findTransaction(Integer.parseInt(id));
-            if (entry != null) {
-                // redirect
-                // result = new TransactionDetail(this, entry);
-            } else {
-                addMessage(Message.Type.ERROR, "Transaction not found!", "Transaction with id '"+id+"' could not be found.");
-            }
+    @Override
+    public void post() {
+        if ("Clear transactions".equals(getParameter("action"))) {
+            JdbcLogger.get().clear();
         }
 
         set();
     }
-    
-    private TransactionEntry findTransaction(int id) {
-        TransactionEntry result = null;
-        
-        for (TransactionEntry entry : transactions) {
-            if (entry.getId() == id) {
-                result = entry;
-                break;
-            }
-        }
-        
-        return result;
-    }
-
     public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
 
