@@ -20,8 +20,6 @@ public class TransactionOverview extends StatsPage {
     private boolean sortTotalTime = false;
     private boolean sortQueryTime = false;
 
-    private List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
-
     public TransactionOverview() {}
 
     public TransactionOverview(String sorting) {
@@ -30,13 +28,13 @@ public class TransactionOverview extends StatsPage {
         sortTotalTime = false;
         sortQueryTime = false;
 
-        if ("sortTotalCalls".equals(sorting)) {
+        if ("calls".equals(sorting)) {
             sortTotalCalls = true;
-        } else if ("sortAvgTime".equals(sorting)) {
+        } else if ("average".equals(sorting)) {
             sortAvgTime = true;
-        } else if ("sortTotalTime".equals(sorting)) {
+        } else if ("total".equals(sorting)) {
             sortTotalTime = true;
-        } else if ("sortQueryTime".equals(sorting)) {
+        } else if ("query".equals(sorting)) {
             sortQueryTime = true;
         }
     }
@@ -48,7 +46,7 @@ public class TransactionOverview extends StatsPage {
 
     @Override
     public void post() {
-        if ("Clear transactions".equals(getParameter("action"))) {
+        if ("Clear queries".equals(getParameter("action"))) {
             JdbcLogger.get().clear();
         }
 
@@ -61,7 +59,8 @@ public class TransactionOverview extends StatsPage {
         long toTime = System.currentTimeMillis();
         long avgTime = 0;
 
-        transactions = new LinkedList<TransactionEntry>();
+        List<TransactionEntry> transactions = new LinkedList<TransactionEntry>();
+
         Map<Long,TransactionEntry> currentTransactions = new HashMap<Long, TransactionEntry>();
 
         if (!entries.isEmpty()) {
@@ -80,18 +79,16 @@ public class TransactionOverview extends StatsPage {
                     entry = new TransactionEntry(id++);
                     entry.timestamp = le.getTimestamp();
                     entry.queryNanoTime = 0;
-                    entry.totalNanoTime = le.getNanoTimeStamp() - le.getNano();
+                    entry.nanoStart = le.getNanoTimeStamp();
                     currentTransactions.put(le.getThreadId(), entry);
+
                 }
 
                 entry.queries.add(le);
                 entry.queryNanoTime += le.getNano();
 
                 if (le.isEndOfTransaction()) {
-                    entry.totalNanoTime = le.getNanoTimeStamp() - entry.totalNanoTime;
-                    if (entry.getCount() > 1) {
-                        entry.totalNanoTime += le.getNano();
-                    }
+                    entry.nanoEnd = le.getNanoTimeStamp() + le.getNano();
                     transactions.add(entry);
                     currentTransactions.remove(le.getThreadId());
                 }

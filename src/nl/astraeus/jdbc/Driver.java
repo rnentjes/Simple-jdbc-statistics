@@ -150,8 +150,8 @@ public class Driver implements java.sql.Driver {
                     }
                 });
 
-                server.addServlet(web, "/*");
                 server.addServlet(new ResourceServlet(), "/resources/*");
+                server.addServlet(web, "/*");
 
                 server.setNumberOfConnections(Settings.get().getWebServerConnections());
 

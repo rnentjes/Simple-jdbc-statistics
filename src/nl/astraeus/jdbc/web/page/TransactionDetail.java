@@ -12,10 +12,21 @@ import nl.astraeus.web.page.Page;
  */
 public class TransactionDetail extends StatsPage {
     
-    private TransactionEntry transaction;
+    private TransactionEntry transactionEntry = new TransactionEntry(0);
     
-    public TransactionDetail(String transactionEntry) {
-        //this.transaction = entry;
+    public TransactionDetail(String ... transactions) {
+        for (String transaction : transactions) {
+            String [] parts = transaction.split("_");
+
+            int hash = Integer.parseInt(parts[0]);
+            long nano = Long.parseLong(parts[1]);
+
+            for (JdbcLogger.LogEntry entry : JdbcLogger.get().getEntries()) {
+                if (entry.getHash() == hash && entry.getNano() == nano) {
+                    transactionEntry.queries.add(entry);
+                }
+            }
+        }
     }
 
     @Override
@@ -26,7 +37,7 @@ public class TransactionDetail extends StatsPage {
             long timestamp = Long.parseLong(getParameter("actionValue"));
             
             JdbcLogger.LogEntry found = null;
-            for (JdbcLogger.LogEntry entry : transaction.getQueries()) {
+            for (JdbcLogger.LogEntry entry : transactionEntry.getQueries()) {
                 if (entry.getTimestamp() == timestamp) {
                     found = entry;
                     break;
@@ -43,10 +54,12 @@ public class TransactionDetail extends StatsPage {
             // redirect back
 //            result = previous;
         }
+
+        set();
     }
 
     public void set() {
-        set("transaction", transaction);
+        set("transaction", transactionEntry);
     }
 
 }

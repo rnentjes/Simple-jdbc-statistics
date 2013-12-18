@@ -16,7 +16,8 @@ public class JdbcStatsMappingProvider implements MappingProvider {
             }
         }
 
-        return null;    }
+        return null;
+    }
 
     public PageMapping getLoginPage() {
         return JdbcStatsMapping.LOGIN;

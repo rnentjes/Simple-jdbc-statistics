@@ -15,7 +15,8 @@ import java.util.List;
 public class TransactionEntry {
     public int id;
     public List<JdbcLogger.LogEntry> queries = new LinkedList<JdbcLogger.LogEntry>();
-    public long totalNanoTime;
+    public long nanoStart;
+    public long nanoEnd;
     public long queryNanoTime;
 
     public long timestamp;
@@ -36,12 +37,22 @@ public class TransactionEntry {
         return timestamp;
     }
 
+    public void add(JdbcLogger.LogEntry entry) {
+        queries.add(entry);
+
+        timestamp = entry.getTimestamp();
+        queryNanoTime += entry.getNano();
+
+        nanoStart = Math.min(nanoStart, entry.getNanoTimeStamp());
+        nanoEnd = Math.max(nanoEnd, entry.getNanoTimeStamp() + entry.getNano());
+    }
+
     public int getCount() {
         return queries.size();
     }
 
     public long getTotalTime() {
-        return totalNanoTime;
+        return nanoEnd = nanoStart;
     }
 
     public long getQueryTime() {
@@ -49,7 +60,11 @@ public class TransactionEntry {
     }
 
     public long getAvgTime() {
-        return queryNanoTime / getCount();
+        if (getCount() > 0) {
+            return queryNanoTime / getCount();
+        } else {
+            return 0L;
+        }
     }
 
     public String getFormattedAvgTime() {
@@ -69,7 +84,7 @@ public class TransactionEntry {
     }
 
     public String getFormattedEndTimestamp() {
-        return Formatting.formatTimestamp(timestamp + (totalNanoTime / 1000000L));
+        return Formatting.formatTimestamp(timestamp + (getTotalTime() / 1000000L));
     }
 
     public String getSql() {

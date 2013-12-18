@@ -12,10 +12,10 @@
 
 <div class="row">
     <div class="span12">
-        <div># Queries: {transaction.count}</div>
-        <div>Total time: {transaction.formattedTotalTime}</div>
-        <div>Query time: {transaction.formattedQueryTime}</div>
-        <div>Avg. time/query: {transaction.formattedAvgTime}</div>
+        <div># Queries: ${transaction.count}</div>
+        <div>Total time: ${transaction.formattedTotalTime}</div>
+        <div>Query time: ${transaction.formattedQueryTime}</div>
+        <div>Avg. time/query: ${transaction.formattedAvgTime}</div>
     </div>
 </div>
 
@@ -40,14 +40,14 @@
     </tr>
     </thead>
     <tbody>
-    {each(transaction.queries as q)}
+    ${each(transaction.queries as q)}
     <tr>
-        <td>{if(q.stackTrace)}<a onclick="return Sjs.submit('stacktrace', '{q.timestamp}')"><i class=" icon-zoom-in"></i></a>{/if}</td>
-        <td>{q.type}</td>
-        <td>{q.formattedTimestamp}</td>
-        <td>{q.formattedNano}</td>
-        <td><pre><code class="sql">{!q.sql}</code></pre></td>
+        <td>${if(q.stackTrace)}<a href="/stacktrace/${q.hash}/${q.timestamp}"><i class=" icon-zoom-in"></i></a>${/if}</td>
+        <td>${q.type}</td>
+        <td>${q.formattedTimestamp}</td>
+        <td>${q.formattedNano}</td>
+        <td><pre><code class="sql">${!q.sql}</code></pre></td>
     </tr>
-    {/each}
+    ${/each}
     </tbody>
 </table>
