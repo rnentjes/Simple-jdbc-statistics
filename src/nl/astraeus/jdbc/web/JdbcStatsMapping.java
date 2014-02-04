@@ -22,6 +22,8 @@ public enum JdbcStatsMapping implements PageMapping {
     LOGIN("login", Login.class),
     STACKTRACE("stacktrace", ShowStacktrace.class),
 
+    RESOURCES("resources", Resources.class),
+
     NOTFOUND("login", Login.class),
     MAIN("", QueryOverview.class),
     ;

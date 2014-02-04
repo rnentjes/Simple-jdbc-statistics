@@ -1,7 +1,5 @@
 package nl.astraeus.jdbc.web.page;
 
-import nl.astraeus.http.SimpleWebServer;
-import nl.astraeus.jdbc.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +19,8 @@ public class ServerInfo extends StatsPage {
     }
 
     public void set() {
-        SimpleWebServer server = Driver.getServer();
+        //SimpleWebServer server = Driver.getServer();
 
-        set("threads", server.getThreads());
+        set("threads", 0); //server.getThreads());
    }
 }

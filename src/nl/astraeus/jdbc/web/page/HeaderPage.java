@@ -12,7 +12,6 @@ public class HeaderPage extends TemplatePage {
     public void get() {
         if (hasMessages()) {
             set("showMessages", true);
-            set("messages", getWarnings().getMessages());
         }
     }
 

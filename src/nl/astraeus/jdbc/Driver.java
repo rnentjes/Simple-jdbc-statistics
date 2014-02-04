@@ -2,14 +2,11 @@ package nl.astraeus.jdbc;
 
 import nl.astraeus.http.SimpleWebServer;
 import nl.astraeus.jdbc.web.JdbcStatsMappingProvider;
-import nl.astraeus.jdbc.web.ResourceServlet;
 import nl.astraeus.jdbc.web.model.Settings;
-import nl.astraeus.web.SimpleWeb;
+import nl.astraeus.web.NanoHttpdSimpleWeb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -123,45 +120,53 @@ public class Driver implements java.sql.Driver {
         }
 
         if (driver != null && !started) {
-            try {
-                server = new SimpleWebServer(Settings.get().getWebServerPort());
+            synchronized (this) {
+                if (!started) {
+                    try {
+                        NanoHttpdSimpleWeb server = new NanoHttpdSimpleWeb(Settings.get().getWebServerPort(), new JdbcStatsMappingProvider());
 
-                SimpleWeb web = new SimpleWeb();
+                        /*
+                        server = new SimpleWebServer(Settings.get().getWebServerPort());
 
-                web.init(new ServletConfig() {
-                    public String getServletName() {
-                        return null;
+                        SimpleWeb web = new SimpleWeb();
+
+                        web.init(new ServletConfig() {
+                            public String getServletName() {
+                                return null;
+                            }
+
+                            public ServletContext getServletContext() {
+                                return null;
+                            }
+
+                            public String getInitParameter(String s) {
+                                if (s.equals("simple.web.mapping")) {
+                                    return JdbcStatsMappingProvider.class.getName();
+                                } else {
+                                    return null;
+                                }
+                            }
+
+                            public Enumeration getInitParameterNames() {
+                                return null;
+                            }
+                        });
+
+                        server.addServlet(new ResourceServlet(), "/resources/*");
+                        server.addServlet(web, "/*");
+
+                        server.setNumberOfConnections(Settings.get().getWebServerConnections());
+                        */
+
+                        server.start();
+
+                        System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
+
+                        started = true;
+                    } catch (Exception e) {
+                        log.error(e.getMessage(),e);
                     }
-
-                    public ServletContext getServletContext() {
-                        return null;
-                    }
-
-                    public String getInitParameter(String s) {
-                        if (s.equals("simple.web.mapping")) {
-                            return JdbcStatsMappingProvider.class.getName();
-                        } else {
-                            return null;
-                        }
-                    }
-
-                    public Enumeration getInitParameterNames() {
-                        return null;
-                    }
-                });
-
-                server.addServlet(new ResourceServlet(), "/resources/*");
-                server.addServlet(web, "/*");
-
-                server.setNumberOfConnections(Settings.get().getWebServerConnections());
-
-                server.start();
-
-                System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
-
-                started = true;
-            } catch (Exception e) {
-                log.error(e.getMessage(),e);
+                }
             }
         }
 

@@ -1,8 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.http.ConnectionHandlerThread;
-import nl.astraeus.http.SimpleWebServer;
-import nl.astraeus.jdbc.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,15 +47,15 @@ public class ThreadStack extends StatsPage {
     }
 
     public void set() {
-        SimpleWebServer server = Driver.getServer();
+//        SimpleWebServer server = Driver.getServer();
 
         ConnectionHandlerThread thread = null;
-        for (ConnectionHandlerThread t : server.getThreads()) {
-            if (t.getName().equals(threadName)) {
-                thread = t;
-                break;
-            }
-        }
+//        for (ConnectionHandlerThread t : server.getThreads()) {
+//            if (t.getName().equals(threadName)) {
+//                thread = t;
+//                break;
+//            }
+//        }
 
         List<TraceElement> trace = new LinkedList<TraceElement>();
 
@@ -69,6 +67,6 @@ public class ThreadStack extends StatsPage {
 
         set("thread", thread);
         set("trace", trace);
-        set("threads", server.getThreads());
+        set("threads", new LinkedList()); //server.getThreads());
     }
 }
