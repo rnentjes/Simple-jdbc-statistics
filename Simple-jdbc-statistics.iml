@@ -9,18 +9,19 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib1" level="project" />
+    <orderEntry type="module" module-name="Very-simple-templates" />
+    <orderEntry type="module" module-name="Simple-web" />
     <orderEntry type="module-library" scope="TEST">
-      <library>
+      <library name="JUnit4">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.11.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/hamcrest-core-1.3.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/hamcrest-library-1.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="Simple-servlet-runner" />
-    <orderEntry type="module" module-name="Very-simple-templates" />
-    <orderEntry type="module" module-name="Simple-web" />
   </component>
 </module>
 

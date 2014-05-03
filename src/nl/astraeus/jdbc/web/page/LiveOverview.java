@@ -6,7 +6,6 @@ import nl.astraeus.web.page.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +33,7 @@ public class LiveOverview extends StatsPage {
 //        return result;
     }
 
+/*
     public Page processRequest(HttpServletRequest request) {
         if ("sortTotalCalls".equals(request.getParameter("action"))) {
             sortTotalCalls = true;
@@ -53,6 +53,7 @@ public class LiveOverview extends StatsPage {
 
         return this;
     }
+*/
 
     public void set() {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();

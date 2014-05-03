@@ -1,6 +1,5 @@
 package nl.astraeus.jdbc;
 
-import nl.astraeus.http.SimpleWebServer;
 import nl.astraeus.jdbc.web.JdbcStatsMappingProvider;
 import nl.astraeus.jdbc.web.model.Settings;
 import nl.astraeus.web.NanoHttpdSimpleWeb;
@@ -23,9 +22,9 @@ public class Driver implements java.sql.Driver {
     final private static String URL_SECURE_PREFIX = "jdbc:secstat:";
 
     private static volatile boolean started = false;
-    private static SimpleWebServer server = null;
+    private static NanoHttpdSimpleWeb server = null;
 
-    public static SimpleWebServer getServer() {
+    public static NanoHttpdSimpleWeb getServer() {
         return server;
     }
 

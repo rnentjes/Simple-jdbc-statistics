@@ -3,8 +3,6 @@ package nl.astraeus.jdbc.web.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.Cookie;
-
 /**
  * User: rnentjes
  * Date: 4/22/12
@@ -25,15 +23,6 @@ public class Settings {
 
     public static Settings get() {
         return instance;
-    }
-
-    private Cookie createLongLivedCookie(String name, String value) {
-        Cookie result = new Cookie(name, value);
-
-        // 90 days
-        result.setMaxAge(60 * 60 * 24 * 90);
-
-        return result;
     }
 
     private int numberOfQueries = 2500;

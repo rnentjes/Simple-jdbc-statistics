@@ -3,7 +3,6 @@
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/script/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/../Very-simple-templates/script/build.xml" />
-    <buildFile url="file://$PROJECT_DIR$/../Simple-servlet-runner/script/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/../Simple-web/script/build.xml" />
   </component>
 </project>

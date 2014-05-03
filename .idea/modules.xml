@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Simple-jdbc-statistics.iml" filepath="$PROJECT_DIR$/Simple-jdbc-statistics.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Simple-servlet-runner/Simple-servlet-runner.iml" filepath="$PROJECT_DIR$/../Simple-servlet-runner/Simple-servlet-runner.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Simple-web/Simple-web.iml" filepath="$PROJECT_DIR$/../Simple-web/Simple-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Very-simple-templates/Very-simple-templates.iml" filepath="$PROJECT_DIR$/../Very-simple-templates/Very-simple-templates.iml" />
     </modules>
