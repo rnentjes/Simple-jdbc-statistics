@@ -15,4 +15,11 @@ public class HeaderPage extends TemplatePage {
         }
     }
 
+    @Override
+    public void post() {
+        if (hasMessages()) {
+            set("showMessages", true);
+        }
+    }
+
 }

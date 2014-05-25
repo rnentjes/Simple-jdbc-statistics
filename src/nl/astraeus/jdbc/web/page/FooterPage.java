@@ -11,4 +11,7 @@ public class FooterPage extends TemplatePage {
     @Override
     public void get() {}
 
+    @Override
+    public void post() {}
+
 }
