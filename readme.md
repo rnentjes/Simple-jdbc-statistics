@@ -8,20 +8,13 @@ See a running example here:
 
 Download:
 
-[jdbc-stats-1.1.jar](https://github.com/rnentjes/Simple-jdbc-statistics/blob/master/dist/jdbc-stats-1.1.zip?raw=true)
+[jdbc-stats-1.2-nodeb.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/v1.2/jdbc-stats-1.2-nodeb.jar)
 
 How to use:
 
-Add the following jars to your classpath:
+Add the jar to your classpath:
 
-* jdbc-stats-1.1.jar
-* slf4j-api-1.6.4.jar (add a slf4j binding if you want to see some logging)
-* ssr-0.5.jar
-* vst-0.5.jar
-
-Add the following jar if you are not running in a web container:
-
-* servlet-api-2.5.jar
+* jdbc-stats-1.2-nodeb.jar
 
 Set your jdbc driver property to the following class:
 
@@ -43,7 +36,7 @@ If you want a login screen add the following instead:
   jdbc:secstat:<settings>:
 ```
 
-Use the same credentials as in your jdbc properties to login.
+Use the same credentials as the ones for your database connection to login.
 
 Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
