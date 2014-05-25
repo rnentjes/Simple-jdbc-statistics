@@ -426,10 +426,17 @@
 
     </target>
 
-    <target name="jar-nodeb" depends="compile, copynonjavafiles" description="Create jar distribution dir">
+    <target name="jar-nodeb" depends="compile, copynonjavafiles, jar" description="Create jar distribution dir">
 
-        <unzip src="${lib.dir}/servlet-api-2.5.jar" dest="${jarnodeb.dir}" />
-        <unjar src="${lib.dir}/slf4j-api-1.6.4.jar" dest="${jarnodeb.dir}" />
+        <unjar src="${jar.dir}/${jar.name}.jar"         dest="${jarnodeb.dir}" />
+        <unjar src="${lib.dir}/slf4j-api-1.6.4.jar"     dest="${jarnodeb.dir}" />
+        <unjar src="${lib.dir}/ext/simple-web-0.1.jar"  dest="${jarnodeb.dir}" />
+        <unjar src="${lib.dir}/ext/vst-1.1.1.jar"       dest="${jarnodeb.dir}" />
+
+        <jar destfile="${jar.dir}/${jar.name}-nodeb.jar" basedir="${jarnodeb.dir}">
+            <manifest>
+            </manifest>
+        </jar>
 
     </target>
 
