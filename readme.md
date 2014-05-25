@@ -6,6 +6,10 @@ See a running example here:
   http://phoibe.astraeus.nl:18080/ /* demo might be down */
 ```
 
+Screenshot:
+
+![Screenshot](/data/jdbc-stats.png "Screenshot")
+
 Download:
 
 [jdbc-stats-1.2-nodeb.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/v1.2/jdbc-stats-1.2-nodeb.jar)
