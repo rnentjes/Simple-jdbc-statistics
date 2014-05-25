@@ -36,7 +36,7 @@ If you want a login screen add the following instead:
   jdbc:secstat:<settings>:
 ```
 
-Use the same credentials as the one for your database connection to login.
+Use the same credentials as the ones for your database connection to login.
 
 Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
