@@ -14,18 +14,29 @@ public class JdbcStatisticsExample {
         Class.forName("org.h2.Driver");
         Class.forName("nl.astraeus.jdbc.Driver");
 
-        new JdbcStatisticsExample();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    new JdbcStatisticsExample(18080, "TEST1");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+        new JdbcStatisticsExample(18081, "TEST2");
     }
 
-    public JdbcStatisticsExample() throws Exception {
+    public JdbcStatisticsExample(int port, String dbname) throws Exception {
         // webServerConnections=1;numberOfQueries=2500;logStacktraces=true;formattedQueries=true
-        Connection conn = DriverManager.getConnection("jdbc:stat::jdbc:h2:mem:test", "user", "password");
+        Connection conn = DriverManager.getConnection("jdbc:stat:webServerPort="+port+":jdbc:h2:mem:"+dbname, "user", "password");
         conn.setAutoCommit(false);
 
         Statement statement = null;
 
         statement = conn.createStatement();
-        statement.execute("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(255))");
+        statement.execute("CREATE TABLE "+dbname+" (ID INT PRIMARY KEY, NAME VARCHAR(255))");
         statement.close();
 
         conn.commit();
@@ -35,7 +46,7 @@ public class JdbcStatisticsExample {
         PreparedStatement ps = null;
 
         while (running) {
-            String TableName = "TEST"+(System.nanoTime() % 1000);
+            String TableName = dbname+"_"+(System.nanoTime() % 1000);
 
             try {
                 ps = conn.prepareStatement("SELECT COUNT(*) FROM "+TableName);

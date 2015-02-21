@@ -1,11 +1,14 @@
 package nl.astraeus.jdbc;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import nl.astraeus.jdbc.util.Util;
-import nl.astraeus.jdbc.web.model.Settings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * User: riennentjes
@@ -15,10 +18,17 @@ import java.util.*;
 public class JdbcLogger {
     private final static Logger logger = LoggerFactory.getLogger(JdbcLogger.class);
 
-    private final static JdbcLogger instance = new JdbcLogger();
+    private final static Map<Integer, JdbcLogger> instances = new ConcurrentHashMap<Integer, JdbcLogger>();
 
-    public static JdbcLogger get() {
-        return instance;
+    public static JdbcLogger get(int port) {
+        JdbcLogger result = instances.get(port);
+
+        if (result == null) {
+            result = new JdbcLogger(port);
+            instances.put(port, result);
+        }
+
+        return result;
     }
 
     public final static class LogEntry {
@@ -32,9 +42,10 @@ public class JdbcLogger {
         private int hash;
         private int count;
         private boolean autoCommit;
+        private boolean formattedQueries;
         private StackTraceElement[] stackTrace = null;
 
-        public LogEntry(int hash, QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
+        public LogEntry(int hash, QueryType type, String sql, long milli, long nano, boolean isAutoCommit, boolean formattedQueries) {
             this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
             this.nanoTimeStamp = System.nanoTime();
@@ -45,6 +56,7 @@ public class JdbcLogger {
             this.nano = nano;
             this.autoCommit = isAutoCommit;
             this.count = 1;
+            this.formattedQueries = formattedQueries;
         }
 
         public LogEntry(LogEntry le) {
@@ -57,6 +69,7 @@ public class JdbcLogger {
             this.nano = le.nano;
             this.count = le.count;
             this.autoCommit = le.autoCommit;
+            this.formattedQueries = le.formattedQueries;
         }
 
         public QueryType getType() {
@@ -112,7 +125,7 @@ public class JdbcLogger {
         }
 
         public String getSql() {
-            if (Settings.get().isFormattedQueries()) {
+            if (formattedQueries) {
                 return SqlFormatter.getHTMLFormattedSQL(sql);
             } else {
                 return sql;
@@ -152,8 +165,10 @@ public class JdbcLogger {
 
     private final List<LogEntry> queries;
     private long startTime;
+    private int port;
 
-    public JdbcLogger() {
+    public JdbcLogger(int port) {
+        this.port = port;
         queries = new LinkedList<LogEntry>();
         startTime = System.currentTimeMillis();
     }
@@ -164,10 +179,11 @@ public class JdbcLogger {
 
     public void logEntry(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
         int hash = sql.hashCode();
+        Driver.StatsLogger logger = Driver.get(port);
 
-        LogEntry entry = new LogEntry(hash, type, sql, milli, nano, isAutoCommit);
+        LogEntry entry = new LogEntry(hash, type, sql, milli, nano, isAutoCommit, logger.getSettings().isFormattedQueries());
 
-        if (Settings.get().isRecordingStacktraces()) {
+        if (logger.getSettings().isRecordingStacktraces()) {
             try {
                 throw new IllegalStateException();
             } catch (IllegalStateException e) {
@@ -178,15 +194,11 @@ public class JdbcLogger {
         synchronized (queries) {
             queries.add(entry);
 
-            while (queries.size() > Settings.get().getNumberOfQueries()) {
+            while (queries.size() > logger.getSettings().getNumberOfQueries()) {
                 entry = queries.remove(0);
                 startTime = entry.getMilli();
             }
         }
-    }
-
-    public static void log(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
-        instance.logEntry(type, sql, milli, nano, isAutoCommit);
     }
 
     public List<LogEntry> getEntries() {

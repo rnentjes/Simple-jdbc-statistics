@@ -1,13 +1,18 @@
 package nl.astraeus.jdbc.web.page;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimeZone;
+
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.jdbc.web.JdbcStatsMapping;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * User: rnentjes
@@ -37,7 +42,7 @@ public class QueryDetail extends StatsPage {
         } else if ("stacktrace".equals(getParameter("action"))) {
             long timestamp = Long.parseLong(getParameter("actionValue"));
             JdbcLogger.LogEntry found = null;
-            for (JdbcLogger.LogEntry entry : JdbcLogger.get().getEntries()) {
+            for (JdbcLogger.LogEntry entry : JdbcLogger.get(getServerInfo().port).getEntries()) {
                 if (entry.getHash() == hash && entry.getTimestamp() == timestamp) {
                     found = entry;
                     break;
@@ -60,7 +65,7 @@ public class QueryDetail extends StatsPage {
     }
 
     public void set() {
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
         long fromTime = System.currentTimeMillis();
         long toTime = 0;

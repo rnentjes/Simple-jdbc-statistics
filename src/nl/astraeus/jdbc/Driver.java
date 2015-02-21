@@ -1,14 +1,21 @@
 package nl.astraeus.jdbc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
 import nl.astraeus.jdbc.web.JdbcStatsMappingProvider;
 import nl.astraeus.jdbc.web.model.Settings;
 import nl.astraeus.web.NanoHttpdSimpleWeb;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
-import java.util.Enumeration;
-import java.util.Properties;
 
 /**
  * User: riennentjes
@@ -18,17 +25,40 @@ import java.util.Properties;
 public class Driver implements java.sql.Driver {
     private final static Logger log = LoggerFactory.getLogger(Driver.class);
 
-    final private static String URL_PREFIX = "jdbc:stat:";
-    final private static String URL_SECURE_PREFIX = "jdbc:secstat:";
+    final private static String URL_PREFIX          = "jdbc:stat:";
+    final private static String URL_SECURE_PREFIX   = "jdbc:secstat:";
 
-    private static volatile boolean started = false;
-    private static NanoHttpdSimpleWeb server = null;
+    public static class StatsLogger {
+        private volatile boolean started    = false;
+        private NanoHttpdSimpleWeb server   = null;
+        private java.sql.Driver driver      = null;
+        private Settings settings           = new Settings();
+        private String targetUrl            = null;
 
-    public static NanoHttpdSimpleWeb getServer() {
-        return server;
+        public Settings getSettings() {
+            return settings;
+        }
     }
 
-    private java.sql.Driver driver = null;
+    private static Map<String, StatsLogger>     loggers     = new ConcurrentHashMap<String, StatsLogger>();
+    private static Map<Integer, StatsLogger>    portMapping = new ConcurrentHashMap<Integer, StatsLogger>();
+
+    public static StatsLogger get(String url) {
+        if (!loggers.containsKey(url)) {
+            throw new IllegalArgumentException("No jdbc statistics logger found for url: "+url);
+        }
+
+        return loggers.get(url);
+    }
+
+    public static StatsLogger get(int port) {
+        if (!portMapping.containsKey(port)) {
+            throw new IllegalArgumentException("No jdbc statistics logger found on port: "+port);
+        }
+
+        return portMapping.get(port);
+    }
+
     private String[] drivers = {
             "org.postgresql.Driver",
             "oracle.jdbc.driver.OracleDriver",
@@ -79,97 +109,74 @@ public class Driver implements java.sql.Driver {
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        if (url.startsWith(URL_PREFIX)) {
-            Settings.get().setSecure(false);
-        } else if (url.startsWith(URL_SECURE_PREFIX)) {
-            Settings.get().setSecure(true);
-        }
+        StatsLogger logger = loggers.get(url);
 
-        String [] parts = url.split("\\:");
-        String settings = "webServerConnections=5;numberOfQueries=2500;logStacktraces=true;formattedQueries=true";
+        if (logger == null) {
+            logger = new StatsLogger();
 
-        if (parts.length > 3) {
-            settings = parts[2];
-        }
-
-        Settings.get().setSettings(settings);
-
-        StringBuilder targetUrl = new StringBuilder();
-        for (int index = 3; index < parts.length; index++) {
-            if (index > 3) {
-                targetUrl.append(":");
+            if (url.startsWith(URL_PREFIX)) {
+                logger.settings.setSecure(false);
+            } else if (url.startsWith(URL_SECURE_PREFIX)) {
+                logger.settings.setSecure(true);
             }
-            targetUrl.append(parts[index]);
-        }
 
-        if (driver == null) {
-            driver = findDriver(targetUrl.toString());
-        }
+            String [] parts = url.split("\\:");
+            String settingsString = "webServerConnections=5;numberOfQueries=2500;logStacktraces=true;formattedQueries=true";
 
-        if (Settings.get().isSecure()) {
-            String user = info.getProperty("user");
-            String password = info.getProperty("password");
-
-            if (user == null || password == null) {
-                log.warn("User and/or password not found in jdbc connection information!");
-            } else {
-                Settings.get().setUser(user);
-                Settings.get().setPasswordHash(password.hashCode());
+            if (parts.length > 3) {
+                settingsString = parts[2];
             }
-        }
 
-        if (driver != null && !started) {
-            synchronized (this) {
-                if (!started) {
-                    try {
-                        NanoHttpdSimpleWeb server = new NanoHttpdSimpleWeb(Settings.get().getWebServerPort(), new JdbcStatsMappingProvider());
+            logger.settings.parseSettings(settingsString);
 
-                        /*
-                        server = new SimpleWebServer(Settings.get().getWebServerPort());
+            StringBuilder targetUrl = new StringBuilder();
+            for (int index = 3; index < parts.length; index++) {
+                if (index > 3) {
+                    targetUrl.append(":");
+                }
+                targetUrl.append(parts[index]);
+            }
+            logger.targetUrl = targetUrl.toString();
 
-                        SimpleWeb web = new SimpleWeb();
+            if (logger.driver == null) {
+                logger.driver = findDriver(targetUrl.toString());
+            }
 
-                        web.init(new ServletConfig() {
-                            public String getServletName() {
-                                return null;
-                            }
+            if (logger.settings.isSecure()) {
+                String user = info.getProperty("user");
+                String password = info.getProperty("password");
 
-                            public ServletContext getServletContext() {
-                                return null;
-                            }
+                if (user == null || password == null) {
+                    log.warn("User and/or password not found in jdbc connection information!");
+                } else {
+                    logger.settings.setUser(user);
+                    logger.settings.setPasswordHash(password.hashCode());
+                }
+            }
 
-                            public String getInitParameter(String s) {
-                                if (s.equals("simple.web.mapping")) {
-                                    return JdbcStatsMappingProvider.class.getName();
-                                } else {
-                                    return null;
-                                }
-                            }
+            if (logger.driver != null && !logger.started) {
+                synchronized (this) {
+                    if (!logger.started) {
+                        try {
+                            NanoHttpdSimpleWeb server = new NanoHttpdSimpleWeb(logger.settings.getWebServerPort(), new JdbcStatsMappingProvider());
 
-                            public Enumeration getInitParameterNames() {
-                                return null;
-                            }
-                        });
+                            server.start();
 
-                        server.addServlet(new ResourceServlet(), "/resources/*");
-                        server.addServlet(web, "/*");
+                            System.out.println("Started Simple JDBC Statistics\n\turl: "+url+"\n\tport: "+logger.settings.getWebServerPort());
 
-                        server.setNumberOfConnections(Settings.get().getWebServerConnections());
-                        */
-
-                        server.start();
-
-                        System.out.println("Started Simple JDBC Statistics, listening on port: "+Settings.get().getWebServerPort());
-
-                        started = true;
-                    } catch (Exception e) {
-                        log.error(e.getMessage(),e);
+                            logger.started = true;
+                        } catch (Exception e) {
+                            log.error(e.getMessage(),e);
+                        }
                     }
                 }
             }
+
+            loggers.put(url, logger);
+            portMapping.put(logger.settings.getWebServerPort(), logger);
         }
 
-        return new ConnectionLogger(driver.connect(targetUrl.toString(), info));
+        return new ConnectionLogger(JdbcLogger.get(logger.settings.getWebServerPort()), logger.driver.connect(logger.targetUrl, info));
     }
 
     public boolean acceptsURL(String url) throws SQLException {
@@ -177,22 +184,28 @@ public class Driver implements java.sql.Driver {
     }
 
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        return driver.getPropertyInfo(url, info);
+        StatsLogger logger = loggers.get(url);
+
+        if (logger != null) {
+            return logger.driver.getPropertyInfo(url, info);
+        }
+
+        return new DriverPropertyInfo[0];
     }
 
     public int getMajorVersion() {
-        return driver.getMajorVersion();
+        return 1;
     }
 
     public int getMinorVersion() {
-        return driver.getMinorVersion();
+        return 0;
     }
 
     public boolean jdbcCompliant() {
-        return driver.jdbcCompliant();
+        return true;
     }
 
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return driver.getParentLogger();
+        throw new SQLFeatureNotSupportedException("Not supported with simple-jdbc-statistics.");
     }
 }

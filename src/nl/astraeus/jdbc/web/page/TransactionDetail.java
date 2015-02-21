@@ -11,9 +11,9 @@ import nl.astraeus.web.page.Page;
  * Time: 2:16 PM
  */
 public class TransactionDetail extends StatsPage {
-    
+
     private TransactionEntry transactionEntry = new TransactionEntry(0);
-    
+
     public TransactionDetail(String ... transactions) {
         for (String transaction : transactions) {
             String [] parts = transaction.split("_");
@@ -21,7 +21,7 @@ public class TransactionDetail extends StatsPage {
             int hash = Integer.parseInt(parts[0]);
             long nano = Long.parseLong(parts[1]);
 
-            for (JdbcLogger.LogEntry entry : JdbcLogger.get().getEntries()) {
+            for (JdbcLogger.LogEntry entry : JdbcLogger.get(getServerInfo().port).getEntries()) {
                 if (entry.getHash() == hash && entry.getNano() == nano) {
                     transactionEntry.queries.add(entry);
                 }
@@ -35,7 +35,7 @@ public class TransactionDetail extends StatsPage {
 
         if ("stacktrace".equals(getParameter("action"))) {
             long timestamp = Long.parseLong(getParameter("actionValue"));
-            
+
             JdbcLogger.LogEntry found = null;
             for (JdbcLogger.LogEntry entry : transactionEntry.getQueries()) {
                 if (entry.getTimestamp() == timestamp) {
@@ -43,7 +43,7 @@ public class TransactionDetail extends StatsPage {
                     break;
                 }
             }
-    
+
             if (found != null) {
                 //redirect();
                 //result = new ShowStacktrace(this, found);

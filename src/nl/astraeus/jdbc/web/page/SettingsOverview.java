@@ -1,5 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
+import nl.astraeus.jdbc.Driver;
 import nl.astraeus.jdbc.web.model.Settings;
 import nl.astraeus.web.page.Message;
 
@@ -17,7 +18,7 @@ public class SettingsOverview extends StatsPage {
 
     @Override
     public void post() {
-        Settings settings = Settings.get();
+        Settings settings = getSettings();
 
         if (getParameter("save") != null) {
             String nrq = getParameter("queries");
@@ -94,7 +95,7 @@ public class SettingsOverview extends StatsPage {
     }
 
     public void set() {
-        Settings settings = Settings.get();
+        Settings settings = Driver.get(getServerInfo().port).getSettings();
 
         int nrq = settings.getNumberOfQueries();
         set("q1000", nrq == 1000);
@@ -110,8 +111,8 @@ public class SettingsOverview extends StatsPage {
         set("webServerPort", String.valueOf(settings.getWebServerPort()));
         set("packageStart", settings.getPackageStart());
 
-        set("jdbcUrl", Settings.get().isSecure() ?
-            "jdbc:secstat:"+Settings.get().getSettings()+":<original jdbc url>" :
-            "jdbc:stat:"+Settings.get().getSettings()+":<original jdbc url>");
+        set("jdbcUrl", settings.isSecure() ?
+            "jdbc:secstat:"+settings.getSettings()+":<original jdbc url>" :
+            "jdbc:stat:"+settings.getSettings()+":<original jdbc url>");
     }
 }

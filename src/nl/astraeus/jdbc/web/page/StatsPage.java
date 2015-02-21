@@ -1,5 +1,7 @@
 package nl.astraeus.jdbc.web.page;
 
+import nl.astraeus.jdbc.Driver;
+import nl.astraeus.jdbc.web.model.Settings;
 import nl.astraeus.web.page.Page;
 import nl.astraeus.web.page.TemplatePage;
 
@@ -18,5 +20,9 @@ public class StatsPage extends TemplatePage {
     @Override
     public Page getFooter() {
         return new FooterPage();
+    }
+
+    public Settings getSettings() {
+        return Driver.get(getServerInfo().port).getSettings();
     }
 }

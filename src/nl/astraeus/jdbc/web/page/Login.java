@@ -1,7 +1,6 @@
 package nl.astraeus.jdbc.web.page;
 
 import nl.astraeus.jdbc.web.JdbcStatsMapping;
-import nl.astraeus.jdbc.web.model.Settings;
 
 /**
  * User: rnentjes
@@ -25,7 +24,7 @@ public class Login extends StatsPage {
                 login = "";
             }
 
-            if (Settings.get().validUser(login, password)) {
+            if (getSettings().validUser(login, password)) {
                 setSession("loggedin", true);
 
                 redirect(JdbcStatsMapping.QUERIES);

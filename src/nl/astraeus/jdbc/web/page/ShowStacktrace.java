@@ -1,13 +1,12 @@
 package nl.astraeus.jdbc.web.page;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.QueryType;
 import nl.astraeus.jdbc.SqlFormatter;
-import nl.astraeus.jdbc.web.model.Settings;
 import nl.astraeus.web.page.Message;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * User: rnentjes
@@ -23,7 +22,7 @@ public class ShowStacktrace extends StatsPage {
     boolean sortTime = false;
 
     public ShowStacktrace(String hashStr, String timestamp) {
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
         hash = Integer.parseInt(hashStr);
         long tsValue = Long.parseLong(timestamp);
@@ -37,7 +36,7 @@ public class ShowStacktrace extends StatsPage {
 
         if (logEntry == null) {
             addMessage(Message.Type.ERROR, "Error", "Stacktrace not found!");
-            logEntry = new JdbcLogger.LogEntry(-1, QueryType.UNKNOWN, "", 0, 0, false);
+            logEntry = new JdbcLogger.LogEntry(-1, QueryType.UNKNOWN, "", 0, 0, false, true);
             logEntry.setStackTrace(new StackTraceElement[0]);
         }
     }
@@ -72,7 +71,7 @@ public class ShowStacktrace extends StatsPage {
         }
 
         public boolean getHighlight() {
-            return element.getClassName().startsWith(Settings.get().getPackageStart());
+            return highlight;
         }
     }
 
@@ -80,7 +79,7 @@ public class ShowStacktrace extends StatsPage {
         List<TraceElement> trace = new LinkedList<TraceElement>();
 
         for (int index = 4; index < logEntry.getStackTrace().length; index++) {
-            boolean hl = logEntry.getStackTrace()[index].getClassName().startsWith("com.brandcleaner");
+            boolean hl = logEntry.getStackTrace()[index].getClassName().startsWith(getSettings().getPackageStart());
             trace.add(new TraceElement(logEntry.getStackTrace()[index], hl));
         }
 

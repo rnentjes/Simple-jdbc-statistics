@@ -1,13 +1,12 @@
 package nl.astraeus.jdbc.thread;
 
-import nl.astraeus.jdbc.web.model.Settings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * User: rnentjes
@@ -139,7 +138,7 @@ public class JvmSampler extends Thread {
         }
 
         public boolean getHighlight() {
-            return location.startsWith(Settings.get().getPackageStart());
+            return false; /* location.startsWith(getSettings().getPackageStart()); */ // todo: fix highlighting
         }
 
         public int compareTo(SampleInfo o) {

@@ -1,13 +1,21 @@
 package nl.astraeus.jdbc.web.page;
 
-import nl.astraeus.jdbc.JdbcLogger;
-import nl.astraeus.jdbc.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.util.Util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * User: rnentjes
@@ -45,14 +53,14 @@ public class QueryOverview extends StatsPage {
     @Override
     public void post() {
         if ("Clear queries".equals(getParameter("action"))) {
-            JdbcLogger.get().clear();
+            JdbcLogger.get(getServerInfo().port).clear();
         }
 
         set();
     }
 
     public void set() {
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();

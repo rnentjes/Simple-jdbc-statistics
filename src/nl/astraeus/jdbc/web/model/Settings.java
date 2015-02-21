@@ -11,19 +11,12 @@ import org.slf4j.LoggerFactory;
 public class Settings {
     private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 
-    private static final Settings instance = new Settings();
-
     private final static String NUMBER_OF_QUERIES = "numberOfQueries";
     private final static String LOG_STACKTRACES   = "logStacktraces";
     private final static String FORMATTED_QUERIES = "formattedQueries";
     private final static String CONNECTION_POOLS  = "webServerThreads";
     private final static String WEBSERVER_PORT    = "webServerPort";
     private final static String PACKAGE_START     = "packageStart";
-
-
-    public static Settings get() {
-        return instance;
-    }
 
     private int numberOfQueries = 2500;
     private boolean formattedQueries = true;
@@ -117,7 +110,7 @@ public class Settings {
         return result;
     }
 
-    public void setSettings(String settings) {
+    public void parseSettings(String settings) {
         if (settings != null && settings.length() > 0) {
             String [] parts = settings.split("\\;");
 
@@ -175,41 +168,6 @@ public class Settings {
     }
 
     public String getSettings() {
-        StringBuilder result = new StringBuilder();
-
-        result.append(WEBSERVER_PORT);
-        result.append("=");
-        result.append(this.webServerPort);
-
-        result.append(";");
-        result.append(CONNECTION_POOLS);
-        result.append("=");
-        result.append(this.webServerConnections);
-
-        result.append(";");
-
-        result.append(NUMBER_OF_QUERIES);
-        result.append("=");
-        result.append(this.numberOfQueries);
-
-        result.append(";");
-
-        result.append(LOG_STACKTRACES);
-        result.append("=");
-        result.append(this.recordingStacktraces);
-
-        result.append(";");
-
-        result.append(FORMATTED_QUERIES);
-        result.append("=");
-        result.append(this.formattedQueries);
-
-        result.append(";");
-
-        result.append(PACKAGE_START);
-        result.append("=");
-        result.append(packageStart);
-
-        return result.toString();
+        return WEBSERVER_PORT + "=" + this.webServerPort + ";" + CONNECTION_POOLS + "=" + this.webServerConnections + ";" + NUMBER_OF_QUERIES + "=" + this.numberOfQueries + ";" + LOG_STACKTRACES + "=" + this.recordingStacktraces + ";" + FORMATTED_QUERIES + "=" + this.formattedQueries + ";" + PACKAGE_START + "=" + packageStart;
     }
 }

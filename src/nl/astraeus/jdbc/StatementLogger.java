@@ -9,6 +9,7 @@ import java.sql.*;
  */
 public class StatementLogger implements Statement {
 
+    private JdbcLogger logger;
     private Statement statement;
 
     private String sql;
@@ -16,7 +17,8 @@ public class StatementLogger implements Statement {
     private long milli;
     private long nano;
 
-    public StatementLogger(Statement statement) throws SQLException {
+    public StatementLogger(JdbcLogger logger, Statement statement) throws SQLException {
+        this.logger = logger;
         this.statement = statement;
 
         this.sql = "";
@@ -32,7 +34,7 @@ public class StatementLogger implements Statement {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        JdbcLogger.log(type, sql, m, n, autocommit);
+        logger.logEntry(type, sql, m, n, autocommit);
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {

@@ -1,14 +1,22 @@
 package nl.astraeus.jdbc.web.page;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.util.Util;
 import nl.astraeus.web.page.Page;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * User: rnentjes
@@ -56,7 +64,7 @@ public class LiveOverview extends StatsPage {
 */
 
     public void set() {
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get().getEntries();
+        List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();
