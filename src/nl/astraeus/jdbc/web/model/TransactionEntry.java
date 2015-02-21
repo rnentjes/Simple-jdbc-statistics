@@ -1,11 +1,11 @@
 package nl.astraeus.jdbc.web.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import nl.astraeus.jdbc.JdbcLogger;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.jdbc.util.Formatting;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * User: rnentjes

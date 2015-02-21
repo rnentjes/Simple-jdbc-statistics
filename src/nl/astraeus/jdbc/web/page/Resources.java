@@ -1,11 +1,11 @@
 package nl.astraeus.jdbc.web.page;
 
-import nl.astraeus.jdbc.util.IOUtils;
-import nl.astraeus.web.page.Page;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import nl.astraeus.jdbc.util.IOUtils;
+import nl.astraeus.web.page.Page;
 
 /**
  * User: rnentjes

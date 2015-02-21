@@ -1,6 +1,14 @@
 package nl.astraeus.jdbc.web;
 
-import nl.astraeus.jdbc.web.page.*;
+import nl.astraeus.jdbc.web.page.JvmStats;
+import nl.astraeus.jdbc.web.page.Login;
+import nl.astraeus.jdbc.web.page.QueryDetail;
+import nl.astraeus.jdbc.web.page.QueryOverview;
+import nl.astraeus.jdbc.web.page.Resources;
+import nl.astraeus.jdbc.web.page.SettingsOverview;
+import nl.astraeus.jdbc.web.page.ShowStacktrace;
+import nl.astraeus.jdbc.web.page.TransactionDetail;
+import nl.astraeus.jdbc.web.page.TransactionOverview;
 import nl.astraeus.web.page.Page;
 import nl.astraeus.web.page.PageMapping;
 
