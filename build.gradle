@@ -1,0 +1,55 @@
+group 'nl.astraeus.jdbc'
+version '1.4-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'findbugs'
+
+sourceSets {
+    main.java.srcDirs += 'src'
+    main.resources.srcDirs += 'src'
+
+    test.java.srcDirs += 'test'
+    test.resources.srcDirs += 'test'
+}
+
+sourceCompatibility = 1.5
+
+repositories {
+    maven {
+        url "http://nexus.astraeus.nl/nexus/content/groups/public"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile "nl.astraeus.template:very-simple-templates:1.+"
+    compile "nl.astraeus.web:simple-web:0.1"
+    compile "org.slf4j:slf4j-api:1.7.+"
+    compile "org.slf4j:slf4j-simple:1.7.+"
+    compile "com.h2database:h2:1.4.+"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "http://nexus.astraeus.nl/nexus/content/repositories/releases") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+            snapshotRepository(url: "http://nexus.astraeus.nl/nexus/content/repositories/snapshots") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+        }
+    }
+}
+
+findbugs {
+    ignoreFailures = true
+}
+
+javadoc {
+    failOnError = false
+}
+
