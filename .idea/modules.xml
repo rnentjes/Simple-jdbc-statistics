@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/simple-jdbc-stats.iml" filepath="$PROJECT_DIR$/simple-jdbc-stats.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple_jdbc_stats_main.iml" filepath="$PROJECT_DIR$/.idea/modules/simple_jdbc_stats_main.iml" group="simple-jdbc-stats" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple_jdbc_stats_test.iml" filepath="$PROJECT_DIR$/.idea/modules/simple_jdbc_stats_test.iml" group="simple-jdbc-stats" />
     </modules>
   </component>
 </project>

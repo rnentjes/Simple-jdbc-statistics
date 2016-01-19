@@ -24,6 +24,9 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="simple_jdbc_stats_main" target="1.5" />
+      <module name="simple_jdbc_stats_test" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
-

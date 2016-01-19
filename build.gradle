@@ -1,5 +1,5 @@
 group 'nl.astraeus.jdbc'
-version '1.4-SNAPSHOT'
+version '1.4.1-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -29,7 +29,7 @@ dependencies {
     compile "nl.astraeus.web:simple-web:0.1"
     compile "org.slf4j:slf4j-api:1.7.+"
     compile "org.slf4j:slf4j-simple:1.7.+"
-    test "com.h2database:h2:1.4.+"
+    testCompile "com.h2database:h2:1.4.+"
 }
 
 uploadArchives {
