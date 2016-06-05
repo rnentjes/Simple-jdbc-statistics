@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
  * User: riennentjes
  * Date: Jul 10, 2008
  * Time: 8:54:37 PM
+ *
+ * Test a little change
+ *
  */
 public class Driver implements java.sql.Driver {
     private final static Logger log = LoggerFactory.getLogger(Driver.class);

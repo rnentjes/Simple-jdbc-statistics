@@ -1,10 +1,11 @@
 group 'nl.astraeus.jdbc'
-version '1.4.1-SNAPSHOT'
+version '1.4.2'
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'findbugs'
+apply plugin: 'maven-publish'
 
 sourceSets {
     main.java.srcDirs += 'src'
@@ -53,3 +54,25 @@ javadoc {
     failOnError = false
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
