@@ -1,5 +1,5 @@
 group 'nl.astraeus.jdbc'
-version '1.5.3-SNAPSHOT'
+version '1.5.4-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -30,7 +30,7 @@ dependencies {
     testCompile "com.h2database:h2:1.4.+"
 
     compile "nl.astraeus.template:very-simple-templates:1.3"
-    compile "nl.astraeus.web:simple-web:0.2"
+    compile "nl.astraeus.web:simple-web:0.3"
     compile "org.slf4j:slf4j-api:1.7.21"
 
     configurations.compile.exclude module: 'javax.servlet-api'
