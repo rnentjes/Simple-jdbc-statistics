@@ -1,5 +1,5 @@
 group 'nl.astraeus.jdbc'
-version '1.5.1-SNAPSHOT'
+version '1.5.2-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
