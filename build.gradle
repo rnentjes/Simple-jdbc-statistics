@@ -25,7 +25,11 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile "org.slf4j:slf4j-simple:1.7.21"
+
+    compile "nl.astraeus.template:very-simple-templates:1.+"
+    compile "nl.astraeus.web:simple-web:0.1"
+    compile "org.slf4j:slf4j-api:1.7.+"
+    compile "org.slf4j:slf4j-simple:1.7.+"
     testCompile "com.h2database:h2:1.4.+"
 
     compile "nl.astraeus.template:very-simple-templates:1.3"
