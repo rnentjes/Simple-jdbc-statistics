@@ -1,3 +1,5 @@
+# Simple jdbc statistics
+
 A simple wrapper around jdbc drivers that will show some statistics about the running queries on a simple web page on port 18080.
 
 See a running example here:
@@ -10,15 +12,29 @@ Screenshot:
 
 ![Screenshot](/data/jdbc-stats.png "Screenshot")
 
-Download:
+## Download:
 
 [jdbc-stats-1.2-nodeb.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/v1.2/jdbc-stats-1.2-nodeb.jar)
 
-How to use:
+## Maven, gradle etc.
+
+Add maven repository: https://nexus.astraeus.nl/nexus/content/groups/public
+
+Pom:
+
+```xml
+<dependency>
+  <groupId>nl.astraeus</groupId>
+  <artifactId>simple-jdbc-stats</artifactId>
+  <version>1.5.4</version>
+</dependency>
+```
+
+## How to use:
 
 Add the jar to your classpath:
 
-* jdbc-stats-1.2-nodeb.jar
+* jdbc-stats-1.5.4-nodeb.jar
 
 Set your jdbc driver property to the following class:
 

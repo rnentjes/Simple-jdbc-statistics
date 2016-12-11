@@ -1,4 +1,4 @@
-group 'nl.astraeus.jdbc'
+group 'nl.astraeus'
 version '1.5.4-SNAPSHOT'
 
 apply plugin: 'java'
@@ -16,6 +16,7 @@ sourceSets {
 }
 
 sourceCompatibility = 1.5
+targetCompatibility = 1.5
 
 repositories {
     maven {
@@ -88,3 +89,14 @@ jar {
         }
     }
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'simple-jdbc-statistics',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-nodep'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
