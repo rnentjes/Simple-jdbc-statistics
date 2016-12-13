@@ -179,6 +179,7 @@ public class JdbcLogger {
 
     public void clear() {
         queries.clear();
+        last100.clear();
     }
 
     public void logEntry(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
