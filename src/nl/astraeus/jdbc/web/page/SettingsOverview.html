@@ -1,79 +1,65 @@
-<form method="post">
-    <div class="page-header">
-        <h3>Settings</h3>
+<div class="page-header">
+  <h3>Settings</h3>
+</div>
+
+<div class="container">
+  <form method="post">
+    <div class="form-group">
+      <label for="queriesInput">Number of queries</label>
+      <select id="queriesInput" name="queries" class="form-control">
+        <option value="1000" ${if(q1000)}selected${/if}>1000</option>
+        <option value="2500" ${if(q2500)}selected${/if}>2500</option>
+        <option value="5000" ${if(q5000)}selected${/if}>5000</option>
+        <option value="10000" ${if(q10000)}selected${/if}>10000</option>
+        <option value="15000" ${if(q15000)}selected${/if}>15000</option>
+        <option value="25000" ${if(q25000)}selected${/if}>25000</option>
+      </select>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="rscheck" name="recordingStacktraces" ${if(recordingStacktraces)}checked${/if}>
+        Recording stacktraces
+      </label>
     </div>
 
-    <div class="well">
-        <fieldset title="Global">
-            <div class="control-group">
-                <label class="control-label" for="queriesInput">Number of queries</label>
-                <div class="controls">
-                    <select id="queriesInput" name="queries">
-                        <option value="1000" ${if(q1000)}selected${/if}>1000</option>
-                        <option value="2500" ${if(q2500)}selected${/if}>2500</option>
-                        <option value="5000" ${if(q5000)}selected${/if}>5000</option>
-                        <option value="10000" ${if(q10000)}selected${/if}>10000</option>
-                        <option value="15000" ${if(q15000)}selected${/if}>15000</option>
-                        <option value="25000" ${if(q25000)}selected${/if}>25000</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="rscheck">Recording stacktraces</label>
-                <div class="controls">
-                    <input type="checkbox" id="rscheck" name="recordingStacktraces" ${if(recordingStacktraces)}checked${/if}>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="fqcheck">Formatted queries</label>
-                <div class="controls">
-                    <input type="checkbox" id="fqcheck" name="formattedQueries" ${if(formattedQueries)}checked${/if}>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="wscon">Web server threads <span class="label label-info">1</span></label>
-                <div class="controls">
-                    <input type="text" id="wscon" name="webServerConnections" value="${webServerConnections}">
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="wsport">Web server port <span class="label label-info">1</span></label>
-                <div class="controls">
-                    <input type="text" id="wsport" name="webServerPort" value="${webServerPort}">
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="pstart">Package start</label>
-                <div class="controls">
-                    <input type="text" id="pstart" name="packageStart" value="${packageStart}">
-                </div>
-            </div>
-        </fieldset>
-        <div class="control-group">
-            <label class="control-label" >Jdbc url example:</label>
-            <div class="controls" id="settings">
-                ${jdbcUrl}
-            </div>
-        </div>
-
-        <div class="control-group">
-            <div class="controls">
-                <span class="label label-info">1</span> These settings won't take effect until after a restart, add them to your jdbc url.
-            </div>
-        </div>
-
-
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="fqcheck" name="recordingStacktraces" ${if(formattedQueries)}checked${/if}> Formatted
+        queries
+      </label>
     </div>
 
-    <div class="row">
-        <div class="span1">
-            <input type="submit" name="save" value="Save" class="btn btn-primary" />
-        </div>
+    <div class="control-group">
+      <label for="wscon">Web server threads <span class="label label-info">1</span></label>
+      <input class="form-control" type="text" id="wscon" name="webServerConnections" value="${webServerConnections}">
     </div>
 
-</form>
+    <div class="control-group">
+      <label for="wsport">Web server port <span class="label label-info">1</span></label>
+      <input class="form-control" type="text" id="wsport" name="webServerPort" value="${webServerPort}">
+    </div>
+
+    <div class="control-group">
+      <label for="pstart">Package start</label>
+      <input class="form-control" type="text" id="pstart" name="packageStart" value="${packageStart}">
+    </div>
+
+    <div class="control-group">
+      <label>Jdbc url example:</label>
+      <div class="controls" id="settings">
+        ${jdbcUrl}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+
+  <div class="row">
+    &nbsp;
+  </div>
+  <div class="row">
+    <span class="label label-info">1</span> These settings won't take effect until after a restart, add them to your
+    jdbc url.
+  </div>
+</div>
+

@@ -3,17 +3,19 @@
 </div>
 <form method="post">
 <div class="row">
-    <div class="span6">
+    <div class="col-md-6">
 
         <div># Queries: ${count}</div>
         <div>Time span: ${deltaTime} (${fromTime} - ${toTime})</div>
         <div>Avg. time/query: ${avgTime}</div>
     </div>
-    <div class="span3 pull-right">
+    <div class="col-md-6 pull-right">
         <input type="submit" name="action" value="Clear queries" class="btn btn-danger" />
     </div>
 </div>
 </form>
+
+<div class="row">&nbsp;</div>
 
 <ul class="nav nav-pills">
     <li ${if(sortTotalTime)}class="active"${/if}><a href="/queries/total">Total time</a></li>
@@ -21,6 +23,8 @@
     <li ${if(sortTotalCalls)}class="active"${/if}><a href="/queries/calls"># Calls</a></li>
     <li ${if(sortLast100)}class="active"${/if}><a href="/queries/last100">Last 100</a></li>
 </ul>
+
+<div class="row">&nbsp;</div>
 
 <table class="table table-condensed table-striped " id="overview">
     <thead>

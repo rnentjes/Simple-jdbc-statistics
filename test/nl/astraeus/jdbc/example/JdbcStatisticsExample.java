@@ -92,7 +92,7 @@ public class JdbcStatisticsExample {
 
             conn.commit();
 
-            Thread.sleep(10);
+            Thread.sleep(1234);
         }
 
         conn.close();

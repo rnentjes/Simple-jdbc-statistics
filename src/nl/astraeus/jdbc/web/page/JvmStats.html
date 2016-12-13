@@ -4,11 +4,11 @@
 
 <form method="post">
     <div class="row">
-        <div class="span6">
+        <div class="col-md-6">
             # Samples: ${totalSamples}
             <input type="submit" name="refresh" value="Refresh" class="btn btn-success" />
         </div>
-        <div class="span3 pull-right">
+        <div class="col-md-6 pull-right">
             ${if(running)}
             <span style="color: red">Running</span>
             <input type="submit" name="stopRunning" value="Stop" class="btn btn-success" />
@@ -20,6 +20,8 @@
         </div>
     </div>
 </form>
+
+<div class="row">&nbsp;</div>
 
 <ul class="nav nav-pills">
     <!--<li ><a onclick="return Sjs.submit('sortTotalTime')">Total time</a></li>-->

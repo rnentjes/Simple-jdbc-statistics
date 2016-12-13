@@ -10,6 +10,12 @@ body {
     padding-top: 50px;
 }
 
+pre {
+    border: none;
+    background-color: inherit;
+    padding: 0;
+}
+
 div#loading {
     /*make invisible*/
     display:none;
