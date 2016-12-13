@@ -4,9 +4,7 @@ A simple wrapper around jdbc drivers that will show some statistics about the ru
 
 See a running example here (just a demo, might be down):
 
-```
-  http://www.astraeus.nl:18100/ 
-```
+[http://www.astraeus.nl:18100/]
 
 Screenshot:
 
