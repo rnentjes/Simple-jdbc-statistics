@@ -4,11 +4,22 @@
 <form method="post">
 <div class="row">
     <div class="col-md-6">
-
-        <div># Queries: ${count}</div>
-        <div>Time span: ${deltaTime} (${fromTime} - ${toTime})</div>
-        <div>Avg. time/query: ${avgTime}</div>
+        <table >
+            <tr>
+                <th style="padding: 2px"># Queries:</th>
+                <td style="padding: 2px">${count}</td>
+            </tr>
+            <tr>
+                <th style="padding: 2px">Time span:</th>
+                <td style="padding: 2px">${deltaTime} (${fromTime} - ${toTime})</td>
+            </tr>
+            <tr>
+                <th style="padding: 2px">Avg. time/query:</th>
+                <td style="padding: 2px">${avgTime}</td>
+            </tr>
+        </table>
     </div>
+
     <div class="col-md-6 pull-right">
         <input type="submit" name="action" value="Clear queries" class="btn btn-danger" />
     </div>
@@ -44,7 +55,7 @@
     <tbody>
     ${each(queries as q)}
     <tr>
-        <td><a href="/query/${q.hash}"><i class=" icon-zoom-in"></i></a></td>
+        <td><a href="/query/${q.hash}"><span class="glyphicon glyphicon-zoom-in"></span></a></td>
         ${if(sortLast100)}
         <td>${q.formattedTimestamp}</td>
         <td>${q.formattedNano}</td>

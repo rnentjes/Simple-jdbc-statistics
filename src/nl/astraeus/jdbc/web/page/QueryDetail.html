@@ -1,36 +1,51 @@
 <div class="page-header">
-    <h3>Query overview</h3>
+    <h3>Query detail</h3>
 </div>
 
 <div class="row">
-    <div class="span1 ">
+    <div class="col-md-1 ">
         <a href="/queries" class="btn btn-primary">Back</a>
     </div>
-    <div class="span1 offset10">
+    <div class="col-md-1 col-md-offset-10">
         <a href="/query/${hash}" class="btn btn-primary">Refresh</a>
     </div>
 </div>
 
-<div class="row">
-    <div class="span6">
-        <div># Queries: ${count}</div>
-        <div>Time span: ${deltaTime} (${fromTime} - ${toTime})</div>
-        <div>Avg. time/query: ${avgTime}</div>
+<div class="row" style="margin-top: 15px;">
+    <div class="col-md-6">
+        <table >
+            <tr>
+                <th style="padding: 2px"># Queries:</th>
+                <td style="padding: 2px">${count}</td>
+            </tr>
+            <tr>
+                <th style="padding: 2px">Time span:</th>
+                <td style="padding: 2px">${deltaTime} (${fromTime} - ${toTime})</td>
+            </tr>
+            <tr>
+                <th style="padding: 2px">Avg. time/query:</th>
+                <td style="padding: 2px">${avgTime}</td>
+            </tr>
+        </table>
     </div>
 </div>
 
+<hr/>
+
 <div class="row">
-    <div class="span10 offset1">
+    <div class="col-md-10 col-md-offset-1">
         <p><pre><code class="sql">${if(sql)}${!sql}${/if}</code></pre></p>
     </div>
 </div>
+
+<hr/>
 
 <ul class="nav nav-pills">
     <li ${if(sortTime)}class="active"${/if}><a onclick="return Sjs.submit('sortTime')">Timestamp</a></li>
     <li ${if(sortAvgTime)}class="active"${/if}><a onclick="return Sjs.submit('sortAvgTime')">Avg. query time</a></li>
 </ul>
 
-<table class="table table-condensed table-striped " id="overview">
+<table class="table table-condensed table-striped " id="overview" style="margin-top: 15px;">
     <thead>
     <tr>
         <th></th>
@@ -43,7 +58,7 @@
     <tbody>
     ${each(queries as q)}
     <tr>
-        <td>${if(q.stackTrace)}<a href="/stacktrace/${hash}/${q.timestamp}"><i class=" icon-zoom-in"></i></a>${/if}</td>
+        <td>${if(q.stackTrace)}<a href="/stacktrace/${hash}/${q.timestamp}"><span class="glyphicon glyphicon-zoom-in"></span></a>${/if}</td>
         <td>${q.formattedTimestamp}</td>
         <td>${q.threadId}</td>
         <td>${q.type.description}</td>

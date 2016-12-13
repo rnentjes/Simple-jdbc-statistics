@@ -44,22 +44,20 @@
       <input class="form-control" type="text" id="pstart" name="packageStart" value="${packageStart}">
     </div>
 
-    <div class="control-group">
+    <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Save</button>
+
+    <div class="control-group" style="margin-top: 15px;">
       <label>Jdbc url example:</label>
       <div class="controls" id="settings">
         ${jdbcUrl}
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-  </form>
+    <div class="form-group">
+      <span class="label label-info">1</span> These settings won't take effect until after a restart, add them to your
+      jdbc url.
+    </div>
 
-  <div class="row">
-    &nbsp;
-  </div>
-  <div class="row">
-    <span class="label label-info">1</span> These settings won't take effect until after a restart, add them to your
-    jdbc url.
-  </div>
+  </form>
 </div>
 
