@@ -2,9 +2,7 @@
 
 A simple wrapper around jdbc drivers that will show some statistics about the running queries on a simple web page on port 18080.
 
-See a running example here (just a demo, might be down):
-
-[http://www.astraeus.nl:18100/]
+See a running example here (just a demo, might be down): http://www.astraeus.nl:18100/
 
 Screenshot:
 
