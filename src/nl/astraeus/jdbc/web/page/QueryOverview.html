@@ -19,15 +19,21 @@
     <li ${if(sortTotalTime)}class="active"${/if}><a href="/queries/total">Total time</a></li>
     <li ${if(sortAvgTime)}class="active"${/if}><a href="/queries/average">Avg. time</a></li>
     <li ${if(sortTotalCalls)}class="active"${/if}><a href="/queries/calls"># Calls</a></li>
+    <li ${if(sortLast100)}class="active"${/if}><a href="/queries/last100">Last 100</a></li>
 </ul>
 
 <table class="table table-condensed table-striped " id="overview">
     <thead>
     <tr>
         <th> </th>
+        ${if(sortLast100)}
+        <th>Timestamp</th>
+        <th>Duration (ms)</th>
+        ${else}
         <th>Total time (ms)</th>
         <th>Avg. time (ms)</th>
         <th># Calls</th>
+        ${/if}
         <th>Sql</th>
     </tr>
     </thead>
@@ -35,9 +41,14 @@
     ${each(queries as q)}
     <tr>
         <td><a href="/query/${q.hash}"><i class=" icon-zoom-in"></i></a></td>
+        ${if(sortLast100)}
+        <td>${q.formattedTimestamp}</td>
+        <td>${q.formattedNano}</td>
+        ${else}
         <td>${q.total}</td>
         <td>${q.formattedNano}</td>
         <td>${q.count}</td>
+        ${/if}
         <td><pre><code class="sql">${!q.sql}</code></pre></td>
     </tr>
     ${/each}

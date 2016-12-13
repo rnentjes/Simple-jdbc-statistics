@@ -1,5 +1,6 @@
 package nl.astraeus.jdbc;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -163,13 +164,16 @@ public class JdbcLogger {
         }
     }
 
+
     private final List<LogEntry> queries;
+    private final List<LogEntry> last100;
     private long startTime;
     private int port;
 
     public JdbcLogger(int port) {
         this.port = port;
         queries = new LinkedList<LogEntry>();
+        last100 = new LinkedList<LogEntry>();
         startTime = System.currentTimeMillis();
     }
 
@@ -193,10 +197,14 @@ public class JdbcLogger {
 
         synchronized (queries) {
             queries.add(entry);
+            last100.add(entry);
 
             while (queries.size() > logger.getSettings().getNumberOfQueries()) {
                 entry = queries.remove(0);
                 startTime = entry.getMilli();
+            }
+            while (last100.size() > 100) {
+                last100.remove(0);
             }
         }
     }
@@ -204,6 +212,12 @@ public class JdbcLogger {
     public List<LogEntry> getEntries() {
         synchronized (queries) {
             return new LinkedList<LogEntry>(queries);
+        }
+    }
+
+    public List<LogEntry> getLast100() {
+        synchronized (queries) {
+            return new LinkedList<LogEntry>(last100);
         }
     }
 }

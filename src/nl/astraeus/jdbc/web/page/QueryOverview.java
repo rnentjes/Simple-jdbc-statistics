@@ -25,23 +25,26 @@ import org.slf4j.LoggerFactory;
 public class QueryOverview extends StatsPage {
     private static Logger logger = LoggerFactory.getLogger(QueryOverview.class);
 
-    boolean sortTotalCalls = true;
-    boolean sortAvgTime = false;
-    boolean sortTotalTime = false;
+    public static enum Selected {
+        TOTAL_TIME,
+        AVERAGE,
+        CALLS,
+        LAST100
+    }
+
+    Selected selected = Selected.AVERAGE;
 
     public QueryOverview() {}
 
     public QueryOverview(String sorting) {
-        sortTotalCalls = false;
-        sortAvgTime = false;
-        sortTotalTime = false;
-
         if ("total".equals(sorting)) {
-            sortTotalTime = true;
+            selected = Selected.TOTAL_TIME;
         } else if ("average".equals(sorting)) {
-            sortAvgTime = true;
+            selected = Selected.AVERAGE;
         } else if ("calls".equals(sorting)) {
-            sortTotalCalls = true;
+            selected = Selected.CALLS;
+        } else {
+            selected = Selected.LAST100;
         }
     }
 
@@ -60,80 +63,94 @@ public class QueryOverview extends StatsPage {
     }
 
     public void set() {
-        List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
+        List<JdbcLogger.LogEntry> list;
 
         long fromTime = System.currentTimeMillis();
         long toTime = System.currentTimeMillis();
         long avgTime = 0;
 
-        Map<Integer, JdbcLogger.LogEntry> condensed = new HashMap<Integer, JdbcLogger.LogEntry>();
-        List<JdbcLogger.LogEntry> list;
+        if (selected == Selected.LAST100) {
+            list = JdbcLogger.get(getServerInfo().port).getLast100();
 
-        if (!entries.isEmpty()) {
-            fromTime = entries.get(0).getTimestamp();
-            toTime = entries.get(entries.size()-1).getTimestamp();
-
-            long total = 0;
-
-            for (JdbcLogger.LogEntry le : entries) {
-                total += le.getNano();
-
-                JdbcLogger.LogEntry entry = condensed.get(le.getHash());
-
-                if (entry == null) {
-                    entry = new JdbcLogger.LogEntry(le);
-                    condensed.put(entry.getHash(), entry);
-                } else {
-                    entry.addCount(le);
-                }
+            if (!list.isEmpty()) {
+                fromTime = list.get(0).getMilli();
+                toTime = list.get(list.size()-1).getMilli();
+                avgTime = ((toTime - fromTime) / list.size()) * 1000000L;
             }
 
-            avgTime = total / entries.size();
-        }
+            set("count", list.size());
+        } else {
+            List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
-        list = new LinkedList<JdbcLogger.LogEntry>(condensed.values());
+            Map<Integer, JdbcLogger.LogEntry> condensed = new HashMap<Integer, JdbcLogger.LogEntry>();
 
-        if (sortTotalCalls) {
-            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
-                public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    return o2.getCount() - o1.getCount();
-                }
-            });
-        } else if (sortAvgTime) {
-            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
-                public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    long n1 = o1.getNano() / o1.getCount();
-                    long n2 = o2.getNano() / o2.getCount();
+            if (!entries.isEmpty()) {
+                fromTime = entries.get(0).getTimestamp();
+                toTime = entries.get(entries.size() - 1).getTimestamp();
 
-                    if (n2 > n1) {
-                        return 1;
-                    } else if (n2 < n1) {
-                        return -1;
+                long total = 0;
+
+                for (JdbcLogger.LogEntry le : entries) {
+                    total += le.getNano();
+
+                    JdbcLogger.LogEntry entry = condensed.get(le.getHash());
+
+                    if (entry == null) {
+                        entry = new JdbcLogger.LogEntry(le);
+                        condensed.put(entry.getHash(), entry);
                     } else {
-                        return 0;
+                        entry.addCount(le);
                     }
                 }
-            });
-        } else if (sortTotalTime) {
-            Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
-                public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
-                    if (o2.getNano() > o1.getNano()) {
-                        return 1;
-                    } else if (o2.getNano() < o1.getNano()) {
-                        return -1;
-                    } else {
-                        return 0;
+
+                avgTime = total / entries.size();
+            }
+
+            list = new LinkedList<JdbcLogger.LogEntry>(condensed.values());
+
+            if (selected == Selected.CALLS) {
+                Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
+                    public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
+                        return o2.getCount() - o1.getCount();
                     }
-                }
-            });
+                });
+            } else if (selected == Selected.AVERAGE) {
+                Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
+                    public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
+                        long n1 = o1.getNano() / o1.getCount();
+                        long n2 = o2.getNano() / o2.getCount();
+
+                        if (n2 > n1) {
+                            return 1;
+                        } else if (n2 < n1) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+            } else if (selected == Selected.TOTAL_TIME) {
+                Collections.sort(list, new Comparator<JdbcLogger.LogEntry>() {
+                    public int compare(JdbcLogger.LogEntry o1, JdbcLogger.LogEntry o2) {
+                        if (o2.getNano() > o1.getNano()) {
+                            return 1;
+                        } else if (o2.getNano() < o1.getNano()) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+            }
+            set("count", entries.size());
         }
 
         set("queries", list);
-        set("count", entries.size());
 
-        set("sortTotalCalls", sortTotalCalls);
-        set("sortAvgTime", sortAvgTime);
-        set("sortTotalTime", sortTotalTime);
+        set("sortTotalCalls", selected == Selected.CALLS);
+        set("sortAvgTime", selected == Selected.AVERAGE);
+        set("sortTotalTime", selected == Selected.TOTAL_TIME);
+        set("sortLast100", selected == Selected.LAST100);
 
         DateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
