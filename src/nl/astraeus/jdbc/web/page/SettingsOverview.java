@@ -20,75 +20,73 @@ public class SettingsOverview extends StatsPage {
     public void post() {
         Settings settings = getSettings();
 
-        if (getParameter("save") != null) {
-            String nrq = getParameter("queries");
-            String pq = getParameter("formattedQueries");
-            String rs = getParameter("recordingStacktraces");
-            String wsc = getParameter("webServerConnections");
-            String wsp = getParameter("webServerPort");
-            String pstart = getParameter("packageStart");
+        String nrq = getParameter("queries");
+        String pq = getParameter("formattedQueries");
+        String rs = getParameter("recordingStacktraces");
+        String wsc = getParameter("webServerConnections");
+        String wsp = getParameter("webServerPort");
+        String pstart = getParameter("packageStart");
 
-            if (wsp != null) {
-                try {
-                    int port = Integer.parseInt(wsp);
+        if (wsp != null) {
+            try {
+                int port = Integer.parseInt(wsp);
 
-                    if (port < 1025 || port > 65535) {
-                        addMessage(Message.Type.ERROR, "Error!", "Web server port should be a number between 1025 and 65535.");
-                    } else {
-                        settings.setWebServerPort(port);
-                    }
-                } catch (NumberFormatException e) {
+                if (port < 1025 || port > 65535) {
                     addMessage(Message.Type.ERROR, "Error!", "Web server port should be a number between 1025 and 65535.");
+                } else {
+                    settings.setWebServerPort(port);
                 }
+            } catch (NumberFormatException e) {
+                addMessage(Message.Type.ERROR, "Error!", "Web server port should be a number between 1025 and 65535.");
             }
+        }
 
-            if (wsc != null) {
-                try {
-                    int nrcon = Integer.parseInt(wsc);
+        if (wsc != null) {
+            try {
+                int nrcon = Integer.parseInt(wsc);
 
-                    if (nrcon < 1 || nrcon > 25) {
-                        addMessage(Message.Type.ERROR, "Error!", "Number of web server threads should be a number between 1 and 25.");
-                    } else {
-                        settings.setWebServerConnections(nrcon);
-                    }
-                } catch (NumberFormatException e) {
+                if (nrcon < 1 || nrcon > 25) {
                     addMessage(Message.Type.ERROR, "Error!", "Number of web server threads should be a number between 1 and 25.");
+                } else {
+                    settings.setWebServerConnections(nrcon);
                 }
+            } catch (NumberFormatException e) {
+                addMessage(Message.Type.ERROR, "Error!", "Number of web server threads should be a number between 1 and 25.");
             }
+        }
 
-            if (nrq != null) {
-                try {
-                    int nrquery = Integer.parseInt(nrq);
+        if (nrq != null) {
+            try {
+                int nrquery = Integer.parseInt(nrq);
 
-                    if (nrquery < 1 || nrquery > 25000) {
-                       addMessage(Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
-                    } else {
-                        settings.setNumberOfQueries(nrquery);
-                    }
-                } catch (NumberFormatException e) {
-                    addMessage(Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
+                if (nrquery < 1 || nrquery > 25000) {
+                   addMessage(Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
+                } else {
+                    settings.setNumberOfQueries(nrquery);
                 }
+            } catch (NumberFormatException e) {
+                addMessage(Message.Type.ERROR, "Error!", "Number of queries logged should be a number between 1 and 25000.");
             }
+        }
 
-            if (pq != null) {
-                settings.setFormattedQueries(true);
-            } else {
-                settings.setFormattedQueries(false);
-            }
+        if (pq != null) {
+            settings.setFormattedQueries(true);
+        } else {
+            settings.setFormattedQueries(false);
+        }
 
-            if (rs != null) {
-                settings.setRecordingStacktraces(true);
-            } else {
-                settings.setRecordingStacktraces(false);
-            }
+        if (rs != null) {
+            settings.setRecordingStacktraces(true);
+        } else {
+            settings.setRecordingStacktraces(false);
+        }
 
-            if (pstart != null) {
-                settings.setPackageStart(pstart);
-            }
+        if (pstart != null) {
+            settings.setPackageStart(pstart);
+        }
 
-            if (!hasWarnings()) {
-                addMessage(Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
-            }
+        if (!hasWarnings()) {
+            addMessage(Message.Type.SUCCESS, "Success!", "Settings are successfully saved.");
         }
 
         set();

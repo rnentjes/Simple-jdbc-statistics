@@ -4,10 +4,18 @@
 
 <form method="post">
     <div class="row">
-        <div class="col-md-6">
-            # Samples: ${totalSamples}
+        <div class="col-md-4">
+            <table >
+                <tr>
+                    <th style="padding: 2px"># Samples::</th>
+                    <td style="padding: 2px">${totalSamples}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-2">
             <input type="submit" name="refresh" value="Refresh" class="btn btn-success" />
         </div>
+
         <div class="col-md-6 pull-right">
             ${if(running)}
             <span style="color: red">Running</span>
