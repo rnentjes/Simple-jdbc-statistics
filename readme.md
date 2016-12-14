@@ -6,7 +6,7 @@ See a running example here (just a demo, might be down): http://www.astraeus.nl:
 
 Screenshot:
 
-![Screenshot](/data/jdbc-stats.png "Screenshot")
+![Screenshot](/data/sjs-screenshot.png "Screenshot")
 
 ## Download:
 
