@@ -43,6 +43,7 @@
         <th> </th>
         ${if(sortLast100)}
         <th>Timestamp</th>
+        <th>Thread</th>
         <th>Duration (ms)</th>
         ${else}
         <th>Total time (ms)</th>
@@ -58,6 +59,7 @@
         <td><a href="/query/${q.hash}"><span class="glyphicon glyphicon-zoom-in"></span></a></td>
         ${if(sortLast100)}
         <td>${q.formattedTimestamp}</td>
+        <td>${q.threadId}</td>
         <td>${q.formattedNano}</td>
         ${else}
         <td>${q.total}</td>
