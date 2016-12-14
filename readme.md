@@ -30,7 +30,7 @@ Pom:
 
 Add the jar to your classpath:
 
-* jdbc-stats-1.5.4-nodeb.jar
+* [simple-jdbc-stats-nodep-1.5.6.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.6/simple-jdbc-stats-nodep-1.5.6.jar)
 
 Set your jdbc driver property to the following class:
 
@@ -45,14 +45,6 @@ Add the following to the front of your current jdbc url:
   
   (eg. jdbc:postgresql://localhost/mydb becomes: jdbc:stat::jdbc:postgresql://localhost/mydb)
 ```
-
-If you want a login screen add the following instead:
-
-```text
-  jdbc:secstat:<settings>:
-```
-
-Use the same credentials as the ones for your database connection to login.
 
 Start your application and goto: http://&lt;host app is running on&gt;:18080/
 
