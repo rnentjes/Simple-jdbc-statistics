@@ -10,7 +10,7 @@ Screenshot:
 
 ## Download:
 
-[jdbc-stats-1.2-nodeb.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/v1.2/jdbc-stats-1.2-nodeb.jar)
+[simple-jdbc-stats-nodep-1.5.6.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.6/simple-jdbc-stats-nodep-1.5.6.jar)
 
 ## Maven, gradle etc.
 
