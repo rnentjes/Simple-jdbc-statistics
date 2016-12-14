@@ -10,73 +10,48 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="/resources/css/jdbc-stats.css" rel="stylesheet">
-
-    <script
-        src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="/resources/js/smoothie.js"></script>
-
-    <script type="text/javascript">
-        Sjs = function () {
-            return {
-                log: function (p1, p2, p3, p4, p5) {
-                    if (console.log) {
-                        console.log(p1, p2, p3, p4, p5);
-                    }
-                }
-            };
-        }();
-
-    </script>
-
 </head>
+
 <body>
-        <nav id="topmenu" class="navbar navbar-default navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Simple JDBC Statistics</a>
-                </div>
-
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <!-- <li class=""><a onclick="return Sjs.submit('menulive');">Live view</a></li> -->
-                        <li class=""><a href="/queries" >Queries</a></li>
-                        <!-- <li class=""><a href="/transactions" >Transactions</a></li> -->
-                        <li class=""><a href="/jvm" >Jvm stats</a></li>
-                        <li class=""><a href="/settings" >Settings</a></li>
-                    </ul>
-                </div>
+    <nav id="topmenu" class="navbar navbar-default navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Simple JDBC Statistics</a>
             </div>
-        </nav>
 
-        <div class="container">
 
-        ${if(showMessages)}
-            ${foreach(messages as message)}
-            <div class="alert
-            ${if(message.success)}alert-success${/if}
-            ${if(message.info)}alert-info${/if}
-            ${if(message.error)}alert-error${/if}">
-                <a class="close" data-dismiss="alert" href="#">×</a>
-                ${if(message.header)}<strong>${message.header}</strong>${/if}
-                ${if(message.body)}${message.body}${/if}
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <!-- <li class=""><a onclick="return Sjs.submit('menulive');">Live view</a></li> -->
+                    <li class=""><a href="/queries" >Queries</a></li>
+                    <!-- <li class=""><a href="/transactions" >Transactions</a></li> -->
+                    <li class=""><a href="/jvm" >Jvm stats</a></li>
+                    <li class=""><a href="/settings" >Settings</a></li>
+                </ul>
             </div>
-            ${/each}
-        ${/if}
+        </div>
+    </nav>
+
+    <div class="container">
+
+    ${if(showMessages)}
+        ${foreach(messages as message)}
+        <div class="alert
+        ${if(message.success)}alert-success${/if}
+        ${if(message.info)}alert-info${/if}
+        ${if(message.error)}alert-error${/if}">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            ${if(message.header)}<strong>${message.header}</strong>${/if}
+            ${if(message.body)}${message.body}${/if}
+        </div>
+        ${/each}
+    ${/if}
