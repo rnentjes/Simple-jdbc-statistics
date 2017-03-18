@@ -112,7 +112,8 @@ public class ConnectionLogger implements Connection {
 
     public CallableStatement prepareCall(String sql) throws SQLException {
         lastSql = sql;
-        return connection.prepareCall(sql);
+
+        return new CallableStatementLogger(logger, connection, sql);
     }
 
     public String nativeSQL(String sql) throws SQLException {
@@ -174,7 +175,8 @@ public class ConnectionLogger implements Connection {
 
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         lastSql = sql;
-        return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
+
+        return new CallableStatementLogger(logger, connection, sql, resultSetType, resultSetConcurrency);
     }
 
     public Map<String, Class<?>> getTypeMap() throws SQLException {
@@ -210,12 +212,13 @@ public class ConnectionLogger implements Connection {
     }
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+        return new StatementLogger(logger, connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         lastSql = sql;
-        return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+
+        return new CallableStatementLogger(logger, connection, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     public Clob createClob() throws SQLException {
