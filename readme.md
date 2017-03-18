@@ -22,7 +22,7 @@ Pom:
 <dependency>
   <groupId>nl.astraeus</groupId>
   <artifactId>simple-jdbc-stats</artifactId>
-  <version>1.5.4</version>
+  <version>1.5.7</version>
 </dependency>
 ```
 
