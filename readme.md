@@ -10,7 +10,7 @@ Screenshot:
 
 ## Download:
 
-[simple-jdbc-stats-nodep-1.5.6.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.6/simple-jdbc-stats-nodep-1.5.6.jar)
+[simple-jdbc-stats-nodep-1.5.7.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.7/simple-jdbc-stats-nodep-1.5.7.jar)
 
 ## Maven, gradle etc.
 
@@ -22,7 +22,7 @@ Pom:
 <dependency>
   <groupId>nl.astraeus</groupId>
   <artifactId>simple-jdbc-stats</artifactId>
-  <version>1.5.4</version>
+  <version>1.5.7</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ Pom:
 
 Add the jar to your classpath:
 
-* [simple-jdbc-stats-nodep-1.5.6.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.6/simple-jdbc-stats-nodep-1.5.6.jar)
+* [simple-jdbc-stats-nodep-1.5.7.jar](https://github.com/rnentjes/Simple-jdbc-statistics/releases/download/1.5.7/simple-jdbc-stats-nodep-1.5.7.jar)
 
 Set your jdbc driver property to the following class:
 
