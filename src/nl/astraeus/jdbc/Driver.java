@@ -92,7 +92,7 @@ public class Driver implements java.sql.Driver {
             try {
                 Class.forName(dr);
             } catch (Throwable e) {
-                log.debug("Can't instantiate driver: " + dr, e);
+                log.trace("Can't instantiate driver: " + dr);
             }
         }
     }
