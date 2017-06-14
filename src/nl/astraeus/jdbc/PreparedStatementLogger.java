@@ -543,15 +543,23 @@ public class PreparedStatementLogger implements PreparedStatement {
     }
 
     public void addBatch(String sql) throws SQLException {
+        this.sql += "\n"+sql;
         statement.addBatch(sql);
     }
 
     public void clearBatch() throws SQLException {
+        this.sql += "";
         statement.clearBatch();
     }
 
     public int[] executeBatch() throws SQLException {
-        return statement.executeBatch();
+        clearTime();
+
+        int [] result = statement.executeBatch();
+
+        log(QueryType.BATCH, sql);
+
+        return result;
     }
 
     public Connection getConnection() throws SQLException {

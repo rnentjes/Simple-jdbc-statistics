@@ -178,7 +178,7 @@ public class StatementLogger implements Statement {
 
         int [] result = statement.executeBatch();
 
-        log(QueryType.STATEMENT, sql);
+        log(QueryType.BATCH, sql);
 
         return result;
     }
