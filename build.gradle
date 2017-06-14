@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '1.5.9'
+version '1.5.10-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
