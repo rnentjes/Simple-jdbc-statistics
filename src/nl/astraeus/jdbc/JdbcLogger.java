@@ -1,14 +1,15 @@
 package nl.astraeus.jdbc;
 
+import nl.astraeus.jdbc.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import nl.astraeus.jdbc.util.Util;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * User: riennentjes
@@ -44,8 +45,18 @@ public class JdbcLogger {
         private boolean autoCommit;
         private boolean formattedQueries;
         private StackTraceElement[] stackTrace = null;
+        private Set<Parameter> parameters = new HashSet<Parameter>();
 
-        public LogEntry(int hash, QueryType type, String sql, long milli, long nano, boolean isAutoCommit, boolean formattedQueries) {
+        public LogEntry(
+                int hash,
+                QueryType type,
+                String sql,
+                long milli,
+                long nano,
+                boolean isAutoCommit,
+                boolean formattedQueries,
+                Set<Parameter> parameters
+        ) {
             this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
             this.nanoTimeStamp = System.nanoTime();
@@ -57,6 +68,7 @@ public class JdbcLogger {
             this.autoCommit = isAutoCommit;
             this.count = 1;
             this.formattedQueries = formattedQueries;
+            this.parameters = parameters;
         }
 
         public LogEntry(LogEntry le) {
@@ -64,12 +76,13 @@ public class JdbcLogger {
             this.nanoTimeStamp = System.nanoTime();
             this.hash = le.hash;
             this.type = le.type;
-            this.sql = le .sql;
+            this.sql = le.sql;
             this.milli = le.milli;
             this.nano = le.nano;
             this.count = le.count;
             this.autoCommit = le.autoCommit;
             this.formattedQueries = le.formattedQueries;
+            this.parameters = le.parameters;
         }
 
         public QueryType getType() {
@@ -113,11 +126,11 @@ public class JdbcLogger {
         }
 
         public String getFormattedMilli() {
-            return Util.formatNano(milli*1000000/count);
+            return Util.formatNano(milli * 1000000 / count);
         }
 
         public String getFormattedNano() {
-            return Util.formatNano(nano/count);
+            return Util.formatNano(nano / count);
         }
 
         public String getTotal() {
@@ -130,6 +143,23 @@ public class JdbcLogger {
             } else {
                 return sql;
             }
+        }
+
+        public String getParameters() {
+            StringBuilder result = new StringBuilder();
+
+            if (parameters != null && !parameters.isEmpty()) {
+                for (Parameter parameter : parameters) {
+                    result.append(String.format(
+                            "%4s, %12s, %24s\n",
+                            parameter.getIndex(),
+                            parameter.getType(),
+                            parameter.getDisplayValue()
+                    ));
+                }
+            }
+
+            return result.toString();
         }
 
         public boolean isEndOfTransaction() {
@@ -181,11 +211,37 @@ public class JdbcLogger {
         last100.clear();
     }
 
-    public void logEntry(QueryType type, String sql, long milli, long nano, boolean isAutoCommit) {
+    public void logEntry(
+            QueryType type,
+            String sql,
+            long milli,
+            long nano,
+            boolean isAutoCommit
+    ) {
+        logEntry(type, sql, milli, nano, isAutoCommit, new HashSet<Parameter>());
+    }
+
+    public void logEntry(
+            QueryType type,
+            String sql,
+            long milli,
+            long nano,
+            boolean isAutoCommit,
+            Set<Parameter> parameters
+    ) {
         int hash = sql.hashCode();
         Driver.StatsLogger logger = Driver.get(port);
 
-        LogEntry entry = new LogEntry(hash, type, sql, milli, nano, isAutoCommit, logger.getSettings().isFormattedQueries());
+        LogEntry entry = new LogEntry(
+                hash,
+                type,
+                sql,
+                milli,
+                nano,
+                isAutoCommit,
+                logger.getSettings().isFormattedQueries(),
+                parameters
+        );
 
         if (logger.getSettings().isRecordingStacktraces()) {
             try {

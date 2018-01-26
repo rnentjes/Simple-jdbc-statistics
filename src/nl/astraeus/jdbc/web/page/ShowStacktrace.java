@@ -1,12 +1,14 @@
 package nl.astraeus.jdbc.web.page;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.Parameter;
 import nl.astraeus.jdbc.QueryType;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.web.page.Message;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * User: rnentjes
@@ -21,7 +23,10 @@ public class ShowStacktrace extends StatsPage {
     boolean sortAvgTime = false;
     boolean sortTime = false;
 
-    public ShowStacktrace(String hashStr, String timestamp) {
+    public ShowStacktrace(
+            String hashStr,
+            String timestamp
+    ) {
         List<JdbcLogger.LogEntry> entries = JdbcLogger.get(getServerInfo().port).getEntries();
 
         hash = Integer.parseInt(hashStr);
@@ -36,7 +41,16 @@ public class ShowStacktrace extends StatsPage {
 
         if (logEntry == null) {
             addMessage(Message.Type.ERROR, "Error", "Stacktrace not found!");
-            logEntry = new JdbcLogger.LogEntry(-1, QueryType.UNKNOWN, "", 0, 0, false, true);
+            logEntry = new JdbcLogger.LogEntry(
+                    -1,
+                    QueryType.UNKNOWN,
+                    "",
+                    0,
+                    0,
+                    false,
+                    true,
+                    new HashSet<Parameter>()
+            );
             logEntry.setStackTrace(new StackTraceElement[0]);
         }
     }
@@ -61,7 +75,10 @@ public class ShowStacktrace extends StatsPage {
         private StackTraceElement element;
         private boolean highlight;
 
-        public TraceElement(StackTraceElement element, boolean highlight) {
+        public TraceElement(
+                StackTraceElement element,
+                boolean highlight
+        ) {
             this.element = element;
             this.highlight = highlight;
         }

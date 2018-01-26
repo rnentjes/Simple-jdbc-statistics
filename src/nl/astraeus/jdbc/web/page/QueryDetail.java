@@ -1,5 +1,10 @@
 package nl.astraeus.jdbc.web.page;
 
+import nl.astraeus.jdbc.JdbcLogger;
+import nl.astraeus.jdbc.SqlFormatter;
+import nl.astraeus.jdbc.util.Util;
+import nl.astraeus.jdbc.web.JdbcStatsMapping;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -8,11 +13,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
-
-import nl.astraeus.jdbc.JdbcLogger;
-import nl.astraeus.jdbc.SqlFormatter;
-import nl.astraeus.jdbc.util.Util;
-import nl.astraeus.jdbc.web.JdbcStatsMapping;
 
 /**
  * User: rnentjes

@@ -52,6 +52,7 @@
         <th>Timestamp</th>
         <th>Thread id</th>
         <th>Type</th>
+        <th>Parameters</th>
         <th>Time (ms)</th>
     </tr>
     </thead>
@@ -62,6 +63,7 @@
         <td>${q.formattedTimestamp}</td>
         <td>${q.threadId}</td>
         <td>${q.type.description}</td>
+        <td><pre>${q.parameters}</pre></td>
         <td>${q.total}</td>
     </tr>
     ${/each}

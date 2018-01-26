@@ -51,6 +51,9 @@
         <th># Calls</th>
         ${/if}
         <th>Sql</th>
+        ${if(sortLast100)}
+        <th>Parameters</th>
+        ${/if}
     </tr>
     </thead>
     <tbody>
@@ -67,6 +70,9 @@
         <td>${q.count}</td>
         ${/if}
         <td><pre><code class="sql">${!q.sql}</code></pre></td>
+        ${if(sortLast100)}
+        <td><pre>${q.parameters}</pre></td>
+        ${/if}
     </tr>
     ${/each}
     </tbody>
