@@ -17,7 +17,7 @@
       <entry name="?*.png" />
       <entry name="?*.gif" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.5">
       <module name="simple-jdbc-stats_main" target="1.5" />
       <module name="simple-jdbc-stats_test" target="1.5" />
       <module name="simple_jdbc_stats_main" target="1.5" />

@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats_main.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats_main.iml" group="simple-jdbc-stats" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats_test.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats_test.iml" group="simple-jdbc-stats" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.main.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.test.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-jdbc-stats.test.iml" />
     </modules>
   </component>
 </project>

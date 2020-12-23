@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '1.6.1-SNAPSHOT'
+version '1.6.2-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -99,4 +99,3 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-

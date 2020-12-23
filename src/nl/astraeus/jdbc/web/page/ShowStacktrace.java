@@ -6,9 +6,11 @@ import nl.astraeus.jdbc.QueryType;
 import nl.astraeus.jdbc.SqlFormatter;
 import nl.astraeus.web.page.Message;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: rnentjes
@@ -49,7 +51,7 @@ public class ShowStacktrace extends StatsPage {
                     0,
                     false,
                     true,
-                    new HashSet<Parameter>()
+                    new HashMap<Integer, Parameter>()
             );
             logEntry.setStackTrace(new StackTraceElement[0]);
         }

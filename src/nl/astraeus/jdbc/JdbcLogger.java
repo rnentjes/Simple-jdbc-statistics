@@ -4,11 +4,13 @@ import nl.astraeus.jdbc.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -45,7 +47,7 @@ public class JdbcLogger {
         private boolean autoCommit;
         private boolean formattedQueries;
         private StackTraceElement[] stackTrace = null;
-        private Set<Parameter> parameters = new HashSet<Parameter>();
+        private final Map<Integer, Parameter> parameters;
 
         public LogEntry(
                 int hash,
@@ -55,7 +57,7 @@ public class JdbcLogger {
                 long nano,
                 boolean isAutoCommit,
                 boolean formattedQueries,
-                Set<Parameter> parameters
+                Map<Integer, Parameter> parameters
         ) {
             this.threadId = Thread.currentThread().getId();
             this.timeStamp = System.currentTimeMillis();
@@ -149,7 +151,8 @@ public class JdbcLogger {
             StringBuilder result = new StringBuilder();
 
             if (parameters != null && !parameters.isEmpty()) {
-                for (Parameter parameter : parameters) {
+                for (Map.Entry<Integer, Parameter> parameterEntry : parameters.entrySet()) {
+                    Parameter parameter = parameterEntry.getValue();
                     result.append(String.format(
                             "%4s, %12s, %24s\n",
                             parameter.getIndex(),
@@ -218,7 +221,7 @@ public class JdbcLogger {
             long nano,
             boolean isAutoCommit
     ) {
-        logEntry(type, sql, milli, nano, isAutoCommit, new HashSet<Parameter>());
+        logEntry(type, sql, milli, nano, isAutoCommit, new TreeMap<Integer, Parameter>());
     }
 
     public void logEntry(
@@ -227,7 +230,7 @@ public class JdbcLogger {
             long milli,
             long nano,
             boolean isAutoCommit,
-            Set<Parameter> parameters
+            Map <Integer, Parameter> parameters
     ) {
         int hash = sql.hashCode();
         Driver.StatsLogger logger = Driver.get(port);

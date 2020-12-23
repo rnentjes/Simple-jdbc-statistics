@@ -26,7 +26,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -46,17 +49,7 @@ public class PreparedStatementLogger implements PreparedStatement {
     private long milli;
     private long nano;
 
-    private Set<Parameter> parameters = new TreeSet<Parameter>(new Comparator<Parameter>() {
-        public int compare(
-                Parameter o1,
-                Parameter o2
-        ) {
-            int x = o1.getIndex();
-            int y = o2.getIndex();
-
-            return (x < y) ? -1 : ((x == y) ? 0 : 1);
-        }
-    });
+    private final Map<Integer, Parameter> parameters = new TreeMap<Integer, Parameter>();
 
     public PreparedStatementLogger(JdbcLogger logger, PreparedStatement statement) throws SQLException {
         this.logger = logger;
@@ -75,7 +68,7 @@ public class PreparedStatementLogger implements PreparedStatement {
         long m = System.currentTimeMillis() - milli;
         long n = System.nanoTime() - nano;
 
-        logger.logEntry(type, sql, m, n, autocommit, parameters);
+        logger.logEntry(type, sql, m, n, autocommit, new TreeMap<Integer, Parameter>(parameters));
     }
 
     public PreparedStatementLogger(JdbcLogger logger, Connection connection, String sql) throws SQLException {
@@ -255,242 +248,242 @@ public class PreparedStatementLogger implements PreparedStatement {
 
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
         statement.setNull(parameterIndex, sqlType);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NULL));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NULL));
     }
 
     public void setBoolean(int parameterIndex, boolean x) throws SQLException {
         statement.setBoolean(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BOOLEAN, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BOOLEAN, x));
     }
 
     public void setByte(int parameterIndex, byte x) throws SQLException {
         statement.setByte(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BYTE, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BYTE, x));
     }
 
     public void setShort(int parameterIndex, short x) throws SQLException {
         statement.setShort(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.SHORT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.SHORT, x));
     }
 
     public void setInt(int parameterIndex, int x) throws SQLException {
         statement.setInt(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.INT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.INT, x));
     }
 
     public void setLong(int parameterIndex, long x) throws SQLException {
         statement.setLong(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.LONG, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.LONG, x));
     }
 
     public void setFloat(int parameterIndex, float x) throws SQLException {
         statement.setFloat(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.FLOAT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.FLOAT, x));
     }
 
     public void setDouble(int parameterIndex, double x) throws SQLException {
         statement.setDouble(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.DOUBLE, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.DOUBLE, x));
     }
 
     public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
         statement.setBigDecimal(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BIG_DECIMAL, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BIG_DECIMAL, x));
     }
 
     public void setString(int parameterIndex, String x) throws SQLException {
         statement.setString(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.STRING, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.STRING, x));
     }
 
     public void setBytes(int parameterIndex, byte x[]) throws SQLException {
         statement.setBytes(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BYTES, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BYTES, x));
     }
 
     public void setDate(int parameterIndex, Date x) throws SQLException {
         statement.setDate(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.DATE, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.DATE, x));
     }
 
     public void setTime(int parameterIndex, Time x) throws SQLException {
         statement.setTime(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.TIME, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.TIME, x));
     }
 
     public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
         statement.setTimestamp(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.TIMESTAMP, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.TIMESTAMP, x));
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
         statement.setAsciiStream(parameterIndex, x, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
     }
 
     public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
         statement.setUnicodeStream(parameterIndex, x, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.UNICODE_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.UNICODE_STR));
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
         statement.setBinaryStream(parameterIndex, x, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
         statement.setObject(parameterIndex, x, targetSqlType);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
     }
 
     public void setObject(int parameterIndex, Object x) throws SQLException {
         statement.setObject(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
         statement.setCharacterStream(parameterIndex, reader, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR, reader));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR, reader));
     }
 
     public void setRef(int parameterIndex, Ref x) throws SQLException {
         statement.setRef(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.REF, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.REF, x));
     }
 
     public void setBlob(int parameterIndex, Blob x) throws SQLException {
         statement.setBlob(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BLOB, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BLOB, x));
     }
 
     public void setClob(int parameterIndex, Clob x) throws SQLException {
         statement.setClob(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CLOB, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CLOB, x));
     }
 
     public void setArray(int parameterIndex, Array x) throws SQLException {
         statement.setArray(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.ARRAY, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.ARRAY, x));
     }
 
     public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
         statement.setDate(parameterIndex, x, cal);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.DATE, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.DATE, x));
     }
 
     public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
         statement.setTime(parameterIndex, x, cal);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.TIME, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.TIME, x));
     }
 
     public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
         statement.setTimestamp(parameterIndex, x, cal);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.TIMESTAMP, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.TIMESTAMP, x));
     }
 
     public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
         statement.setNull(parameterIndex, sqlType, typeName);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NULL));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NULL));
     }
 
     public void setURL(int parameterIndex, URL x) throws SQLException {
         statement.setURL(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.URL, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.URL, x));
     }
 
     public void setRowId(int parameterIndex, RowId x) throws SQLException {
         statement.setRowId(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.ROW_ID, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.ROW_ID, x));
     }
 
     public void setNString(int parameterIndex, String value) throws SQLException {
         statement.setNString(parameterIndex, value);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NSTRING, value));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NSTRING, value));
     }
 
     public void setNCharacterStream(int parameterIndex, Reader value, long length) throws SQLException {
         statement.setNCharacterStream(parameterIndex, value, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NCHAR_STR, value));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NCHAR_STR, value));
     }
 
     public void setNClob(int parameterIndex, NClob value) throws SQLException {
         statement.setNClob(parameterIndex, value);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NCLOB, value));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NCLOB, value));
     }
 
     public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
         statement.setClob(parameterIndex, reader, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CLOB, reader));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CLOB, reader));
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream, long length) throws SQLException {
         statement.setBlob(parameterIndex, inputStream, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BLOB));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BLOB));
     }
 
     public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
         statement.setNClob(parameterIndex, reader, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NCLOB));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NCLOB));
     }
 
     public void setSQLXML(int parameterIndex, SQLXML xmlObject) throws SQLException {
         statement.setSQLXML(parameterIndex, xmlObject);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.SQLXML));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.SQLXML));
     }
 
     public void setObject(int parameterIndex, Object x, int targetSqlType, int scaleOrLength) throws SQLException {
         statement.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.OBJECT, x));
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x, long length) throws SQLException {
         statement.setAsciiStream(parameterIndex, x, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x, long length) throws SQLException {
         statement.setBinaryStream(parameterIndex, x, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader, long length) throws SQLException {
         statement.setCharacterStream(parameterIndex, reader, length);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR));
     }
 
     public void setAsciiStream(int parameterIndex, InputStream x) throws SQLException {
         statement.setAsciiStream(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.ASCII_STR));
     }
 
     public void setBinaryStream(int parameterIndex, InputStream x) throws SQLException {
         statement.setBinaryStream(parameterIndex, x);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BIN_STR));
     }
 
     public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
         statement.setCharacterStream(parameterIndex, reader);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CHAR_STR));
     }
 
     public void setNCharacterStream(int parameterIndex, Reader value) throws SQLException {
         statement.setNCharacterStream(parameterIndex, value);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NCHAR_STR));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NCHAR_STR));
     }
 
     public void setClob(int parameterIndex, Reader reader) throws SQLException {
         statement.setClob(parameterIndex, reader);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.CLOB));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.CLOB));
     }
 
     public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
         statement.setBlob(parameterIndex, inputStream);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.BLOB));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.BLOB));
     }
 
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
         statement.setNClob(parameterIndex, reader);
-        parameters.add(new Parameter(parameterIndex, Parameter.ParameterType.NCLOB));
+        parameters.put(parameterIndex, new Parameter(parameterIndex, Parameter.ParameterType.NCLOB));
     }
 
 
@@ -501,6 +494,7 @@ public class PreparedStatementLogger implements PreparedStatement {
         nano = 0;
 
         statement.close();
+        parameters.clear();
     }
 
     public ResultSetMetaData getMetaData() throws SQLException {
@@ -509,6 +503,7 @@ public class PreparedStatementLogger implements PreparedStatement {
 
     public void clearParameters() throws SQLException {
         statement.clearParameters();
+        parameters.clear();
     }
 
     public ParameterMetaData getParameterMetaData() throws SQLException {
